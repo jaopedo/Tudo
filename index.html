@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Aluguel de Veículos</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff9c4; /* amarelo clarinho */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+    }
+
+    .login-container h2 {
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+
+    .login-container input {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 90%;
+      font-size: 16px;
+    }
+
+    .login-container button {
+      padding: 12px;
+      font-size: 16px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .login-container button:hover {
+      background-color: #125ca1;
+    }
+
+    #mensagem {
+      margin-top: 10px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <input type="text" id="usuario" placeholder="Usuário">
+    <input type="password" id="senha" placeholder="Senha">
+    <button onclick="login()">Entrar</button>
+    <p id="mensagem"></p>
+  </div>
+
+  <script>
+    function login() {
+      const usuario = document.getElementById("usuario").value;
+      const senha = document.getElementById("senha").value;
+      const msg = document.getElementById("mensagem");
+
+      if (usuario === "Admin" && senha === "123@4") {
+        window.location.href = "home.html";
+      } else {
+        msg.innerText = "Usuário ou senha incorretos!";
+      }
+    }
+  </script>
+</body>
+</html>

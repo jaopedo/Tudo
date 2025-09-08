@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="Pt-Br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula de Front-End</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="CSS/stylenovo.css">
+</head>
+
+<body>
+
+    <header class="bg-light header">
+        <section>
+            <span class="span-1">Aprenda</span>
+            <span class="span-2">Na Prática</span>
+        </section>
+    </header>
+
+    <main>
+
+        <div class="secao-1">
+
+            <h1 class="robinho">Prof. Robinho</h1>
+            <p></p>
+            <div>
+                <a href="sequencias.html" class="btn btn-info link-a-1">Sequências</a>
+                <a href="Jogo 3d.html" class="btn btn-info link-a-1">Jogo 3D</a>
+                <a href="Jogo 2d.html" class="btn btn-info link-a-1">Jogo 2D</a>
+                <a href="index.html" class="btn btn-info link-a-1">Index</a>
+                <a href="home.html" class="btn btn-info link-a-1">Home</a>
+                <a href="aluguel.html" class="btn btn-info link-a-1">Aluguel</a>
+            </div>
+
+            <div>
+                <h2>Javascript!</h2>
+                <p class="texto">
+                    JavaScript é a linguagem que torna a web dinâmica e interativa. Se você busca
+                    uma carreira em desenvolvimento
+                    web, dominar essa linguagem é essencial. ...
+                    <img class="img2" src="imagens/img6.jpeg">
+                </p>
+            </div>
+        </div>
+
+        <div class="linha-divisoria"></div>
+
+        <div class="secao-2">
+            <div>
+                <h3>Técnico em T.I</h3>
+                <p class="texto">
+                    O curso técnico em TI oferece um caminho rápido e eficiente para quem busca uma carreira promissora. 
+                    <img class="img2" src="Imagens/Mario2.jpg" alt="">
+                </p>
+            </div>
+            <div>
+                <form id="cadastroForm">
+                    <h2>Formulário para Cadastro</h2>
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                    <label for="endereco">Endereço:</label>
+                    <input type="text" id="endereco" name="endereco" required>
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" id="telefone" name="telefone" required>
+
+                    <button type="button" onclick="mostrarMensagem()">Cadastrar</button>
+                    <p id="mensagem"></p>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            let slideIndex = 0;
+            showSlides();
+
+            function showSlides() {
+                let i;
+                let slides = document.getElementsByClassName("mySlides");
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                slideIndex++;
+                if (slideIndex > slides.length) { slideIndex = 1 }
+                slides[slideIndex - 1].style.display = "block";
+                setTimeout(showSlides, 2000);
+            }
+
+            function mostrarMensagem() {
+                document.getElementById("mensagem").textContent = "Cadastro realizado com sucesso!";
+            }
+        </script>
+
+    </main>
+
+    <footer>
+        Copyright--2024
+    </footer>
+
+</body>
+
+</html>
