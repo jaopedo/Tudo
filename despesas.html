@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculo de Sobra</title>
+</head>
+<body>
+<br>
+    <label for="salario">Salario</label>
+    <input type="number" id="salario">
+<br>
+<br>
+    <label for="despesa1">Despesa 1</label>
+    <input type="number" id="despesa1">
+<br>
+<br>
+    <label for="despesa2">Despesa 2</label>
+    <input type="number" id="despesa2">
+ <br>   
+ <br>
+    <label for="despesa3">Despesa 3</label>
+    <input type="number" id="despesa3">
+<br>
+<br>
+    <button onclick="calcularSaldo()">Calcular Saldo</button>   
+
+
+ <script>
+   function calcularSaldo() {  
+ var salario = parseFloat(document.getElementById("salario").value);
+ var despesa1 = parseFloat(document.getElementById("despesa1").value);
+ var despesa2 = parseFloat(document.getElementById("despesa2").value);
+ var despesa3 = parseFloat(document.getElementById("despesa3").value);
+
+ var saldo = salario - despesa1 - despesa2 - despesa3;
+
+ document.getElementById("saldo").textContent = saldo.toFixed(2);
+
+   } 
+ </script>   
+<p><span id ="saldo"></span></p>
+
+</body>
+</html>

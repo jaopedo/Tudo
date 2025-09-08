@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculando</title>
+</head>
+<body>
+    <H1>Calculando...</H1>
+    <button onclick="calcula()">Clique para calcular</button>
+    <section id="resultado">
+        <P>O resultado é: </P>
+    </section>
+
+<script>
+    function calcula() {
+        const n1 = Number(window.prompt ("Digite o numero aqui: "))
+        const resultado = document.querySelector ("section#resultado")
+        resultado.innerHTML = `<p>O dobro de ${n1} é ${n1*2} e ametade é ${n1/2}!</p>`
+    }
+
+
+</script>
+
+
+</body>
+</html>

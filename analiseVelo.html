@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Calculando velocidade com funcao SE (if)</title>
+</head>
+<body>
+<h1>Sistema de Multas</h1>
+Velocidade do carro: <input type="number" name="txtvel" id="txtvel">Km/h
+<input type="button" value="Verificar" onclick="calcular()">
+<div id="res">
+
+</div>
+<script>
+function calcular(){ //criando uma função
+var txtv = window.document.querySelector("input#txtvel")//Atribuindo uma variavel
+var res = window.document.querySelector("div#res")//atribuindo uma variavel na tela
+var vel = Number(txtv.value)//atribuindo uma variavel de numero
+res.innerHTML = `<p>Sua velocidade atual é de <strong>${vel}</strong>Km/h.</p>` //imprimindo no HTML
+if (vel > 60) { //Condição para imprimir
+res.innerHTML += `<p>Você está <strong>multado</strong> por excesso de velocidade` //se tiver certo
+}
+res.innerHTML += `<p>Dirija sempre com cinto de segurança!` //se tiver errado
+}// fim da função.
+</script>
+</body>
+</html>

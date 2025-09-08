@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<head>
+    <title>Soamndo dois Números</title>
+
+    <style>
+        body { 
+            font: 12pt Arial; 
+        }
+
+        button { 
+            font-size: 12pt;
+            padding: 50px; 
+        }
+
+    </style>
+
+</head>
+
+   <body>
+       <h1>Somando números no Js</h1>
+       <button onclick="soma()">Iniciar a soma</button>
+
+    <section id="Resultado">
+        <p>O resultado é :</p>
+    </section>
+
+
+
+    <script>
+   
+function soma() {
+            let n1 = Number(window.prompt('Digite um número: '))
+            let n2 = Number(window.prompt('Digite outro número: '))
+            somando = n1 + n2
+            let resultado = document.querySelector('section#Resultado') // nome do id com "secton#" na frente para puxar as informaçoes da section definida no html.
+            resultado.innerHTML = `<p>A soma entre <mark>${n1}</mark> e <mark>${n2}</mark> é igual a <strong> ${somando}! </strong></p>`
+
+        }
+
+    </script>
+
+
+   </body>
+</html>
+

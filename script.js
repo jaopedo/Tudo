@@ -1,11 +1,19 @@
-function login() {
-    const usuario = document.getElementById("usuario").value;
-    const senha = document.getElementById("senha").value;
-    const msg = document.getElementById("mensagem");
-  
-    if (usuario === "Admin" && senha === "123@4") {
-      window.location.href = "home.html";
-    } else {
-      msg.innerText = "Usuário ou senha incorretos!";
-    }
-  }  
+
+//variaveis definidas
+const forma = 'quadrado'
+const altura = 5
+const comprimento = 7
+let area;
+
+
+//define o calculo da area dando duas opçoes 
+if(forma === 'quadrado'){
+    area = ( altura * comprimento)
+}
+
+else {
+    area = (altura*comprimento)/2
+
+}
+//executa
+console.log(area)

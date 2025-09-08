@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Padrão</title>
+    <link rel="stylesheet" href="calculadora.css">
+</head>
+<body>
+    <div class="calculadora">
+    <div class="visor" id="visor">0</div>
+    <div class="botoes">
+
+<button class="botao" onclick="adcionarNumero('7')">7</button>
+<button class="botao" onclick="adcionarNumero('8')">8</button>
+<button class="botao" onclick="adcionarNumero('9')">9</button>
+<button class="botao operador" onclick="adcionarOperador('/')">/</button>
+
+<button class="botao" onclick="adcionarNumero('4')">4</button>
+<button class="botao" onclick="adcionarNumero('5')">5</button>
+<button class="botao" onclick="adcionarNumero('6')">6</button>
+<button class="botao operador" onclick="adcionarOperador('*')">*</button>
+
+<button class="botao" onclick="adcionarNumero('1')">1</button>
+<button class="botao" onclick="adcionarNumero('2')">2</button>
+<button class="botao" onclick="adcionarNumero('3')">3</button>
+<button class="botao operador" onclick="adcionarOperador('-')">-</button>
+<button class="botao operador" onclick="adcionarNumero('0')">0</button>
+
+<button class="botao igual" onclick="calcular()">=</button>
+<button class="botao operador" onclick="adcionarOperador('+')">+</button>
+
+<button class="botao" onclick="limparVissor()">C</button>
+
+
+    </div>
+    </div>
+
+<script>
+    
+let visor = document.getElementById ('visor');
+let operador = null;
+let primeiroValor = null; 
+
+function adcionarNumero(numero) {
+    if (visor.innerText === '0'){
+         visor.innerText = numero;
+
+    } else {
+         visor.innerText += numero;
+
+    }   
+}
+
+function adcionarOperador(operadorSelecionado) {
+    operador = operadorSelecionado;
+    primeiroValor = parseFloat(visor.innerText);
+    visor.innerText = '0'; 
+}
+
+function limparVissor() {
+    visor.innerText = '0';
+    operador = null;
+    primeiroValor = null;
+ 
+}
+
+function calcular() {
+   let segundoValor = parseFloat(visor.innerText);
+   let resultado;
+
+
+switch(operador){
+    case '+': 
+    resultado = primeiroValor + segundoValor;
+    break;
+
+    case '-': 
+    resultado = primeiroValor - segundoValor;
+    break;
+
+    case '*': 
+    resultado = primeiroValor * segundoValor;
+    break;
+
+    case '/': 
+    resultado = primeiroValor / segundoValor;
+    break;
+
+    visor.innerText = resultado;
+    operador = null;
+    primeiroValor = resultado;
+
+    
+
+}
+}
+ </script>
+</body>
+</html>
