@@ -1,0 +1,34 @@
+<!DOCTYPE html> <!-- Define o tipo de documento como HTML5 -->
+<html lang="pt-BR"> <!-- Define o idioma da página como português do Brasil -->
+<head>
+  <meta charset="UTF-8" /> <!-- Suporte a caracteres especiais como acentos -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Torna a página responsiva -->
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" /> <!-- Compatibilidade com IE antigo -->
+  <title>Vamos contar</title> <!-- Título que aparece na aba do navegador -->
+  <link rel="stylesheet" href="style.css" /> <!-- Importa o arquivo de estilos CSS -->
+</head>
+<body>
+  <header> <!-- Cabeçalho da página -->
+    <h1>Vamos contar</h1> <!-- Título principal -->
+  </header>
+
+  <section> <!-- Área principal do conteúdo -->
+    <div id="dados"> <!-- Div que contém os campos de entrada -->
+      <p>Início: <input type="number" id="start" /></p> <!-- Campo para número inicial -->
+      <p>Fim: <input type="number" id="end" /></p> <!-- Campo para número final -->
+      <p>Passo: <input type="number" id="step" /></p> <!-- Campo para valor do passo -->
+      <p><input type="button" value="Contar" onclick="contar()" /></p> <!-- Botão que chama a função contar() -->
+    </div>
+
+    <div id="result"> <!-- Div que mostra o resultado -->
+      <p>Preparando a contagem...</p>
+    </div>
+  </section>
+
+  <footer> <!-- Rodapé da página -->
+    <p>&copy; Polo 2025</p> <!-- Mensagem do rodapé -->
+  </footer>
+
+  <script src="script.js"></script> <!-- Importa o script JavaScript externo -->
+</body>
+</html>
