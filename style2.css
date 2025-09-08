@@ -1,0 +1,38 @@
+body {
+    background: linear-gradient(to right, lightgray, white); /* Fundo degradê de cinza claro para branco */
+    font: normal 15pt Arial; /* Define a fonte do corpo do texto */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  header {
+    color: white; /* Cor do texto */
+    text-align: center; /* Centraliza o texto */
+    background: cornflowerblue; /* Fundo azul claro */
+    width: 100%;
+    padding: 20px;
+  }
+  
+  section {
+    background: white; /* Fundo branco da caixa de contagem */
+    border-radius: 10px; /* Cantos arredondados */
+    padding: 15px;
+    width: 500px;
+    margin: 20px auto;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.329); /* Sombra ao redor */
+  }
+  
+  footer {
+    color: white;
+    text-align: center;
+    font-style: italic;
+    background: cornflowerblue;
+    width: 100%;
+    padding: 10px;
+    position: fixed; /* Fixa o rodapé na parte inferior da tela */
+    bottom: 0;
+  }
+  
