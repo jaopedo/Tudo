@@ -1,0 +1,185 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid #ccc;
+}
+
+.header section {
+    text-align: center;
+}
+
+.span-1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0d6efd;
+    margin-right: 10px;
+}
+
+.span-2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #198754;
+}
+
+/* Área principal */
+main {
+    padding: 20px;
+}
+
+/* Seção 1 */
+.secao-1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.robinho {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    color: #0d6efd;
+}
+
+/* Botões de navegação */
+.link-a-1 {
+    margin: 5px;
+    border-radius: 25px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.link-a-1:hover {
+    background-color: #0dcaf0;
+    transform: scale(1.05);
+}
+
+/* Slideshow */
+.slideshow-container {
+    max-width: 600px;
+    margin: 20px auto;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+}
+
+.mySlides {
+    width: 100%;
+    display: none;
+    border-radius: 15px;
+}
+
+/* Texto */
+.texto {
+    font-size: 1rem;
+    line-height: 1.6;
+    text-align: justify;
+    margin: 20px;
+    color: #333;
+}
+
+/* Imagens no texto */
+.img2 {
+    display: block;
+    max-width: 300px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Linha divisória */
+.linha-divisoria {
+    height: 3px;
+    background: linear-gradient(to right, #0d6efd, #198754);
+    margin: 40px 0;
+    border-radius: 3px;
+}
+
+/* Seção 2 */
+.secao-2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+/* Formulário */
+form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+    max-width: 350px;
+    margin: auto;
+}
+
+form h2 {
+    margin-bottom: 15px;
+    color: #0d6efd;
+    font-size: 1.5rem;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+form input:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(13, 110, 253, 0.5);
+}
+
+form button {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    background-color: #198754;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+form button:hover {
+    background-color: #145c32;
+}
+
+/* Mensagem */
+#mensagem {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #198754;
+}
+
+/* Footer */
+footer {
+    background: #0d6efd;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    border-top: 3px solid #198754;
+}
