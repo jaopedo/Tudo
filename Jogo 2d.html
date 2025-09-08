@@ -1,207 +1,132 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Jogo de Carro 2D</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #111827;
-      font-family: Arial, sans-serif;
-    }
-    #hud {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.6);
-      padding: 10px 20px;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 20px;
-      font-weight: bold;
-      z-index: 10;
-    }
-    #gameOver {
-      display: none;
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      font-size: 28px;
-      z-index: 10;
-    }
-    #gameOver button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 6px;
-      background: #22c55e;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    #gameOver button:hover {
-      background: #16a34a;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Jogo de Carro 2D</title>
+<style>
+body { margin:0; overflow:hidden; background:#111827; font-family:Arial, sans-serif; }
+#hud { position:absolute; top:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.6); padding:10px 20px; border-radius:8px; color:#fff; font-size:20px; font-weight:bold; z-index:10; }
+#gameOver { display:none; position:absolute; inset:0; background:rgba(0,0,0,0.8); color:white; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:28px; z-index:10; }
+#gameOver button { margin-top:15px; padding:10px 20px; font-size:18px; border:none; border-radius:6px; background:#22c55e; color:white; cursor:pointer; transition: background 0.3s; }
+#gameOver button:hover { background:#16a34a; }
+</style>
 </head>
 <body>
-  <div id="hud">Pontuação: <span id="score">0</span></div>
-  <div id="gameOver">
-    <div id="msg">BATEU!</div>
-    <div>Pontuação: <span id="finalScore">0</span></div>
-    <button onclick="restart()">Reiniciar</button>
-  </div>
-  <canvas id="game"></canvas>
+<div id="hud">Pontuação: <span id="score">0</span></div>
+<div id="gameOver">
+<div id="msg">BATEU!</div>
+<div>Pontuação: <span id="finalScore">0</span></div>
+<button onclick="restart()">Reiniciar</button>
+</div>
+<canvas id="game"></canvas>
 
-  <script>
-    const canvas = document.getElementById("game");
-    const ctx = canvas.getContext("2d");
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+const lanes = [canvas.width/2 - 150, canvas.width/2, canvas.width/2 + 150];
+const car = { x: lanes[1], y: canvas.height - 140, w:60, h:100, lane:1, targetX: lanes[1] };
+const obstacles = [];
+let score=0, gameOver=false, speed=6, spawnTimer=0, roadOffset=0;
 
-    const lanes = [canvas.width/2 - 150, canvas.width/2, canvas.width/2 + 150];
-    const car = { 
-      x: lanes[1], 
-      y: canvas.height - 140, 
-      w: 60, 
-      h: 100, 
-      lane: 1, 
-      targetX: lanes[1] 
-    };
-    const obstacles = [];
-    let score = 0;
-    let gameOver = false;
-    let speed = 6;
-    let spawnTimer = 0;
+// SONS locais (adicione arquivos .mp3 na mesma pasta do HTML)
+const motorSound = new Audio("motor.mp3");
+motorSound.loop = true;
+motorSound.volume = 0.3;
 
-    let roadOffset = 0; // para ilusão de movimento
+const crashSound = new Audio("crash.mp3");
+crashSound.volume = 0.5;
 
-    function drawCar(c, color="#22c55e") {
-      ctx.fillStyle = color;
-      ctx.fillRect(c.x - c.w/2, c.y, c.w, c.h);
-      // janelas
-      ctx.fillStyle = "#1e3a8a";
-      ctx.fillRect(c.x - c.w/2 + 10, c.y + 15, c.w - 20, 20);
-      ctx.fillRect(c.x - c.w/2 + 10, c.y + 55, c.w - 20, 20);
-      // faróis
-      ctx.fillStyle = "#facc15";
-      ctx.fillRect(c.x - c.w/2, c.y, 10, 10);
-      ctx.fillRect(c.x + c.w/2 - 10, c.y, 10, 10);
+// Inicia o som do motor só após primeiro clique
+document.addEventListener("click", ()=>{ if(!gameOver){ motorSound.play(); }}, {once:true});
+
+function drawCar(c,color="#22c55e"){
+  ctx.fillStyle=color;
+  ctx.fillRect(c.x - c.w/2,c.y,c.w,c.h);
+  ctx.fillStyle="#1e3a8a";
+  ctx.fillRect(c.x - c.w/2 +10, c.y+15, c.w-20, 20);
+  ctx.fillRect(c.x - c.w/2 +10, c.y+55, c.w-20, 20);
+  ctx.fillStyle="#facc15";
+  ctx.fillRect(c.x - c.w/2, c.y, 10,10);
+  ctx.fillRect(c.x + c.w/2 -10, c.y, 10,10);
+}
+
+function updateObstacles(){
+  obstacles.forEach((o,i)=>{
+    o.y += speed;
+    if(o.y>canvas.height){ obstacles.splice(i,1); score+=10; document.getElementById("score").textContent=score; }
+    if(o.y+o.h>car.y && o.y<car.y+car.h && Math.abs(o.x-car.x)<(o.w/2+car.w/2)){
+      crashSound.play();
+      endGame();
     }
+  });
+}
 
-    function updateObstacles() {
-      obstacles.forEach((o, i) => {
-        o.y += speed;
-        if(o.y > canvas.height) {
-          obstacles.splice(i,1);
-          score += 10;
-          document.getElementById("score").textContent = score;
-        }
-        if(o.y + o.h > car.y &&
-           o.y < car.y + car.h &&
-           Math.abs(o.x - car.x) < (o.w/2 + car.w/2)) {
-          endGame();
-        }
-      });
-    }
+function spawnObstacle(){
+  const lane = Math.floor(Math.random()*3);
+  const colors=["#ef4444","#3b82f6","#f97316"];
+  obstacles.push({ x:lanes[lane], y:-120, w:60, h:100, color:colors[Math.floor(Math.random()*colors.length)] });
+}
 
-    function spawnObstacle() {
-      const lane = Math.floor(Math.random()*3);
-      const colors = ["#ef4444","#3b82f6","#f97316"];
-      obstacles.push({ 
-        x: lanes[lane], 
-        y: -120, 
-        w: 60, 
-        h: 100, 
-        color: colors[Math.floor(Math.random()*colors.length)] 
-      });
-    }
+function drawRoad(){
+  ctx.fillStyle="#333";
+  ctx.fillRect(canvas.width/2 -250,0,500,canvas.height);
+  ctx.strokeStyle="#fff";
+  ctx.lineWidth=5;
+  ctx.setLineDash([40,40]);
+  ctx.lineDashOffset=-roadOffset;
+  ctx.beginPath();
+  ctx.moveTo(canvas.width/2 -150,0); ctx.lineTo(canvas.width/2 -150,canvas.height);
+  ctx.moveTo(canvas.width/2 +150,0); ctx.lineTo(canvas.width/2 +150,canvas.height);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
 
-    function drawRoad() {
-      ctx.fillStyle = "#333";
-      ctx.fillRect(canvas.width/2 - 250, 0, 500, canvas.height);
+function loop(){
+  if(gameOver) return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawRoad();
+  car.x += (car.targetX - car.x)*0.2;
+  drawCar(car);
+  obstacles.forEach(o=>drawCar(o,o.color));
+  updateObstacles();
+  spawnTimer++;
+  if(spawnTimer>70){ spawnObstacle(); spawnTimer=0; }
+  roadOffset += speed; if(roadOffset>80) roadOffset=0;
+  requestAnimationFrame(loop);
+}
 
-      ctx.strokeStyle = "#fff";
-      ctx.lineWidth = 5;
-      ctx.setLineDash([40,40]);
-      ctx.lineDashOffset = -roadOffset;
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 - 150, 0);
-      ctx.lineTo(canvas.width/2 - 150, canvas.height);
-      ctx.moveTo(canvas.width/2 + 150, 0);
-      ctx.lineTo(canvas.width/2 + 150, canvas.height);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
+function endGame(){
+  gameOver=true;
+  motorSound.pause();
+  document.getElementById("finalScore").textContent=score;
+  document.getElementById("gameOver").style.display="flex";
+}
 
-    function loop() {
-      if(gameOver) return;
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+window.restart = function(){
+  obstacles.length=0;
+  car.lane=1; car.x=lanes[1]; car.targetX=lanes[1];
+  score=0; speed=6;
+  document.getElementById("score").textContent=score;
+  gameOver=false;
+  document.getElementById("gameOver").style.display="none";
+  motorSound.play();
+  loop();
+}
 
-      drawRoad();
+document.addEventListener("keydown", e=>{
+  if(e.key==="ArrowLeft"||e.key==="a"){ if(car.lane>0) car.lane--; }
+  if(e.key==="ArrowRight"||e.key==="d"){ if(car.lane<2) car.lane++; }
+  car.targetX=lanes[car.lane];
+});
 
-      // movimento suave do carro
-      car.x += (car.targetX - car.x) * 0.2;
+setInterval(()=>{ if(!gameOver) speed+=0.5; },5000);
 
-      drawCar(car);
-      obstacles.forEach(o => drawCar(o, o.color));
-      updateObstacles();
+// inicializa o loop do jogo
+loop();
 
-      spawnTimer++;
-      if(spawnTimer > 70) { 
-        spawnObstacle();
-        spawnTimer = 0;
-      }
-
-      // anima a estrada
-      roadOffset += speed;
-      if(roadOffset > 80) roadOffset = 0;
-
-      requestAnimationFrame(loop);
-    }
-
-    function endGame(){
-      gameOver = true;
-      document.getElementById("finalScore").textContent = score;
-      document.getElementById("gameOver").style.display = "flex";
-    }
-
-    window.restart = function(){
-      obstacles.length = 0;
-      car.lane = 1;
-      car.x = lanes[1];
-      car.targetX = lanes[1];
-      score = 0;
-      speed = 6;
-      document.getElementById("score").textContent = score;
-      gameOver = false;
-      document.getElementById("gameOver").style.display = "none";
-      loop();
-    }
-
-    document.addEventListener("keydown", e=>{
-      if(e.key === "ArrowLeft" || e.key === "a") {
-        if(car.lane > 0) car.lane--;
-      }
-      if(e.key === "ArrowRight" || e.key === "d") {
-        if(car.lane < 2) car.lane++;
-      }
-      car.targetX = lanes[car.lane];
-    });
-
-    // aumento de dificuldade
-    setInterval(()=>{ if(!gameOver) speed += 0.5; }, 5000);
-
-    loop();
-  </script>
+</script>
 </body>
 </html>
