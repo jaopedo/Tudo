@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jogo de Carro 3D com Som</title>
+  <title>Jogo de Carro 3D com Música</title>
   <style>
     body {
       margin: 0;
@@ -68,8 +68,11 @@
     // Sons
     const somPonto = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
     const somBateu = new Audio("https://actions.google.com/sounds/v1/impacts/crash.ogg");
+    const musicaFundo = new Audio("https://www.bensound.com/bensound-music/bensound-energy.mp3"); // música livre
     somPonto.volume = 0.4;
     somBateu.volume = 0.6;
+    musicaFundo.volume = 0.3;
+    musicaFundo.loop = true;
 
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
@@ -174,6 +177,8 @@
 
     function endGame(){
       gameOver=true;
+      musicaFundo.pause();
+      musicaFundo.currentTime = 0;
       somBateu.play();
       finalScore.textContent=score;
       document.querySelector('#gameOver').style.display='flex';
@@ -189,6 +194,7 @@
       gameOver=false;
       document.querySelector('#gameOver').style.display='none';
       clock=new THREE.Clock();
+      musicaFundo.play();
       animate();
     }
 
@@ -200,6 +206,7 @@
 
     window.addEventListener('resize',resize);
     resize();
+    musicaFundo.play();
     animate();
   </script>
 </body>
