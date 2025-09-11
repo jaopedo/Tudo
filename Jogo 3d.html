@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Carro 3D com Música</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, #0f172a, #1e293b);
+      font-family: Arial, sans-serif;
+    }
+    #hud {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 0 12px rgba(255,255,255,0.2);
+    }
+    #gameOver {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 30px;
+      font-family: Arial, sans-serif;
+      z-index: 10;
+    }
+    #gameOver button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #gameOver button:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <div id="hud">Pontuação: <span id="score">0</span></div>
+  <div id="gameOver">
+    <div id="msg">💥 BATEU!</div>
+    <div>Pontuação: <span id="finalScore">0</span></div>
+    <button onclick="restart()">🔄 Reiniciar</button>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
+
+    // Sons
+    const somPonto = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+    const somBateu = new Audio("https://actions.google.com/sounds/v1/impacts/crash.ogg");
+    const musicaFundo = new Audio("https://www.bensound.com/bensound-music/bensound-energy.mp3"); // música livre
+    somPonto.volume = 0.4;
+    somBateu.volume = 0.6;
+    musicaFundo.volume = 0.3;
+    musicaFundo.loop = true;
+
+    const canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+
+    const renderer = new THREE.WebGLRenderer({canvas});
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x111111, 10, 50);
+
+    const camera = new THREE.PerspectiveCamera(65, window.innerWidth/window.innerHeight, 0.1, 100);
+    camera.position.set(0,5,12);
+
+    const light = new THREE.HemisphereLight(0xffffff,0x444444,1);
+    scene.add(light);
+
+    // Carro mais estilizado
+    const carGroup = new THREE.Group();
+    const bodyGeo = new THREE.BoxGeometry(1,1,2);
+    const bodyMat = new THREE.MeshStandardMaterial({color:0x3b82f6, metalness:0.3, roughness:0.6});
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 0.5;
+
+    const roofGeo = new THREE.BoxGeometry(0.9,0.5,1);
+    const roofMat = new THREE.MeshStandardMaterial({color:0x1e40af});
+    const roof = new THREE.Mesh(roofGeo, roofMat);
+    roof.position.set(0,1,0);
+
+    carGroup.add(body);
+    carGroup.add(roof);
+    scene.add(carGroup);
+
+    const groundGeo = new THREE.PlaneGeometry(20,200);
+    const groundMat = new THREE.MeshStandardMaterial({color:0x222});
+    const ground = new THREE.Mesh(groundGeo,groundMat);
+    ground.rotation.x = -Math.PI/2;
+    scene.add(ground);
+
+    const obstacles = [];
+    let score = 0;
+    let gameOver = false;
+    const scoreEl = document.querySelector('#score');
+    const finalScore = document.querySelector('#finalScore');
+
+    let speed = 10;
+    let difficultyTimer = 0;
+
+    function spawnObstacle(){
+      const geo = new THREE.BoxGeometry(1,1.2,1.5);
+      const mat = new THREE.MeshStandardMaterial({color:0xdc2626});
+      const obs = new THREE.Mesh(geo,mat);
+      const lane = Math.floor(Math.random()*3)-1; // -1,0,1
+      obs.position.set(lane*2.5,0.6,-40);
+      scene.add(obs);
+      obstacles.push(obs);
+    }
+
+    let keys = {};
+    document.addEventListener('keydown',e=>keys[e.key]=true);
+    document.addEventListener('keyup',e=>keys[e.key]=false);
+
+    let clock = new THREE.Clock();
+    let spawnTimer = 0;
+
+    function animate(){
+      if(gameOver) return;
+      requestAnimationFrame(animate);
+      const dt = clock.getDelta();
+      spawnTimer += dt;
+      difficultyTimer += dt;
+
+      // aumenta a dificuldade
+      if(difficultyTimer > 10){
+        speed += 2;
+        difficultyTimer = 0;
+      }
+
+      if(spawnTimer>1.3){
+        spawnObstacle();
+        spawnTimer=0;
+      }
+
+      // Movimento do carro
+      if(keys['ArrowLeft']||keys['a']) carGroup.position.x=Math.max(-2.5,carGroup.position.x-0.2);
+      if(keys['ArrowRight']||keys['d']) carGroup.position.x=Math.min(2.5,carGroup.position.x+0.2);
+
+      // Obstáculos
+      obstacles.forEach((o,i)=>{
+        o.position.z+=speed*dt;
+        if(o.position.z>10){
+          scene.remove(o);
+          obstacles.splice(i,1);
+          score+=10;
+          scoreEl.textContent=score;
+          somPonto.play();
+        }
+        if(Math.abs(o.position.x-carGroup.position.x)<1 && Math.abs(o.position.z-carGroup.position.z)<1.5){
+          endGame();
+        }
+      });
+
+      renderer.render(scene,camera);
+    }
+
+    function endGame(){
+      gameOver=true;
+      musicaFundo.pause();
+      musicaFundo.currentTime = 0;
+      somBateu.play();
+      finalScore.textContent=score;
+      document.querySelector('#gameOver').style.display='flex';
+    }
+
+    window.restart = function(){
+      obstacles.forEach(o=>scene.remove(o));
+      obstacles.length=0;
+      carGroup.position.set(0,0,0);
+      score=0;
+      speed=10;
+      scoreEl.textContent=score;
+      gameOver=false;
+      document.querySelector('#gameOver').style.display='none';
+      clock=new THREE.Clock();
+      musicaFundo.play();
+      animate();
+    }
+
+    function resize(){
+      camera.aspect=window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth,window.innerHeight);
+    }
+
+    window.addEventListener('resize',resize);
+    resize();
+    musicaFundo.play();
+    animate();
+  </script>
+</body>
+</html>
