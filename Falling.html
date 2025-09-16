@@ -1,0 +1,342 @@
+<!DOCTYPE html> <!-- Declara que este documento é HTML5 -->
+<html lang="pt-br"> <!-- Define o idioma da página como português do Brasil -->
+<head>
+  <meta charset="utf-8"> <!-- Define a codificação de caracteres para UTF-8 -->
+  <title>Jogo das Bolinhas (sem vermelha)</title> <!-- Título da aba -->
+  <style>
+    /* ===== estilo básico da página ===== */
+    /* body: configurações visuais gerais */
+    body { margin: 0; font-family: Arial, sans-serif; background: linear-gradient(135deg,#0f172a,#1e3a8a); color: #e6edf3; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+
+    /* título/aviso no topo */
+    h2 { margin: 16px 0; text-shadow: 0 0 8px cyan; }
+
+    /* HUD (pontuação e vidas) */
+    #hud { margin-bottom: 8px; font-weight: bold; }
+
+    /* botão iniciar/reiniciar centralizado */
+    #controls { margin-bottom: 8px; }
+
+    /* canvas central do jogo */
+    canvas { background: rgba(0,0,0,0.45); border-radius: 10px; box-shadow: 0 0 20px rgba(6,182,212,0.35); display: block; }
+
+    /* container para textos flutuantes (mensagens) */
+    #floatingContainer { position: relative; width: 500px; height: 0; } /* height:0 só para posicionamento relativo dos textos */
+
+    /* estilo do texto flutuante */
+    .floatingText {
+      position: absolute;                 /* posicionamento absoluto dentro do floatingContainer */
+      color: #facc15;                     /* cor amarela para aviso */
+      font-weight: bold;                  /* mais visível */
+      text-shadow: 0 0 6px #facc15;       /* brilho */
+      pointer-events: none;               /* não atrapalha cliques */
+      font-size: 18px;                    /* tamanho legível */
+      transform: translateX(-50%);        /* centraliza o texto horizontalmente sobre a posição x */
+    }
+  </style>
+</head>
+<body>
+  <!-- aviso principal -->
+  <h2>⚠️ Não pegue a bolinha azul! Ela tira vida.</h2>
+
+  <!-- HUD que mostra pontos e vidas -->
+  <div id="hud">Pontos: 0 | Vidas: 3</div>
+
+  <!-- controles: botão para iniciar e reiniciar -->
+  <div id="controls">
+    <button id="startBtn">Start</button>
+    <button id="restartBtn" style="display:none">Reiniciar</button>
+  </div>
+
+  <!-- canvas onde o jogo é desenhado -->
+  <canvas id="gameCanvas" width="500" height="600"></canvas>
+
+  <!-- Áudios: música de fundo (opcional) e sons de ponto/erro -->
+  <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" loop></audio>
+  <audio id="scoreSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="hitSound" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg"></audio>
+  
+
+  <!-- container para mensagens flutuantes -->
+  <div id="floatingContainer"></div>
+
+  <script>
+    // ===== Referências aos elementos HTML =====
+    const canvas = document.getElementById("gameCanvas");       // elemento <canvas>
+    const ctx = canvas.getContext("2d");                       // contexto 2D para desenhar
+    const hud = document.getElementById("hud");                // HUD (pontos/vidas)
+    const startBtn = document.getElementById("startBtn");      // botão Start
+    const restartBtn = document.getElementById("restartBtn");  // botão Reiniciar
+    const floatingContainer = document.getElementById("floatingContainer"); // área para textos flutuantes
+
+    // ===== Áudios (referências) =====
+    const bgMusic = document.getElementById("bgMusic");        // música de fundo
+    const scoreSound = document.getElementById("scoreSound");  // som ao ganhar ponto
+    const hitSound = document.getElementById("hitSound");      // som ao perder vida
+
+    // ===== Estado do jogo / variáveis principais =====
+    let player = { x: 220, y: 550, w: 60, h: 20, speed: 6 };   // jogador: posição, tamanho e velocidade
+    let objects = [];                                          // array com as bolinhas que caem
+    let score = 0;                                             // pontuação atual
+    let lives = 3;                                             // vidas restantes
+    let running = false;                                       // indica se o jogo está em execução
+    let gameOver = false;                                      // indica fim de jogo
+    let lastSpawn = 0;                                         // contador de tempo desde último spawn
+    let spawnInterval = 1000;                                  // intervalo de spawn (ms)
+    let keys = { left: false, right: false };                 // estado das setas (teclado)
+    let floatingTexts = [];                                    // textos flutuantes ativos
+
+    // ===== Função para atualizar o HUD (Pontos e Vidas) =====
+    function updateHUD() {
+      hud.textContent = `Pontos: ${score} | Vidas: ${lives}`; // atualiza o texto do HUD
+    }
+
+    // ===== Função para criar um texto flutuante (aviso sobre a bolinha azul) =====
+    function addFloatingText(text, x, y) {
+      const div = document.createElement("div");               // cria elemento <div>
+      div.className = "floatingText";                          // adiciona classe para estilo
+      div.style.left = x + "px";                               // posiciona horizontalmente
+      div.style.top = y + "px";                                // posiciona verticalmente
+      div.textContent = text;                                  // define o texto a mostrar
+      floatingContainer.appendChild(div);                      // adiciona ao container
+      floatingTexts.push({ el: div, y: y, life: 60 });         // salva o objeto para animação (60 frames)
+    }
+
+    // ===== Função para atualizar os textos flutuantes (movimento e remoção) =====
+    function updateFloatingTexts() {
+      for (let i = floatingTexts.length - 1; i >= 0; i--) {    // percorre de trás pra frente
+        const ft = floatingTexts[i];                           // pega o texto flutuante
+        ft.y -= 1;                                            // sobe um pixel por frame
+        ft.el.style.top = ft.y + "px";                        // aplica nova posição
+        ft.life--;                                            // decrementa vida (frames)
+        if (ft.life <= 0) {                                   // quando acabar a vida
+          floatingContainer.removeChild(ft.el);               // remove do DOM
+          floatingTexts.splice(i, 1);                        // remove do array
+        }
+      }
+    }
+
+    // ===== Função para gerar (spawn) uma nova bolinha =====
+    function spawnObject() {
+      const size = 15 + Math.random() * 20;                   // tamanho aleatório entre 15 e 35
+      const rand = Math.random();                             // número aleatório entre 0 e 1
+      let type;                                               // tipo da bolinha
+
+      // DECISÃO DO TIPO:
+      // 70% chance de ser "good" (laranja) que dá ponto,
+      // 30% chance de ser "neutral" (azul) que não pode ser pego.
+      if (rand < 0.7) type = "good";
+      else type = "neutral";
+
+      // posição X aleatória dentro do canvas (considerando o tamanho)
+      const x = Math.random() * (canvas.width - size);
+
+      // empurra objeto para o array: x, posição inicial y acima da tela, raio, velocidade e tipo
+      objects.push({
+        x: x,                          // posição X do canto esquerdo da bolinha
+        y: -size,                      // começa acima do canvas
+        r: size / 2,                   // raio (metade do size)
+        vy: 2 + Math.random() * 2.5,   // velocidade vertical aleatória
+        type: type                     // "good" ou "neutral"
+      });
+    }
+
+    // ===== Função de colisão CÍRCULO x RETÂNGULO =====
+    // circle: { x, y, r } -> note que x,y aqui serão canto superior-esquerdo + r em uso do código
+    // rect: { x, y, w, h }
+    function rectCircleCollide(circle, rect) {
+      // calcula distância entre o centro do círculo e o centro do retângulo nas duas direções
+      const centerX = circle.x + circle.r;                    // centro X do círculo
+      const centerY = circle.y + circle.r;                    // centro Y do círculo
+      const rectCenterX = rect.x + rect.w / 2;                // centro X do retângulo
+      const rectCenterY = rect.y + rect.h / 2;                // centro Y do retângulo
+
+      const distX = Math.abs(centerX - rectCenterX);          // distância horizontal
+      const distY = Math.abs(centerY - rectCenterY);          // distância vertical
+
+      // se a distância for maior que metade do retângulo + raio, não colidiu
+      if (distX > (rect.w / 2 + circle.r)) return false;
+      if (distY > (rect.h / 2 + circle.r)) return false;
+
+      // se estiver dentro das projeções, colidiu
+      if (distX <= rect.w / 2) return true;
+      if (distY <= rect.h / 2) return true;
+
+      // caso diagonal: testa distância ao canto
+      const dx = distX - rect.w / 2;
+      const dy = distY - rect.h / 2;
+      return (dx * dx + dy * dy <= circle.r * circle.r);
+    }
+
+    // ===== Função que atualiza toda a lógica do jogo (movimento, spawn, colisões) =====
+    function update(delta) {
+      if (!running) return;                                    // se jogo não estiver rodando, sai
+
+      // atualiza spawn usando tempo (delta em ms)
+      lastSpawn += delta;                                      // acumula tempo desde último spawn
+      if (lastSpawn > spawnInterval) {                         // se passou o intervalo
+        spawnObject();                                         // gera nova bolinha
+        lastSpawn = 0;                                        // reseta contador
+        // reduz um pouco o intervalo até um limite para aumentar dificuldade com o tempo
+        spawnInterval = Math.max(350, spawnInterval - 8);
+      }
+
+      // ===== movimento do jogador (suave com flags de teclas) =====
+      // se a tecla esquerda estiver pressionada, move para esquerda
+      if (keys.left) player.x -= player.speed * (delta / 16);
+      // se a tecla direita estiver pressionada, move para direita
+      if (keys.right) player.x += player.speed * (delta / 16);
+
+      // limita o jogador dentro dos limites do canvas
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.w > canvas.width) player.x = canvas.width - player.w;
+
+      // ===== atualiza objetos (do fim para o começo para permitir splice seguro) =====
+      for (let i = objects.length - 1; i >= 0; i--) {
+        const obj = objects[i];                                // bolinha atual
+        obj.y += obj.vy * (delta / 16);                        // aplica velocidade (ajustada por delta)
+
+        // verifica colisão com o jogador
+        if (rectCircleCollide(obj, player)) {
+          if (obj.type === "good") {
+            // bolinha laranja: jogador ganha ponto
+            score++;                                          // incrementa pontuação
+            scoreSound.currentTime = 0;                       // reinicia som de ponto
+            scoreSound.play();                                // toca som de ponto
+            updateHUD();                                      // atualiza HUD
+          } else if (obj.type === "neutral") {
+            // bolinha azul: jogador perde vida somente ao encostar nela
+            lives--;                                          // decrementa vidas
+            hitSound.currentTime = 0;                         // reinicia som de hit
+            hitSound.play();                                  // toca som de hit
+            updateHUD();                                      // atualiza HUD
+            // exibe mensagem flutuante sobre o jogador avisando que não pode pegar
+            addFloatingText("⚠️ Não pode pegar!", player.x + player.w / 2, player.y - 22);
+            if (lives <= 0) {                                 // se acabou as vidas
+              endGame();                                      // termina o jogo
+              return;                                         // sai da função para evitar ações a mais
+            }
+          }
+          objects.splice(i, 1);                                // remove o objeto que foi pego/colidiu
+          continue;                                            // segue para o próximo objeto
+        }
+
+        // Se a bolinha passou do chão (saiu do canvas)
+        if (obj.y - obj.r > canvas.height) {
+          // Regras:
+          // - bolinha laranja (good): não faz nada ao passar (apenas some)
+          // - bolinha azul (neutral): NÃO tira vida quando passa (conforme seu pedido)
+          objects.splice(i, 1);                                // remove objeto que saiu da tela
+        }
+      }
+
+      // atualiza e anima textos flutuantes
+      updateFloatingTexts();
+    }
+
+    // ===== Função que desenha tudo no canvas =====
+    function draw() {
+      // limpa o canvas inteiro
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // desenha o jogador como um retângulo neon
+      ctx.fillStyle = "#22d3ee";                              // cor do jogador
+      ctx.shadowColor = "#22d3ee";                            // sombra para efeito neon
+      ctx.shadowBlur = 18;                                    // intensidade da sombra
+      ctx.fillRect(player.x, player.y, player.w, player.h);   // desenha retângulo do jogador
+
+      // desenha cada bolinha do array
+      for (const obj of objects) {
+        if (obj.type === "good") {
+          ctx.fillStyle = "#f97316";                          // laranja para "good"
+          ctx.shadowColor = "#f97316";
+        } else {
+          ctx.fillStyle = "#3b82f6";                          // azul para "neutral"
+          ctx.shadowColor = "#3b82f6";
+        }
+        ctx.shadowBlur = 14;                                  // sombra das bolinhas
+        ctx.beginPath();                                      // inicia forma
+        ctx.arc(obj.x + obj.r, obj.y + obj.r, obj.r, 0, Math.PI * 2); // desenha círculo
+        ctx.fill();                                           // preenche círculo
+      }
+
+      // reseta blur da sombra
+      ctx.shadowBlur = 0;
+    }
+
+    // ===== Loop principal (requestAnimationFrame) =====
+    let lastTime = 0;                                         // último timestamp do frame
+    function loop(ts) {
+      if (!running) return;                                   // se não estiver rodando, não continua
+      if (!lastTime) lastTime = ts;                           // inicializa lastTime no primeiro frame
+      const delta = ts - lastTime;                            // calcula delta em ms entre frames
+      lastTime = ts;                                          // atualiza último tempo
+      update(delta);                                          // atualiza lógica do jogo
+      draw();                                                 // redesenha a cena
+      requestAnimationFrame(loop);                            // solicita próximo frame
+    }
+
+    // ===== Iniciar o jogo (configura variáveis iniciais) =====
+    function startGame() {
+      // reseta variáveis principais
+      objects = [];
+      score = 0;
+      lives = 3;
+      running = true;
+      gameOver = false;
+      lastSpawn = 0;
+      spawnInterval = 1000;
+      player.x = (canvas.width - player.w) / 2;               // posiciona jogador no centro
+      updateHUD();                                           // atualiza HUD
+      floatingTexts.forEach(ft => {                          // limpa quaisquer textos anteriores
+        if (ft.el && ft.el.parentNode) ft.el.parentNode.removeChild(ft.el);
+      });
+      floatingTexts = [];                                    // limpa array de textos
+      bgMusic.currentTime = 0;                               // zera a música
+      // tenta tocar a música (só funciona após interação do usuário em alguns navegadores)
+      bgMusic.play().catch(()=>{});                          // ignora erro se o navegador bloquear reprodução automática
+      lastTime = 0;                                          // zera o tempo do loop
+      requestAnimationFrame(loop);                           // inicia o loop
+      startBtn.style.display = "none";                       // esconde botão Start enquanto joga
+      restartBtn.style.display = "none";                     // esconde reiniciar
+    }
+
+    // ===== Função fim de jogo =====
+    function endGame() {
+      running = false;                                       // para o loop
+      gameOver = true;                                       // marca fim do jogo
+      bgMusic.pause();                                       // pausa música
+      updateHUD();                                           // atualiza HUD (já mostra 0 vidas se acabou)
+      // mostra botão de reiniciar
+      restartBtn.style.display = "inline-block";
+      startBtn.style.display = "none";
+      // alerta final (pode ser substituído por uma tela personalizada)
+      setTimeout(() => alert(`Game Over! Pontos: ${score}`), 50);
+    }
+
+    // ===== Eventos do teclado para movimento suave =====
+    window.addEventListener("keydown", (e) => {
+      // seta correspondente à esquerda
+      if (e.key === "ArrowLeft" || e.key === "a") keys.left = true;
+      // seta correspondente à direita
+      if (e.key === "ArrowRight" || e.key === "d") keys.right = true;
+    });
+    window.addEventListener("keyup", (e) => {
+      // desativa flags quando solta a tecla
+      if (e.key === "ArrowLeft" || e.key === "a") keys.left = false;
+      if (e.key === "ArrowRight" || e.key === "d") keys.right = false;
+    });
+
+    // ===== Atualiza e anima textos flutuantes a cada frame =====
+    // (chamada a partir da função update)
+    // -- já implementada acima como updateFloatingTexts()
+
+    // ===== Botões de Start/Reiniciar =====
+    startBtn.addEventListener("click", () => startGame());   // inicia quando usuário clica Start
+    restartBtn.addEventListener("click", () => startGame()); // reinicia também
+
+    // ===== Inicialização: atualiza HUD inicialmente =====
+    updateHUD();                                             // mostra pontuação/vidas iniciais
+  </script>
+</body>
+</html>

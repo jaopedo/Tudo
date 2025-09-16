@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Jogo da Velha Multiplayer com Música</title>
+  <style>
+    /* ===== Estilo geral ===== */
+    body {
+      margin: 0; /* Remove margens padrão do navegador */
+      font-family: Arial, sans-serif; /* Fonte padrão */
+      background: #1e293b; /* Cor de fundo */
+      color: #e2e8f0; /* Cor do texto */
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; /* Centraliza conteúdo verticalmente */
+    }
+
+    h1 { margin: 16px; text-shadow: 0 0 12px #38bdf8; } /* Título com sombra azul neon */
+
+    /* ===== HUD (Pontuação e vidas) ===== */
+    .hud {
+      display: flex; 
+      justify-content: space-between; /* Distribui pontos e vidas */
+      width: 360px; 
+      margin-bottom: 10px; 
+      font-weight: bold;
+    }
+
+    /* ===== Tela inicial ===== */
+    #startScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+      background: #334155;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #38bdf8;
+    }
+
+    label { margin-top: 10px; }
+
+    button, select {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background: #0ea5e9;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #0ea5e9;
+    }
+
+    /* ===== Tabuleiro ===== */
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px); /* 3 colunas de 100px */
+      grid-template-rows: repeat(3, 100px);    /* 3 linhas de 100px */
+      gap: 5px; /* Espaço entre células */
+      margin-top: 20px;
+    }
+
+    .cell {
+      background: #111827; /* Cor da célula */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      cursor: pointer;
+      border-radius: 6px;
+      text-shadow: 0 0 8px #fff;
+    }
+
+    .cell.X { color: #f43f5e; text-shadow: 0 0 10px #f43f5e; }
+    .cell.O { color: #3b82f6; text-shadow: 0 0 10px #3b82f6; }
+
+  </style>
+</head>
+<body>
+
+  <!-- ===== Título ===== -->
+  <h1>✨ Jogo da Velha ✨</h1>
+
+  <!-- ===== HUD: Pontos e Vidas ===== -->
+  <div class="hud">
+    <div>Pontos: <span id="score">0</span></div>
+    <div>Vidas: <span id="lives">3</span></div>
+  </div>
+
+  <!-- ===== Tela Inicial: Configurações ===== -->
+  <div id="startScreen">
+    <p>Escolha símbolo, dificuldade e modo</p>
+
+    <label>
+      Símbolo:
+      <select id="playerSymbol">
+        <option value="X">❌ X</option>
+        <option value="O">⭕ O</option>
+      </select>
+    </label>
+
+    <label>
+      Dificuldade:
+      <select id="difficulty">
+        <option value="easy">Fácil</option>
+        <option value="medium" selected>Médio</option>
+        <option value="hard">Difícil</option>
+      </select>
+    </label>
+
+    <label>
+      Modo:
+      <select id="modeSelect">
+        <option value="single">Singleplayer</option>
+        <option value="multi">Local Multiplayer</option>
+      </select>
+    </label>
+
+    <button id="startBtn">Start</button>
+    <button id="musicBtn">🎵 Música</button>
+  </div>
+
+  <!-- ===== Tabuleiro e Próxima Rodada ===== -->
+  <div id="board" style="display:none;"></div>
+  <button id="nextBtn" style="display:none;">Próxima Rodada</button>
+
+  <script>
+    /* ===== Elementos HTML ===== */
+    const startScreen = document.getElementById("startScreen");
+    const startBtn = document.getElementById("startBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const boardEl = document.getElementById("board");
+    const scoreEl = document.getElementById("score");
+    const livesEl = document.getElementById("lives");
+    const playerSymbolEl = document.getElementById("playerSymbol");
+    const difficultyEl = document.getElementById("difficulty");
+    const modeSelectEl = document.getElementById("modeSelect");
+    const musicBtn = document.getElementById("musicBtn");
+
+    /* ===== Variáveis do jogo ===== */
+    let score = 0;              // Pontos do jogador
+    let lives = 3;              // Vidas
+    let board = Array(9).fill(null); // Tabuleiro 3x3
+    let gameOver = false;       // Controle de final de jogo
+    let player = "X";           // Símbolo do jogador
+    let ai = "O";               // Símbolo da IA
+    let difficulty = "medium";  // Dificuldade da IA
+    let mode = "single";        // Modo de jogo
+    let currentTurn = "X";      // Turno atual (para multiplayer)
+    let isPlaying = false;      // Controle da música
+
+    /* ===== Música de fundo ===== */
+    const music = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3");
+    music.loop = true; // Música em loop
+
+    // Alterna música play/pause
+    musicBtn.addEventListener("click", () => {
+      if (!isPlaying) {
+        music.play();
+        isPlaying = true;
+        musicBtn.textContent = "⏸️ Pausar Música";
+      } else {
+        music.pause();
+        isPlaying = false;
+        musicBtn.textContent = "🎵 Música";
+      }
+    });
+
+    /* ===== Atualiza HUD ===== */
+    function updateHUD() {
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+    }
+
+    /* ===== Cria tabuleiro ===== */
+    function createBoard() {
+      boardEl.innerHTML = "";
+      board = Array(9).fill(null);
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.dataset.index = i;
+        cell.addEventListener("click", () => playerMove(i));
+        boardEl.appendChild(cell);
+      }
+    }
+
+    /* ===== Jogada do jogador ===== */
+    function playerMove(index) {
+      if (gameOver || board[index]) return; // Não faz nada se jogo acabou ou célula ocupada
+
+      if (mode === "single") {
+        board[index] = player;
+        renderBoard();
+        if (checkWinner(player)) { score++; gameOver=true; updateHUD(); alert("Você ganhou!"); nextBtn.style.display="block"; return; }
+        if (board.every(c=>c)) { gameOver=true; alert("Empate!"); nextBtn.style.display="block"; return; }
+        aiMove(); // IA joga
+      } else {
+        board[index] = currentTurn;
+        renderBoard();
+        if (checkWinner(currentTurn)) { gameOver=true; alert(`Jogador ${currentTurn} ganhou!`); nextBtn.style.display="block"; return; }
+        if (board.every(c=>c)) { gameOver=true; alert("Empate!"); nextBtn.style.display="block"; return; }
+        currentTurn = (currentTurn==="X")?"O":"X"; // Alterna turno
+      }
+    }
+
+    /* ===== Jogada da IA ===== */
+    function aiMove() {
+      let move = null;
+      if (difficulty==="easy") {
+        const empty = board.map((v,i)=>v?null:i).filter(v=>v!==null);
+        move = empty[Math.floor(Math.random()*empty.length)];
+      } else if (difficulty==="medium") {
+        move = findBestMove(ai) || findBestMove(player);
+        if (!move) { const empty = board.map((v,i)=>v?null:i).filter(v=>v!==null); move=empty[Math.floor(Math.random()*empty.length)]; }
+      } else if (difficulty==="hard") {
+        move = minimax(board, ai).index;
+      }
+
+      board[move] = ai;
+      renderBoard();
+
+      if (checkWinner(ai)) { lives--; gameOver=true; updateHUD(); if(lives<=0){alert("Game Over! Pontos: "+score); resetGame(); return;} alert("Você perdeu!"); nextBtn.style.display="block"; return; }
+      if (board.every(c=>c)) { gameOver=true; alert("Empate!"); nextBtn.style.display="block"; }
+    }
+
+    /* ===== Função para achar melhor jogada IA (bloqueio ou vitória) ===== */
+    function findBestMove(playerCheck) {
+      const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      for (let comb of wins) {
+        const vals = comb.map(i => board[i]);
+        if (vals.filter(v=>v===playerCheck).length===2 && vals.includes(null)) return comb[vals.indexOf(null)];
+      }
+      return null;
+    }
+
+    /* ===== Renderiza o tabuleiro ===== */
+    function renderBoard() {
+      const cells = document.querySelectorAll(".cell");
+      board.forEach((v,i)=>{ cells[i].textContent=v||""; cells[i].className="cell "+(v||""); });
+    }
+
+    /* ===== Verifica vencedor ===== */
+    function checkWinner(p) {
+      const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      return wins.some(comb => comb.every(i => board[i]===p));
+    }
+
+    /* ===== Reinicia o jogo ===== */
+    function resetGame() {
+      score=0; lives=3; updateHUD();
+      startScreen.style.display="flex";
+      boardEl.style.display="none";
+      nextBtn.style.display="none";
+    }
+
+    /* ===== Inicia nova rodada ===== */
+    function startRound() {
+      player = playerSymbolEl.value;
+      ai = (player==="X")?"O":"X";
+      difficulty = difficultyEl.value;
+      mode = modeSelectEl.value;
+      currentTurn = "X"; // inicializa turno
+
+      createBoard();
+      renderBoard();
+      gameOver=false;
+      startScreen.style.display="none";
+      boardEl.style.display="grid";
+      nextBtn.style.display="none";
+
+      // IA começa se jogador for "O" em singleplayer
+      if (mode==="single" && player==="O") aiMove();
+    }
+
+    /* ===== Algoritmo Minimax (dificuldade hard) ===== */
+    function minimax(newBoard,currentPlayer){
+      const availSpots=newBoard.map((v,i)=>v?null:i).filter(v=>v!==null);
+      if(checkWinner(player)) return {score:-10};
+      if(checkWinner(ai)) return {score:10};
+      if(availSpots.length===0) return {score:0};
+
+      const moves=[];
+      for(let i=0;i<availSpots.length;i++){
+        const move={};
+        move.index=availSpots[i];
+        newBoard[availSpots[i]]=currentPlayer;
+        let result=(currentPlayer===ai)?minimax(newBoard,player):minimax(newBoard,ai);
+        move.score=result.score;
+        newBoard[availSpots[i]]=null;
+        moves.push(move);
+      }
+
+      let bestMove;
+      if(currentPlayer===ai){
+        let bestScore=-Infinity;
+        for(let i=0;i<moves.length;i++){ if(moves[i].score>bestScore){ bestScore=moves[i].score; bestMove=i; } }
+      } else{
+        let bestScore=Infinity;
+        for(let i=0;i<moves.length;i++){ if(moves[i].score<bestScore){ bestScore=moves[i].score; bestMove=i; } }
+      }
+      return moves[bestMove];
+    }
+
+    /* ===== Eventos dos botões ===== */
+    startBtn.addEventListener("click",startRound);
+    nextBtn.addEventListener("click",startRound);
+
+    /* ===== Inicializa HUD ===== */
+    updateHUD();
+  </script>
+</body>
+</html>

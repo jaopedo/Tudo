@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Define a codificação de caracteres como UTF-8 -->
+  <meta charset="UTF-8" />
+  <!-- Define a viewport para dispositivos móveis, garantindo responsividade -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Título da página, que aparece na aba do navegador -->
+  <title>Jogo da Cobrinha</title>
+  <!-- Link para o arquivo CSS externo que estiliza a página -->
+  <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+  <!-- Tela inicial do jogo (overlay) que aparece antes de começar -->
+  <div id="startScreen" class="overlay">
+    <!-- Título do jogo -->
+    <h1>Cobrinha</h1>
+    <!-- Instruções e quantidade inicial de vidas -->
+    <p>Use as setas do teclado para mover. Você tem <span id="startLives">3</span> vidas.</p>
+    <!-- Botão para começar o jogo -->
+    <button id="startBtn">Começar</button>
+    <!-- Botão para começar o jogo zerando pontos e vidas -->
+    <button id="startBtnReset" class="secondary">Começar (Zerar pontos e vidas)</button>
+  </div>
+
+  <!-- HUD (Head-Up Display) mostrando pontos e vidas durante o jogo -->
+  <div class="hud">
+    <div>Pontos: <span id="score">0</span></div> <!-- Exibe a pontuação atual -->
+    <div>Vidas: <span id="lives">3</span></div>  <!-- Exibe as vidas restantes -->
+  </div>
+
+  <!-- Canvas do HTML5 onde o jogo será desenhado -->
+  <canvas id="game" width="400" height="400"></canvas>
+
+  <!-- Controles adicionais abaixo do canvas -->
+  <div class="controls">
+    <!-- Botão para pausar o jogo -->
+    <button id="pauseBtn">Pausar</button>
+    <!-- Botão para reiniciar a rodada sem zerar tudo -->
+    <button id="restartBtn">Reiniciar Rodada</button>
+  </div>
+
+  <!-- Música de fundo do jogo, tocando em loop -->
+  <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+  
+  <!-- Link para o arquivo JavaScript externo que contém toda a lógica do jogo -->
+  <script src="script1.js"></script>
+</body>
+</html>

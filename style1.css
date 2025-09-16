@@ -1,0 +1,80 @@
+/* Define que html e body ocupam 100% da altura da tela e remove margens e paddings padrões */
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+}
+
+/* Estiliza o body principal */
+body {
+  display: flex;                 /* Usa flexbox para organizar elementos verticalmente */
+  flex-direction: column;        /* Empilha elementos de cima para baixo */
+  align-items: center;           /* Centraliza horizontalmente */
+  background: #0b1220;           /* Cor de fundo escura azul-marinho */
+  color: #e6eef8;                /* Cor do texto principal */
+  font-family: Arial, sans-serif; /* Fonte usada no site */
+  padding-top: 20px;             /* Espaço no topo */
+}
+
+/* Estilo para overlays, como a tela inicial do jogo */
+.overlay {
+  background: #071022;           /* Fundo mais escuro para destaque */
+  padding: 18px;                 /* Espaço interno */
+  border-radius: 12px;           /* Bordas arredondadas */
+  box-shadow: 0 8px 24px rgba(2,6,23,0.7); /* Sombra ao redor */
+  text-align: center;            /* Centraliza o conteúdo */
+  margin-bottom: 14px;           /* Espaço abaixo do overlay */
+}
+
+/* Estilização geral para todos os botões */
+button {
+  cursor: pointer;               /* Mostra a mão ao passar o mouse */
+  padding: 10px 16px;            /* Espaço interno do botão */
+  border-radius: 8px;            /* Bordas arredondadas */
+  border: none;                  /* Remove borda padrão */
+  font-weight: 600;              /* Texto um pouco mais grosso */
+}
+
+/* Botão de começar o jogo */
+#startBtn { 
+  background: #06b6d4;           /* Cor azul clara */
+  color: #062024;                /* Texto escuro */
+  margin: 6px;                   /* Espaço em volta */
+}
+
+/* Botão de começar zerando pontos e vidas */
+#startBtnReset { 
+  background: #ef4444;           /* Cor vermelha */
+  color: white;                  /* Texto branco */
+  margin: 6px;                   /* Espaço em volta */
+}
+
+/* Classe secundária, usada para botões com estilo alternativo */
+.secondary { 
+  background: #111827;           /* Fundo azul-marinho escuro */
+  color: #e6eef8;                /* Texto claro */
+}
+
+/* HUD (pontuação e vidas) */
+.hud { 
+  display: flex;                 /* Flexbox para organizar itens horizontalmente */
+  gap: 18px;                     /* Espaço entre itens */
+  margin-bottom: 10px;           /* Espaço abaixo do HUD */
+  font-size: 16px;               /* Tamanho da fonte */
+}
+
+/* Canvas do jogo */
+#game {
+  background: #0f1724;           /* Fundo escuro do canvas */
+  border: 3px solid #122231;     /* Borda azul escura */
+  display: block;                /* Garante que seja um bloco */
+  box-shadow: 0 6px 20px rgba(2,6,23,0.6); /* Sombra ao redor */
+  border-radius: 6px;            /* Bordas arredondadas */
+}
+
+/* Controles abaixo do canvas */
+.controls { 
+  margin-top: 10px;              /* Espaço acima */
+  display: flex;                 /* Flexbox para organizar botões lado a lado */
+  gap: 8px;                      /* Espaço entre os botões */
+}
