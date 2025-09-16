@@ -5,220 +5,186 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jogo da Cobrinha</title>
 <style>
-  /* Estilo do corpo da página */
-  body { 
-    background: #0b1220; /* fundo escuro */
-    color: #e6eef8; /* cor do texto */
-    font-family: Arial, sans-serif; /* fonte */
-    text-align: center; /* centraliza texto */
-  }
-
-  /* Estilo do canvas (onde a cobrinha será desenhada) */
-  canvas { 
-    background: #0f1724; /* fundo do jogo */
-    display: block; /* bloco para centralizar */
-    margin: 20px auto; /* centraliza horizontalmente */
-    border: 3px solid #122231; /* borda do canvas */
-    border-radius: 6px; /* borda arredondada */
-  }
-
-  /* Tela inicial do jogo (overlay) */
+  body { background:#0b1220; color:#e6eef8; font-family:Arial; text-align:center; }
+  canvas { display:block; margin:20px auto; border:3px solid #122231; border-radius:6px; }
   #startScreen {
-    position: fixed; /* fica sobre toda a tela */
-    top:0; left:0; width:100%; height:100%; /* cobre toda a tela */
-    background: rgba(11,18,32,0.95); /* fundo semi-transparente */
-    display:flex; 
-    flex-direction:column; 
-    justify-content:center; 
-    align-items:center; /* centraliza conteúdo */
-    z-index:10; /* fica acima de tudo */
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(11,18,32,0.95);
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    z-index:10;
   }
-
-  /* Botões na tela inicial */
-  #startScreen button {
-    padding: 12px 25px; /* espaço interno */
-    margin:10px; /* espaço externo */
-    border:none; 
-    border-radius:8px; /* borda arredondada */
-    font-weight:bold; 
-    cursor:pointer; /* muda cursor ao passar o mouse */
-  }
-
-  /* Botão de iniciar */
+  #startScreen button { padding:12px 25px; margin:10px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
   #startBtn { background:#06b6d4; color:#062024; }
-
-  /* Botão de reset (não usado no HTML atual, mas pode ser usado futuramente) */
-  #startBtnReset { background:#ef4444; color:white; }
-
-  /* HUD - Pontos e vidas */
-  .hud { 
-    display:flex; 
-    justify-content:center; 
-    gap: 30px; /* espaço entre pontos e vidas */
-    font-size:18px; 
-    margin-top:10px; 
-  }
+  .hud { display:flex; justify-content:center; gap:30px; font-size:18px; margin-top:10px; }
 </style>
 </head>
 <body>
 
-<!-- Tela inicial do jogo -->
 <div id="startScreen">
-  <h1>Cobrinha</h1> <!-- título -->
-  <p>Use as setas do teclado. Vidas: <span id="startLives">3</span></p> <!-- instruções e vidas -->
-  <button id="startBtn">Começar</button> <!-- botão iniciar -->
+  <h1>Cobrinha</h1>
+  <p>Use as setas do teclado. Vidas: <span id="startLives">3</span></p>
+  <button id="startBtn">Começar</button>
 </div>
 
-<!-- HUD mostrando Pontos e Vidas -->
 <div class="hud">
-  <div>Pontos: <span id="score">0</span></div> <!-- Pontuação -->
-  <div>Vidas: <span id="lives">3</span></div> <!-- Vidas restantes -->
+  <div>Pontos: <span id="score">0</span></div>
+  <div>Vidas: <span id="lives">3</span></div>
+  <div>Pausado: <span id="paused">Não</span></div>
 </div>
 
-<!-- Canvas do jogo -->
 <canvas id="game" width="400" height="400"></canvas>
 
 <!-- Sons -->
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio> <!-- música de fundo -->
-<audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio> <!-- som ao pegar comida -->
-<audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio> <!-- som ao bater/cair -->
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+<audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio>
 
 <script>
-// Seleção dos elementos HTML
 const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d'); // contexto 2D para desenhar no canvas
+const ctx = canvas.getContext('2d');
 
 const startScreen = document.getElementById('startScreen');
 const startBtn = document.getElementById('startBtn');
-const startBtnReset = document.getElementById('startBtnReset');
 
-const scoreEl = document.getElementById('score'); // span da pontuação
-const livesEl = document.getElementById('lives'); // span das vidas
-const startLivesEl = document.getElementById('startLives'); // span vidas na tela inicial
+const scoreEl = document.getElementById('score');
+const livesEl = document.getElementById('lives');
+const startLivesEl = document.getElementById('startLives');
+const pausedEl = document.getElementById('paused');
 
-const bgMusic = document.getElementById('bgMusic'); // música de fundo
-const eatSound = document.getElementById('eatSound'); // som de comida
-const hitSound = document.getElementById('hitSound'); // som de colisão
+const bgMusic = document.getElementById('bgMusic');
+const eatSound = document.getElementById('eatSound');
+const hitSound = document.getElementById('hitSound');
 
-// Variáveis do jogo
-let snake, direction, food, score, lives, gameInterval;
+let snake = [];
+let direction = 'RIGHT';
+let food = {};
+let score = 0;
+let lives = 3;
+let gameInterval;
+let isPaused = false;
 
-// Função para criar comida em posição aleatória
-function placeFood(){
-  food = {
-    x: Math.floor(Math.random()*20), // 20 blocos horizontais
-    y: Math.floor(Math.random()*20)  // 20 blocos verticais
-  };
+// Carrega imagem da maçã JPGu
+688hh
+const appleImg = new Image();
+appleImg.src = 'https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg'; // Maçã JPG
+
+function placeFood() {
+  food = { x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20) };
 }
 
-// Função para iniciar ou reiniciar o jogo
-function initGame(reset=false){
-  snake = [{x:10, y:10}]; // cobra inicia no meio
-  direction = 'RIGHT'; // direção inicial
-  placeFood(); // cria comida
-
-  // Zera pontuação e vidas se reset for true ou primeira execução
-  if(reset || score === undefined || lives === undefined){
-    score = 0;
-    lives = 3;
-  }
-
-  // Atualiza HUD
+function initGame() {
+  snake = [{x:10, y:10}];
+  direction = 'RIGHT';
+  placeFood();
+  score = 0;
+  lives = 3;
+  isPaused = false;
   scoreEl.textContent = score;
   livesEl.textContent = lives;
   startLivesEl.textContent = lives;
-
-  startScreen.style.display = 'none'; // esconde tela inicial
-  bgMusic.play(); // toca música de fundo
-
-  if(gameInterval) clearInterval(gameInterval); // limpa loop anterior se existir
-  gameInterval = setInterval(gameLoop, 150); // inicia loop do jogo
+  pausedEl.textContent = 'Não';
+  startScreen.style.display = 'none';
+  bgMusic.play();
+  if(gameInterval) clearInterval(gameInterval);
+  gameInterval = setInterval(gameLoop, 150);
 }
 
-// Loop principal do jogo
-function gameLoop(){
-  const head = {...snake[0]}; // nova cabeça baseada na anterior
+function gameLoop() {
+  if(isPaused) return;
 
-  // Atualiza posição da cabeça conforme direção
+  const head = {...snake[0]};
   if(direction==='RIGHT') head.x++;
   if(direction==='LEFT') head.x--;
   if(direction==='UP') head.y--;
   if(direction==='DOWN') head.y++;
 
-  // Colisão com parede
+  // colisão parede
   if(head.x<0 || head.x>=20 || head.y<0 || head.y>=20){
     loseLife();
     return;
   }
 
-  // Colisão com corpo
+  // colisão corpo
   if(snake.some(seg=>seg.x===head.x && seg.y===head.y)){
     loseLife();
     return;
   }
 
-  snake.unshift(head); // adiciona cabeça à frente
+  snake.unshift(head);
 
-  // Pegar comida
+  // pegar comida
   if(head.x===food.x && head.y===food.y){
-    score += 10; // aumenta pontos
-    scoreEl.textContent = score; // atualiza HUD
-    eatSound.currentTime = 0; // reinicia som
-    eatSound.play(); // toca som
-    placeFood(); // gera nova comida
+    score += 10;
+    scoreEl.textContent = score;
+    eatSound.currentTime = 0;
+    eatSound.play();
+    placeFood();
   } else {
-    snake.pop(); // remove último segmento (não cresce)
+    snake.pop();
   }
 
-  drawGame(); // redesenha o jogo
+  drawGame();
 }
 
-// Função para perder vida
-function loseLife(){
-  lives--; // diminui vidas
+function loseLife() {
+  lives--;
   livesEl.textContent = lives;
   startLivesEl.textContent = lives;
-
-  hitSound.currentTime = 0; // reinicia som
-  hitSound.play(); // toca som de colisão
-
+  hitSound.currentTime = 0;
+  hitSound.play();
   if(lives <= 0){
-    alert("Game Over!"); // alerta fim de jogo
-    startScreen.style.display = 'flex'; // mostra tela inicial
-    clearInterval(gameInterval); // para loop do jogo
+    alert("Game Over!");
+    startScreen.style.display = 'flex';
+    clearInterval(gameInterval);
   } else {
-    snake = [{x:10, y:10}]; // reinicia posição da cobra
-    direction = 'RIGHT'; // direção inicial
+    snake = [{x:10, y:10}];
+    direction = 'RIGHT';
   }
 }
 
-// Função para desenhar jogo
-function drawGame(){
-  ctx.fillStyle="#0f1724"; // fundo
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  // Desenha comida
-  ctx.fillStyle="#00e5ff";
-  ctx.fillRect(food.x*20, food.y*20, 20, 20);
-
-  // Desenha cobra
-  ctx.fillStyle="#ffffff";
-  snake.forEach(seg=>{
-    ctx.fillRect(seg.x*20, seg.y*20, 20, 20);
-  });
+// Desenha o fundo quadriculado
+function drawGrid() {
+  ctx.fillStyle = "#0f1724";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "#122231";
+  for(let x=0; x<=400; x+=20){
+    ctx.beginPath();
+    ctx.moveTo(x,0);
+    ctx.lineTo(x,400);
+    ctx.stroke();
+  }
+  for(let y=0; y<=400; y+=20){
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    ctx.lineTo(400,y);
+    ctx.stroke();
+  }
 }
 
-// Controles com teclado
+function drawGame() {
+  drawGrid();
+
+  // Desenhar comida (maçã)
+  ctx.drawImage(appleImg, food.x*20, food.y*20, 20, 20);
+
+  // Desenhar cobra
+  ctx.fillStyle="#ffffff";
+  snake.forEach(seg => ctx.fillRect(seg.x*20, seg.y*20, 20, 20));
+}
+
+// Controles
 document.addEventListener('keydown', e=>{
   if(e.key==='ArrowUp' && direction!=='DOWN') direction='UP';
   if(e.key==='ArrowDown' && direction!=='UP') direction='DOWN';
   if(e.key==='ArrowLeft' && direction!=='RIGHT') direction='LEFT';
   if(e.key==='ArrowRight' && direction!=='LEFT') direction='RIGHT';
+  if(e.code==='Space'){ 
+    isPaused = !isPaused;
+    pausedEl.textContent = isPaused ? 'Sim' : 'Não';
+  }
 });
 
-// Botão iniciar
-startBtn.addEventListener('click', ()=>initGame(false));
-startBtnReset?.addEventListener('click', ()=>initGame(true)); // caso exista
+startBtn.addEventListener('click', initGame);
 </script>
 </body>
 </html>
