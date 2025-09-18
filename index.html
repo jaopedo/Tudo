@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8"> <!-- Define a codificação de caracteres como UTF-8 -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsividade para dispositivos móveis -->
-<title>Página Inicial de Jogos</title> <!-- Título que aparece na aba do navegador -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página Inicial de Jogos</title>
 
 <style>
-    /* Reset básico e fonte padrão */
     * {
         margin: 0;
         padding: 0;
@@ -14,155 +14,141 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Body e html ocupam toda a altura da tela e têm fundo em gradiente */
     body, html {
         height: 100%;
         background: radial-gradient(circle at top, #1a237e, #0d133d);
-        display: flex; /* Flexbox para centralizar a container */
-        justify-content: center; /* Centraliza horizontalmente */
-        align-items: center; /* Centraliza verticalmente */
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    /* Container principal do conteúdo */
     .container {
-        background: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente */
-        border: 2px solid rgba(255, 255, 255, 0.3); /* Borda semi-transparente */
-        border-radius: 20px; /* Cantos arredondados */
-        padding: 50px; /* Espaço interno */
-        width: 90%; /* Largura relativa à tela */
-        max-width: 900px; /* Limite máximo de largura */
-        backdrop-filter: blur(15px); /* Efeito vidro desfocado */
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3); /* Sombra em volta do container */
-        text-align: center; /* Centraliza texto e elementos */
-        animation: fadeIn 1s ease-in-out; /* Animação de fade-in */
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
+        padding: 50px;
+        width: 90%;
+        max-width: 900px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
     }
 
-    /* Título principal */
     h1 {
-        color: #ffffff; /* Cor branca */
-        font-size: 3rem; /* Tamanho grande */
-        margin-bottom: 40px; /* Espaço abaixo */
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.7); /* Sombra no texto */
+        color: #ffffff;
+        font-size: 3rem;
+        margin-bottom: 40px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
     }
 
-    /* Container dos botões */
     .buttons {
-        display: flex; /* Flexbox para alinhar botões */
-        justify-content: center; /* Centraliza horizontalmente */
-        flex-wrap: wrap; /* Permite que os botões quebrem linha se necessário */
-        gap: 25px; /* Espaço entre os botões */
-        margin-bottom: 40px; /* Espaço abaixo */
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin-bottom: 40px;
     }
 
-    /* Estilo dos botões dos jogos */
     .game-btn {
-        padding: 18px 35px; /* Espaço interno */
-        font-size: 1.2rem; /* Tamanho do texto */
-        background: linear-gradient(145deg, #3949ab, #1a237e); /* Degradê azul escuro */
-        color: #ffffff; /* Texto branco */
-        border: none; /* Sem borda */
-        border-radius: 12px; /* Bordas arredondadas */
-        cursor: pointer; /* Muda o cursor para mão */
-        transition: all 0.3s ease; /* Animação suave em hover */
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Sombra do botão */
-        text-transform: uppercase; /* Texto em maiúsculo */
-        font-weight: bold; /* Negrito */
+        padding: 18px 35px;
+        font-size: 1.2rem;
+        background: linear-gradient(145deg, #3949ab, #1a237e);
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        text-transform: uppercase;
+        font-weight: bold;
     }
 
-    /* Efeito ao passar o mouse sobre o botão */
     .game-btn:hover {
-        transform: translateY(-5px) scale(1.05); /* Eleva e aumenta o botão */
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4); /* Sombra mais intensa */
-        background: linear-gradient(145deg, #1a237e, #283593); /* Degradê alterado */
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        background: linear-gradient(145deg, #1a237e, #283593);
     }
 
-    /* Informações do jogo (imagem e descrição) */
     .game-info {
-        display: none; /* Inicialmente oculto */
-        flex-direction: column; /* Elementos empilhados verticalmente */
-        align-items: center; /* Centraliza horizontalmente */
-        animation: fadeInInfo 0.5s ease-in-out forwards; /* Animação de aparecimento */
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        animation: fadeInInfo 0.5s ease-in-out forwards;
     }
 
-    /* Estilo da imagem do jogo */
     .game-info img {
-        max-width: 80%; /* Não ultrapassa 80% da largura do container */
-        height: auto; /* Mantém proporção */
-        border-radius: 15px; /* Cantos arredondados */
-        margin-bottom: 20px; /* Espaço abaixo da imagem */
-        box-shadow: 0 5px 20px rgba(0,0,0,0.4); /* Sombra da imagem */
+        max-width: 80%;
+        height: auto;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.4);
     }
 
-    /* Descrição do jogo */
     .game-info p {
-        font-size: 1.1rem; /* Tamanho do texto */
-        color: #ffffff; /* Cor branca */
-        max-width: 700px; /* Limita a largura do texto */
-        text-align: center; /* Centraliza texto */
-        text-shadow: 1px 1px 5px rgba(0,0,0,0.6); /* Sombra no texto */
+        font-size: 1.1rem;
+        color: #ffffff;
+        max-width: 700px;
+        text-align: center;
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
     }
 
-    /* Animação de fade-in do container */
     @keyframes fadeIn {
         from { opacity: 0; transform: scale(0.95); }
         to { opacity: 1; transform: scale(1); }
     }
 
-    /* Animação de fade-in das informações do jogo */
     @keyframes fadeInInfo {
         from { opacity: 0; }
         to { opacity: 1; }
     }
 </style>
 </head>
+
 <body>
-<!-- Container central com título, botões e informações do jogo -->
 <div class="container">
     <h1>Bem-vindo aos Jogos!</h1>
-    
-    <!-- Botões que levam aos diferentes jogos -->
+
     <div class="buttons">
         <button class="game-btn" 
-            onclick="goToGame('https://jaopedo.github.io/Tudo/jogo1.html','imagem1.png','Uma cobra guloza louca para se divertir com você no seu tempo livre, ou até em momentos de tedio.')">
+            onmouseover="showPreview('imagem1.png','Uma cobra guloza louca para se divertir com você no seu tempo livre, ou até em momentos de tedio.')"
+            onclick="goToGame('https://jaopedo.github.io/Tudo/jogo1.html')">
             Snake
         </button>
+
         <button class="game-btn" 
-            onclick="goToGame('https://jaopedo.github.io/Tudo/JogodaVelha.html','imagem2.png','Um classico dos jogos, perfeito para passar um tempo com amigos.')">
+            onmouseover="showPreview('imagem2.png','Um classico dos jogos, perfeito para passar um tempo com amigos.')"
+            onclick="goToGame('https://jaopedo.github.io/Tudo/JogodaVelha.html')">
             Jogo da Velha
         </button>
+
         <button class="game-btn" 
-            onclick="goToGame('https://jaopedo.github.io/Tudo/Falling.html','imagem3.png','Um do jogo do gênero falling game onde temos que pegar as bolas da cor certa para pontuar.')">
+            onmouseover="showPreview('imagem3.png','Um do jogo do gênero falling game onde temos que pegar as bolas da cor certa para pontuar.')"
+            onclick="goToGame('https://jaopedo.github.io/Tudo/Falling.html')">
             Falling Game
         </button>
     </div>
 
-    <!-- Área que mostra a imagem e descrição do jogo selecionado -->
     <div class="game-info" id="gameInfo">
-        <img id="gameImage" src="" alt="Imagem do Jogo"> <!-- Imagem do jogo -->
-        <p id="gameDescription"></p> <!-- Descrição do jogo -->
+        <img id="gameImage" src="" alt="Imagem do Jogo">
+        <p id="gameDescription"></p>
     </div>
 </div>
 
-<!-- Script JavaScript -->
 <script>
-function goToGame(link, image, description){
-    const gameInfo = document.getElementById('gameInfo'); // Container da info do jogo
-    const gameImage = document.getElementById('gameImage'); // Elemento de imagem
-    const gameDescription = document.getElementById('gameDescription'); // Elemento de descrição
+function showPreview(image, description){
+    const gameInfo = document.getElementById('gameInfo');
+    const gameImage = document.getElementById('gameImage');
+    const gameDescription = document.getElementById('gameDescription');
 
-    gameImage.src = image; // Define a imagem do jogo
-    gameDescription.textContent = description; // Define a descrição
-    gameInfo.style.display = 'flex'; // Mostra a área de info
+    gameImage.src = image;
+    gameDescription.textContent = description;
+    gameInfo.style.display = 'flex';
+}
 
-    // Redireciona para o jogo após 1 segundo
-    setTimeout(() => {
-        window.location.href = link;
-    }, 1000);
+function goToGame(link){
+    window.location.href = link;
 }
 </script>
-</body>
+</body> 
 </html>
-
-
-
-
