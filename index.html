@@ -7,101 +7,43 @@
 <title>Página Inicial de Jogos</title>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    * {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;}
+    body,html {
+        height:100%;
+        background: radial-gradient(circle at top,#1a237e,#0d133d);
+        display:flex;justify-content:center;align-items:center;
     }
-
-    body, html {
-        height: 100%;
-        background: radial-gradient(circle at top, #1a237e, #0d133d);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
     .container {
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 20px;
-        padding: 50px;
-        width: 90%;
-        max-width: 900px;
-        backdrop-filter: blur(15px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        text-align: center;
-        animation: fadeIn 1s ease-in-out;
+        background:rgba(255,255,255,0.1);
+        border:2px solid rgba(255,255,255,0.3);
+        border-radius:20px;
+        padding:50px;
+        width:90%;max-width:900px;
+        backdrop-filter:blur(15px);
+        box-shadow:0 8px 25px rgba(0,0,0,0.3);
+        text-align:center;
+        animation:fadeIn 1s ease-in-out;
     }
-
-    h1 {
-        color: #ffffff;
-        font-size: 3rem;
-        margin-bottom: 40px;
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-    }
-
-    .buttons {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 25px;
-        margin-bottom: 40px;
-    }
-
+    h1 {color:#fff;font-size:3rem;margin-bottom:40px;text-shadow:2px 2px 8px rgba(0,0,0,0.7);}
+    .buttons {display:flex;justify-content:center;flex-wrap:wrap;gap:25px;margin-bottom:40px;}
     .game-btn {
-        padding: 18px 35px;
-        font-size: 1.2rem;
-        background: linear-gradient(145deg, #3949ab, #1a237e);
-        color: #ffffff;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        text-transform: uppercase;
-        font-weight: bold;
+        padding:18px 35px;font-size:1.2rem;
+        background:linear-gradient(145deg,#3949ab,#1a237e);
+        color:#fff;border:none;border-radius:12px;cursor:pointer;
+        transition:all 0.3s ease;
+        box-shadow:0 5px 15px rgba(0,0,0,0.3);
+        text-transform:uppercase;font-weight:bold;
     }
-
     .game-btn:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        background: linear-gradient(145deg, #1a237e, #283593);
+        transform:translateY(-5px) scale(1.05);
+        box-shadow:0 10px 25px rgba(0,0,0,0.4);
+        background:linear-gradient(145deg,#1a237e,#283593);
     }
-
-    .game-info {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        animation: fadeInInfo 0.5s ease-in-out forwards;
-    }
-
-    .game-info img {
-        max-width: 80%;
-        height: auto;
-        border-radius: 15px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-    }
-
-    .game-info p {
-        font-size: 1.1rem;
-        color: #ffffff;
-        max-width: 700px;
-        text-align: center;
-        text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes fadeInInfo {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+    .game-info {display:none;flex-direction:column;align-items:center;animation:fadeInInfo 0.5s ease-in-out forwards;}
+    .game-info img {max-width:80%;height:auto;border-radius:15px;margin-bottom:20px;box-shadow:0 5px 20px rgba(0,0,0,0.4);}
+    .game-info p {font-size:1.1rem;color:#fff;max-width:700px;text-align:center;text-shadow:1px 1px 5px rgba(0,0,0,0.6);}
+    @keyframes fadeIn {from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+    @keyframes fadeInInfo {from{opacity:0;}to{opacity:1;}}
 </style>
 </head>
 
@@ -111,19 +53,19 @@
 
     <div class="buttons">
         <button class="game-btn" 
-            onmouseover="showPreview('imagem1.png','Uma cobra guloza louca para se divertir com você no seu tempo livre, ou até em momentos de tedio.')"
+            onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder!')"
             onclick="goToGame('https://jaopedo.github.io/Tudo/jogo1.html')">
             Snake
         </button>
 
         <button class="game-btn" 
-            onmouseover="showPreview('imagem2.png','Um classico dos jogos, perfeito para passar um tempo com amigos.')"
+            onmouseover="showPreview('imagem2.png','Desafie amigos ou a si mesmo no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia!')"
             onclick="goToGame('https://jaopedo.github.io/Tudo/JogodaVelha.html')">
             Jogo da Velha
         </button>
 
         <button class="game-btn" 
-            onmouseover="showPreview('imagem3.png','Um do jogo do gênero falling game onde temos que pegar as bolas da cor certa para pontuar.')"
+            onmouseover="showPreview('imagem3.png','Agilidade e atenção são tudo neste Falling Game! Pegue apenas as bolas certas, acumule pontos rapidamente e prove seu tempo de reação!')"
             onclick="goToGame('https://jaopedo.github.io/Tudo/Falling.html')">
             Falling Game
         </button>
