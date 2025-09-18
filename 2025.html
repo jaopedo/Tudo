@@ -2,155 +2,168 @@
 <html lang="pt-BR">
 
 <head>
-    <!-- Metadados e Responsividade -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aulas 2025</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aulas 2025</title>
 
-    <!-- Bootstrap CSS e JS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 
-    <!-- CSS Customizado -->
-    <link rel="stylesheet" href="stylenovo.css">
+  <style>
+    body {
+      background: #f7f9fc;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0d6efd, #4dabf7);
+      color: white;
+      padding: 2rem 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    header .title-main {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    header .subtitle {
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+
+    h1,
+    h3 {
+      color: #0d6efd;
+    }
+
+    .btn {
+      min-width: 150px;
+    }
+
+    footer {
+      background-color: #f1f3f5;
+      color: #495057;
+      font-weight: 500;
+    }
+
+    .section-title {
+      border-left: 5px solid #0d6efd;
+      padding-left: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .linha-divisoria {
+      border-top: 2px solid #dee2e6;
+      margin: 3rem 0;
+    }
+  </style>
 </head>
 
 <body>
 
-    <!-- HEADER -->
-    <header class="bg-light header mb-4">
-        <section class="text-center py-3">
-            <span class="span-1">2025</span>
-            <span class="span-2">Na Prática</span>
-        </section>
-    </header>
-
-    <!-- MAIN -->
-    <main class="container">
-
-        <!-- SEÇÃO 1: Trimestre -->
-        <div class="secao-1 mb-5">
-            <h1>Projetos!</h1>
-
-            <div class="row g-3">
-
-                <!-- Categoria: HTML do Trimestre -->
-                <div class="col-md-6">
-                    <h3>HTML Local</h3>
-                    <a href="sequencias.html" class="btn btn-info mb-1">Sequências</a>
-                    <a href="index2.html" class="btn btn-info mb-1">IndexCarro</a>
-                    <a href="home.html" class="btn btn-info mb-1">Home</a>
-                    <a href="aluguel.html" class="btn btn-info mb-1">Aluguel</a>
-                    <a href="testarcodigo4.html" class="btn btn-info mb-1">Testar Código 4</a>
-                    <a href="testarcodigo3.html" class="btn btn-info mb-1">Testar Código 3</a>
-                    <a href="testarcodigo2.html" class="btn btn-info mb-1">Testar Código 2</a>
-                    <a href="testarcodigo.html" class="btn btn-info mb-1">Testar Código</a>
-                    <a href="script erro.html" class="btn btn-info mb-1">Script Erro</a>
-                    <a href="Oi.html" class="btn btn-info mb-1">Oi</a>
-                    <a href="mouseClick.html" class="btn btn-info mb-1">Mouse Click</a>
-                    <a href="mmc.html" class="btn btn-info mb-1">MMC</a>
-                    <a href="index.html" class="btn btn-info mb-1">Index</a>
-                    <a href="Front3.html" class="btn btn-info mb-1">Front 3</a>
-                    <a href="Front2.html" class="btn btn-info mb-1">Front 2</a>
-                    <a href="Front1.html" class="btn btn-info mb-1">Front 1</a>
-                    <a href="exemplo3.html" class="btn btn-info mb-1">Exemplo 3</a>
-                    <a href="exemplo2.html" class="btn btn-info mb-1">Exemplo 2</a>
-                    <a href="exemplo1.html" class="btn btn-info mb-1">Exemplo 1</a>
-                    <a href="despesas.html" class="btn btn-info mb-1">Despesas</a>
-                    <a href="calcular.html" class="btn btn-info mb-1">Calcular</a>
-                    <a href="calculadora.html" class="btn btn-info mb-1">Calculadora</a>
-                    <a href="aula18-02.html" class="btn btn-info mb-1">Aula 18-02</a>
-                    <a href="aula 18-02 2.html" class="btn btn-info mb-1">Aula 18-02 (2)</a>
-                    <a href="aula 06-03 subtrair.html" class="btn btn-info mb-1">Subtrair</a>
-                    <a href="aula 06-03 somar.html" class="btn btn-info mb-1">Somar</a>
-                    <a href="aula 06-03 multiplicar.html" class="btn btn-info mb-1">Multiplicar</a>
-                    <a href="aula 06-03 dividir.html" class="btn btn-info mb-1">Dividir</a>
-                    <a href="analiseVelo.html" class="btn btn-info mb-1">Análise Velocidade</a>
-                    <a href="AbraCadabra.html" class="btn btn-info mb-1">AbraCadabra</a>
-                </div>
-
-                <!-- Categoria: Projetos Externos -->
-                <div class="col-md-6">
-                    <h3>Aplicativos Expo</h3>
-
-                    <a href="https://snack.expo.dev/@jptabm14/lanchonete?platform=web"
-                       target="_blank" class="btn btn-warning mb-1">Lanchonete</a>
-
-                    <a href="https://snack.expo.dev/@jptabm14/hello"
-                       target="_blank" class="btn btn-warning mb-1">Hello</a>
-
-                    <a href="https://snack.expo.dev/@jptabm14/controle-financeiro"
-                       target="_blank" class="btn btn-warning mb-1">Controle Financeiro</a>
-
-
-                    <a href="https://snack.expo.dev/@jptabm14/conversor-de-km"
-                       target="_blank" class="btn btn-warning mb-1">Conversor de KM</a>
-
-
-                </div>
-
-
-            <div class="col-md-6">
-                <h3>Python</h3>
-                <a href="https://drive.google.com/drive/folders/1F_uihheS0GlsmxtJYCJKE4nGbWmc7tQk?usp=sharing"
-                   target="_blank" class="btn btn-warning mb-1">Arquivos Python</a>
-            </div>
-            
-<div class="col-md-6">
-    <h3>Outros Arquivos</h3>
-    <a href="https://drive.google.com/drive/folders/1kKG4zeC2k-wVn6kG1WDoT6VUJ87iwS9A"
-    target="_blank" class="btn btn-warning mb-1">Arquivos</a>
-</div>
-
-<div>
-          <h3>Jogos</h3>
-         <a href="index.html" class="btn btn-info mb-1">Três Jogos</a>
-         <a href="Jogo 3d.html" class="btn btn-info mb-1">Jogo 3D</a>
-         <a href="Jogo 2d.html" class="btn btn-info mb-1">Jogo 2D</a>
+  <!-- HEADER -->
+  <header class="text-center">
+    <div class="container">
+      <div class="title-main">2025</div>
+      <div class="subtitle">Na Prática</div>
     </div>
-            </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container my-5">
+
+    <section class="mb-5">
+      <h1 class="mb-4">Projetos!</h1>
+      <div class="row g-4">
+
+        <!-- HTML Local -->
+        <div class="col-md-6">
+          <h3 class="section-title">HTML Local</h3>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="sequencias.html" class="btn btn-info">Sequências</a>
+            <a href="index2.html" class="btn btn-info">IndexCarro</a>
+            <a href="home.html" class="btn btn-info">Home</a>
+            <a href="aluguel.html" class="btn btn-info">Aluguel</a>
+            <a href="testarcodigo4.html" class="btn btn-info">Testar Código 4</a>
+            <a href="testarcodigo3.html" class="btn btn-info">Testar Código 3</a>
+            <a href="testarcodigo2.html" class="btn btn-info">Testar Código 2</a>
+            <a href="testarcodigo.html" class="btn btn-info">Testar Código</a>
+            <a href="script erro.html" class="btn btn-info">Script Erro</a>
+            <a href="Oi.html" class="btn btn-info">Oi</a>
+            <a href="mouseClick.html" class="btn btn-info">Mouse Click</a>
+            <a href="mmc.html" class="btn btn-info">MMC</a>
+            <a href="index.html" class="btn btn-info">Index</a>
+            <a href="Front3.html" class="btn btn-info">Front 3</a>
+            <a href="Front2.html" class="btn btn-info">Front 2</a>
+            <a href="Front1.html" class="btn btn-info">Front 1</a>
+            <a href="exemplo3.html" class="btn btn-info">Exemplo 3</a>
+            <a href="exemplo2.html" class="btn btn-info">Exemplo 2</a>
+            <a href="exemplo1.html" class="btn btn-info">Exemplo 1</a>
+            <a href="despesas.html" class="btn btn-info">Despesas</a>
+            <a href="calcular.html" class="btn btn-info">Calcular</a>
+            <a href="calculadora.html" class="btn btn-info">Calculadora</a>
+            <a href="aula18-02.html" class="btn btn-info">Aula 18-02</a>
+            <a href="aula 18-02 2.html" class="btn btn-info">Aula 18-02 (2)</a>
+            <a href="aula 06-03 subtrair.html" class="btn btn-info">Subtrair</a>
+            <a href="aula 06-03 somar.html" class="btn btn-info">Somar</a>
+            <a href="aula 06-03 multiplicar.html" class="btn btn-info">Multiplicar</a>
+            <a href="aula 06-03 dividir.html" class="btn btn-info">Dividir</a>
+            <a href="analiseVelo.html" class="btn btn-info">Análise Velocidade</a>
+            <a href="AbraCadabra.html" class="btn btn-info">AbraCadabra</a>
+          </div>
         </div>
 
-        <!-- LINHA DIVISÓRIA -->
-        <hr class="linha-divisoria">
+        <!-- Aplicativos Expo -->
+        <div class="col-md-6">
+          <h3 class="section-title">Aplicativos Expo</h3>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="https://snack.expo.dev/@jptabm14/lanchonete?platform=web" target="_blank" class="btn btn-warning">Lanchonete</a>
+            <a href="https://snack.expo.dev/@jptabm14/hello" target="_blank" class="btn btn-warning">Hello</a>
+            <a href="https://snack.expo.dev/@jptabm14/controle-financeiro" target="_blank" class="btn btn-warning">Controle Financeiro</a>
+            <a href="https://snack.expo.dev/@jptabm14/conversor-de-km" target="_blank" class="btn btn-warning">Conversor de KM</a>
+          </div>
+        </div>
 
-        <!-- SCRIPT DE SLIDES (opcional, caso haja slides no site) -->
-        <script>
-            let slideIndex = 0;
-            showSlides();
+        <!-- Python -->
+        <div class="col-md-6">
+          <h3 class="section-title">Python</h3>
+          <a href="https://drive.google.com/drive/folders/1F_uihheS0GlsmxtJYCJKE4nGbWmc7tQk?usp=sharing"
+            target="_blank" class="btn btn-warning">Arquivos Python</a>
+        </div>
 
-            function showSlides() {
-                let slides = document.getElementsByClassName("mySlides");
-                for (let i = 0; i < slides.length; i++) {
-                    slides[i].style.display = "none";
-                }
-                slideIndex++;
-                if (slideIndex > slides.length) { slideIndex = 1 }
-                if(slides.length > 0) slides[slideIndex - 1].style.display = "block";
-                setTimeout(showSlides, 2000);
-            }
-        </script>
+        <!-- Outros -->
+        <div class="col-md-6">
+          <h3 class="section-title">Outros Arquivos</h3>
+          <a href="https://drive.google.com/drive/folders/1kKG4zeC2k-wVn6kG1WDoT6VUJ87iwS9A"
+            target="_blank" class="btn btn-warning">Arquivos</a>
+        </div>
 
-    </main>
+        <!-- Jogos -->
+        <div class="col-12">
+          <h3 class="section-title">Jogos</h3>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="index.html" class="btn btn-info">Três Jogos</a>
+            <a href="Jogo 3d.html" class="btn btn-info">Jogo 3D</a>
+            <a href="Jogo 2d.html" class="btn btn-info">Jogo 2D</a>
+          </div>
+        </div>
 
-    <!-- FOOTER -->
-    <footer class="text-center py-3 mt-4 bg-light">
-        &copy; 2025
-    </footer>
+      </div>
+    </section>
 
-<style>
+    <hr class="linha-divisoria">
 
-footer {
-color: black;
-}
+  </main>
 
-</style>
+  <!-- FOOTER -->
+  <footer class="text-center py-3">
+    &copy; 2025
+  </footer>
+
 </body>
-
 </html>
-
-
-
