@@ -13,207 +13,209 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 
-  
+  <style>
+    body {
+      background: #0d1b2a; /* azul escuro */
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #e0e0e0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1b4332, #4a148c);
+      color: #fff;
+      padding: 3rem 1rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+    }
+
+    header .title-main {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    header .subtitle {
+      font-size: 1.3rem;
+      opacity: 0.85;
+    }
+
+    h1 {
+      color: #38b000;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .card {
+      background: #1b1b2f;
+      border: none;
+      border-radius: 15px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(56, 176, 0, 0.3);
+    }
+
+    .card-title {
+      color: #38b000;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      border-left: 6px solid #38b000;
+      padding-left: 10px;
+      position: relative;
+    }
+
+    .card-title[data-description]:hover::after {
+      content: attr(data-description);
+      position: absolute;
+      left: 0;
+      top: 130%;
+      background: #1b1b2f;
+      color: #38b000;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(56, 176, 0, 0.5);
+      z-index: 10;
+    }
+
+    .btn {
+      min-width: 140px;
+      border-radius: 25px;
+      font-weight: 500;
+      margin: 0.3rem;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .btn-info {
+      background-color: #4a148c;
+      color: #e0e0e0;
+    }
+
+    .btn-info:hover {
+      background-color: #6a1b9a;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(106, 27, 154, 0.5);
+    }
+
+    .btn-warning {
+      background-color: #1b4332;
+      color: #e0e0e0;
+    }
+
+    .btn-warning:hover {
+      background-color: #38b000;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(56, 176, 0, 0.5);
+    }
+
+    footer {
+      background-color: #0d1b2a;
+      color: #38b000;
+      font-weight: 500;
+      padding: 1.5rem 0;
+      text-align: center;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+    }
+  </style>
 </head>
 
 <body>
 
   <!-- HEADER -->
-  <header class="text-center">
+  <header>
     <div class="container">
       <div class="title-main">2025</div>
       <div class="subtitle">Na Prática</div>
     </div>
   </header>
-<style>
-  body {
-    background: #1a1a1a; /* preto escuro */
-    font-family: 'Segoe UI', Arial, sans-serif;
-    color: #f5f5f5; /* branco suave */
-    line-height: 1.6;
-  }
-
-  header {
-    background: linear-gradient(135deg, #ff4d4f, #a8071a); /* gradiente vermelho */
-    color: #fff;
-    padding: 3rem 0;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  }
-
-  header .title-main {
-    font-size: 2.8rem;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-
-  header .subtitle {
-    font-size: 1.2rem;
-    opacity: 0.85;
-  }
-
-  h1, h3 {
-    color: #ff4d4f;
-    font-weight: 700;
-  }
-
-  .section-title {
-    border-left: 6px solid #ff4d4f;
-    padding-left: 12px;
-    margin-bottom: 1rem;
-    position: relative;
-    cursor: help;
-    font-size: 1.2rem;
-  }
-
-  /* Tooltip ao passar o mouse */
-  .section-title[data-description]:hover::after {
-    content: attr(data-description);
-    position: absolute;
-    left: 0;
-    top: 120%;
-    background: #333; /* fundo escuro */
-    color: #ff4d4f; /* texto vermelho */
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(255,77,79,0.5);
-    z-index: 10;
-  }
-
-  .btn {
-    min-width: 150px;
-    border-radius: 25px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-  }
-
-  .btn-info {
-    background-color: #ff4d4f;
-    color: #fff;
-  }
-  .btn-info:hover {
-    background-color: #a8071a;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(168,7,26,0.5);
-  }
-
-  .btn-warning {
-    background-color: #ff7875;
-    color: #1a1a1a;
-  }
-  .btn-warning:hover {
-    background-color: #ff4d4f;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(255,77,79,0.5);
-  }
-
-  .linha-divisoria {
-    border-top: 2px dashed #ff4d4f;
-    margin: 3rem 0;
-  }
-
-  footer {
-    background-color: #1a1a1a;
-    color: #ff4d4f;
-    font-weight: 500;
-    padding: 1rem 0;
-    box-shadow: 0 -2px 6px rgba(0,0,0,0.5);
-  }
-</style>
 
   <!-- MAIN -->
   <main class="container my-5">
 
-    <section class="mb-5">
-      <h1 class="mb-4">Projetos!</h1>
-      <div class="row g-4">
+    <h1>Projetos!</h1>
 
-        <!-- HTML Local e Jogos lado a lado -->
-        <div class="col-md-6">
-          <h3 class="section-title" data-description="Arquivos HTML desenvolvidos durante as aulas do Terceiro Trimestre.">HTML Local</h3>
-          <div class="d-flex flex-wrap gap-2">
+    <div class="row g-4">
+
+      <!-- HTML Local -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card">
+          <h3 class="card-title" data-description="Arquivos HTML desenvolvidos durante as aulas do Terceiro Trimestre.">HTML Local</h3>
+          <div class="d-flex flex-wrap">
             <a href="sequencias.html" class="btn btn-info">Sequências</a>
             <a href="index2.html" class="btn btn-info">IndexCarro</a>
             <a href="home.html" class="btn btn-info">Home</a>
             <a href="aluguel.html" class="btn btn-info">Aluguel</a>
             <a href="testarcodigo4.html" class="btn btn-info">Testar Código 4</a>
-            <a href="testarcodigo3.html" class="btn btn-info">Testar Código 3</a>
-            <a href="testarcodigo2.html" class="btn btn-info">Testar Código 2</a>
-            <a href="testarcodigo.html" class="btn btn-info">Testar Código</a>
-            <a href="script erro.html" class="btn btn-info">Script Erro</a>
-            <a href="Oi.html" class="btn btn-info">Oi</a>
-            <a href="mouseClick.html" class="btn btn-info">Mouse Click</a>
-            <a href="mmc.html" class="btn btn-info">MMC</a>
-            <a href="index.html" class="btn btn-info">Index</a>
-            <a href="Front3.html" class="btn btn-info">Front 3</a>
-            <a href="Front2.html" class="btn btn-info">Front 2</a>
-            <a href="Front1.html" class="btn btn-info">Front 1</a>
-            <a href="exemplo3.html" class="btn btn-info">Exemplo 3</a>
-            <a href="exemplo2.html" class="btn btn-info">Exemplo 2</a>
-            <a href="exemplo1.html" class="btn btn-info">Exemplo 1</a>
-            <a href="despesas.html" class="btn btn-info">Despesas</a>
-            <a href="calcular.html" class="btn btn-info">Calcular</a>
-            <a href="calculadora.html" class="btn btn-info">Calculadora</a>
-            <a href="aula18-02.html" class="btn btn-info">Aula 18-02</a>
-            <a href="aula 18-02 2.html" class="btn btn-info">Aula 18-02 (2)</a>
-            <a href="aula 06-03 subtrair.html" class="btn btn-info">Subtrair</a>
-            <a href="aula 06-03 somar.html" class="btn btn-info">Somar</a>
-            <a href="aula 06-03 multiplicar.html" class="btn btn-info">Multiplicar</a>
-            <a href="aula 06-03 dividir.html" class="btn btn-info">Dividir</a>
-            <a href="analiseVelo.html" class="btn btn-info">Análise Velocidade</a>
-            <a href="AbraCadabra.html" class="btn btn-info">AbraCadabra</a>
           </div>
         </div>
+      </div>
 
-        <div class="col-md-6">
-          <h3 class="section-title" data-description="Jogos interativos para diversão entre amigos ou sozinho.">Jogos</h3>
-          <div class="d-flex flex-wrap gap-2">
+      <!-- Jogos -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card">
+          <h3 class="card-title" data-description="Jogos interativos para diversão entre amigos ou sozinho.">Jogos</h3>
+          <div class="d-flex flex-wrap">
             <a href="index.html" class="btn btn-info">Três Jogos</a>
             <a href="Jogo 3d.html" class="btn btn-info">Jogo 3D</a>
             <a href="Jogo 2d.html" class="btn btn-info">Jogo 2D</a>
           </div>
         </div>
+      </div>
 
-        <!-- Aplicativos Expo -->
-        <div class="col-md-6">
-          <h3 class="section-title" data-description="Aplicativos executados com Expo Snack.">Aplicativos Expo</h3>
-          <div class="d-flex flex-wrap gap-2">
-            <a href="https://snack.expo.dev/@jptabm14/lanchonete?platform=web" target="_blank" class="btn btn-warning">Lanchonete</a>
+      <!-- Aplicativos Expo -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card">
+          <h3 class="card-title" data-description="Aplicativos executados com Expo Snack.">Aplicativos Expo</h3>
+          <div class="d-flex flex-wrap">
+            <a href="https://snack.expo.dev/@jptabm14/lanchonete?platform=web" target="_blank"
+              class="btn btn-warning">Lanchonete</a>
             <a href="https://snack.expo.dev/@jptabm14/hello" target="_blank" class="btn btn-warning">Hello</a>
-            <a href="https://snack.expo.dev/@jptabm14/controle-financeiro" target="_blank" class="btn btn-warning">Controle Financeiro</a>
-            <a href="https://snack.expo.dev/@jptabm14/conversor-de-km" target="_blank" class="btn btn-warning">Conversor de KM</a>
+            <a href="https://snack.expo.dev/@jptabm14/controle-financeiro" target="_blank"
+              class="btn btn-warning">Controle Financeiro</a>
           </div>
         </div>
+      </div>
 
-        <!-- Python -->
-        <div class="col-md-6">
-          <h3 class="section-title" data-description="Link para pasta com arquivos e projetos em Python.">Python</h3>
-          <a href="https://drive.google.com/drive/folders/1F_uihheS0GlsmxtJYCJKE4nGbWmc7tQk?usp=sharing" target="_blank"
-            class="btn btn-warning">Arquivos Python</a>
+      <!-- Python -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card">
+          <h3 class="card-title" data-description="Link para pasta com arquivos e projetos em Python.">Python</h3>
+          <a href="https://drive.google.com/drive/folders/1F_uihheS0GlsmxtJYCJKE4nGbWmc7tQk?usp=sharing"
+            target="_blank" class="btn btn-warning">Arquivos Python</a>
         </div>
+      </div>
 
-        <!-- Outros -->
-        <div class="col-md-6">
-          <h3 class="section-title" data-description="Link para pasta com todos os arquivos feitos ao longo do ano.">OutrosArquivos</h3>
+      <!-- Outros -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card">
+          <h3 class="card-title" data-description="Link para pasta com todos os arquivos feitos ao longo do ano.">Outros Arquivos</h3>
           <a href="https://drive.google.com/drive/folders/1kKG4zeC2k-wVn6kG1WDoT6VUJ87iwS9A" target="_blank"
             class="btn btn-warning">Arquivos</a>
         </div>
-
       </div>
-    </section>
 
-    <hr class="linha-divisoria">
+    </div>
 
   </main>
 
   <!-- FOOTER -->
-  <footer class="text-center py-3">
+  <footer>
     &copy; 2025
   </footer>
 
 </body>
+
 </html>
