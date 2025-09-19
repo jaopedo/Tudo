@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo da Velha Responsivo Fullscreen</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-family: Arial, sans-serif;
+    background: #1e293b;
+    color: #e2e8f0;
+    overflow: hidden; /* evita rolagem desnecessária */
+  }
+
+  h1 {
+    margin: 2vh 0;
+    text-align: center;
+    font-size: clamp(20px, 4vw, 36px);
+    text-shadow: 0 0 12px #38bdf8;
+  }
+
+  .hud {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 400px;
+    font-weight: bold;
+    margin-bottom: 1vh;
+    font-size: clamp(14px, 2.5vw, 18px);
+  }
+
+  #startScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2vh;
+    background: #334155;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px #38bdf8;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  label {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  button, select {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #0ea5e9;
+    color: white;
+    font-size: clamp(14px, 2.5vw, 18px);
+    cursor: pointer;
+    box-shadow: 0 0 10px #0ea5e9;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  /* ===== Tabuleiro responsivo fullscreen ===== */
+  #boardContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+  }
+
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* sempre quadrado */
+  }
+
+  .cell {
+    background: #111827;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(24px, 10vw, 64px); /* cresce proporcional à tela */
+    cursor: pointer;
+    border-radius: 6px;
+    text-shadow: 0 0 8px #fff;
+    user-select: none;
+  }
+
+  .cell.X { color: #f43f5e; text-shadow: 0 0 10px #f43f5e; }
+  .cell.O { color: #3b82f6; text-shadow: 0 0 10px #3b82f6; }
+
+  #nextBtn {
+    margin: 10px 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>✨ Jogo da Velha ✨</h1>
+
+<div class="hud">
+  <div>Pontos: <span id="score">0</span></div>
+  <div>Vidas: <span id="lives">3</span></div>
+</div>
+
+<div id="startScreen">
+  <p>Escolha símbolo, dificuldade e modo</p>
+
+  <label>
+    Símbolo:
+    <select id="playerSymbol">
+      <option value="X">❌ X</option>
+      <option value="O">⭕ O</option>
+    </select>
+  </label>
+
+  <label>
+    Dificuldade:
+    <select id="difficulty">
+      <option value="easy">Fácil</option>
+      <option value="medium" selected>Médio</option>
+      <option value="hard">Difícil</option>
+    </select>
+  </label>
+
+  <label>
+    Modo:
+    <select id="modeSelect">
+      <option value="single">Singleplayer</option>
+      <option value="multi">Local Multiplayer</option>
+    </select>
+  </label>
+
+  <button id="startBtn">Start</button>
+  <button id="musicBtn">🎵 Música</button>
+</div>
+
+<div id="boardContainer" style="display:none;">
+  <div id="board"></div>
+</div>
+<button id="nextBtn" style="display:none;">Próxima Rodada</button>
+
+<script>
+// ==== Elementos e variáveis ====
+const startScreen = document.getElementById("startScreen");
+const startBtn = document.getElementById("startBtn");
+const nextBtn = document.getElementById("nextBtn");
+const boardEl = document.getElementById("board");
+const boardContainer = document.getElementById("boardContainer");
+const scoreEl = document.getElementById("score");
+const livesEl = document.getElementById("lives");
+const playerSymbolEl = document.getElementById("playerSymbol");
+const difficultyEl = document.getElementById("difficulty");
+const modeSelectEl = document.getElementById("modeSelect");
+const musicBtn = document.getElementById("musicBtn");
+
+let score = 0, lives = 3, board = Array(9).fill(null), gameOver = false;
+let player = "X", ai = "O", difficulty = "medium", mode = "single", currentTurn = "X", isPlaying = false;
+
+const music = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3");
+music.loop = true;
+musicBtn.addEventListener("click",()=>{
+  if(!isPlaying){ music.play(); isPlaying=true; musicBtn.textContent="⏸️ Pausar Música"; }
+  else{ music.pause(); isPlaying=false; musicBtn.textContent="🎵 Música"; }
+});
+
+function updateHUD(){ scoreEl.textContent=score; livesEl.textContent=lives; }
+
+function createBoard(){
+  boardEl.innerHTML=""; board = Array(9).fill(null);
+  for(let i=0;i<9;i++){
+    const cell=document.createElement("div");
+    cell.classList.add("cell"); cell.dataset.index=i;
+    cell.addEventListener("click",()=>playerMove(i));
+    boardEl.appendChild(cell);
+  }
+}
+
+function playerMove(index){
+  if(gameOver||board[index]) return;
+  if(mode==="single"){
+    board[index]=player; renderBoard();
+    if(checkWinner(player)){ score++; gameOver=true; updateHUD(); alert("Você ganhou!"); nextBtn.style.display="block"; return; }
+    if(board.every(c=>c)){ gameOver=true; alert("Empate!"); nextBtn.style.display="block"; return; }
+    aiMove();
+  } else {
+    board[index]=currentTurn; renderBoard();
+    if(checkWinner(currentTurn)){ gameOver=true; alert(`Jogador ${currentTurn} ganhou!`); nextBtn.style.display="block"; return; }
+    if(board.every(c=>c)){ gameOver=true; alert("Empate!"); nextBtn.style.display="block"; return; }
+    currentTurn=(currentTurn==="X")?"O":"X";
+  }
+}
+
+function aiMove(){
+  let move=null; const empty=board.map((v,i)=>v?null:i).filter(v=>v!==null);
+  if(difficulty==="easy"){ move = empty[Math.floor(Math.random()*empty.length)]; }
+  else if(difficulty==="medium"){ move = findBestMove(ai) || findBestMove(player) || empty[Math.floor(Math.random()*empty.length)]; }
+  else if(difficulty==="hard"){ move=minimax(board,ai).index; }
+  board[move]=ai; renderBoard();
+  if(checkWinner(ai)){ lives--; gameOver=true; updateHUD(); if(lives<=0){alert("Game Over! Pontos: "+score); resetGame(); return;} alert("Você perdeu!"); nextBtn.style.display="block"; return; }
+  if(board.every(c=>c)){ gameOver=true; alert("Empate!"); nextBtn.style.display="block"; }
+}
+
+function findBestMove(p){ const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]; for(let comb of wins){ const vals=comb.map(i=>board[i]); if(vals.filter(v=>v===p).length===2 && vals.includes(null)) return comb[vals.indexOf(null)]; } return null; }
+
+function renderBoard(){ const cells=document.querySelectorAll(".cell"); board.forEach((v,i)=>{ cells[i].textContent=v||""; cells[i].className="cell "+(v||""); }); }
+
+function checkWinner(p){ const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]; return wins.some(c=>c.every(i=>board[i]===p)); }
+
+function resetGame(){ score=0; lives=3; updateHUD(); startScreen.style.display="flex"; boardContainer.style.display="none"; nextBtn.style.display="none"; }
+
+function startRound(){
+  player=playerSymbolEl.value;
+  ai=(player==="X")?"O":"X";
+  difficulty=difficultyEl.value;
+  mode=modeSelectEl.value;
+  currentTurn="X";
+  createBoard(); renderBoard(); gameOver=false;
+  startScreen.style.display="none"; boardContainer.style.display="flex"; nextBtn.style.display="none";
+  if(mode==="single" && player==="O") aiMove();
+}
+
+function minimax(newBoard,currentPlayer){
+  const availSpots=newBoard.map((v,i)=>v?null:i).filter(v=>v!==null);
+  if(checkWinner(player)) return {score:-10}; if(checkWinner(ai)) return {score:10}; if(availSpots.length===0) return {score:0};
+  const moves=[];
+  for(let i=0;i<availSpots.length;i++){
+    const move={index:availSpots[i]};
+    newBoard[availSpots[i]]=currentPlayer;
+    let result=(currentPlayer===ai)?minimax(newBoard,player):minimax(newBoard,ai);
+    move.score=result.score; newBoard[availSpots[i]]=null; moves.push(move);
+  }
+  let bestMove;
+  if(currentPlayer===ai){ let bestScore=-Infinity; for(let i=0;i<moves.length;i++){ if(moves[i].score>bestScore){ bestScore=moves[i].score; bestMove=i; } } }
+  else{ let bestScore=Infinity; for(let i=0;i<moves.length;i++){ if(moves[i].score<bestScore){ bestScore=moves[i].score; bestMove=i; } } }
+  return moves[bestMove];
+}
+
+startBtn.addEventListener("click",startRound);
+nextBtn.addEventListener("click",startRound);
+updateHUD();
+</script>
+</body>
+</html>
