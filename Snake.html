@@ -10,7 +10,7 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* evita rolagem */
+    overflow: hidden;
   }
 
   body {
@@ -24,15 +24,17 @@
   }
 
   canvas {
-    border: 3px solid #122231;
-    border-radius: 6px;
     width: 90vw;
     max-width: 90vh;
     max-height: 80vh;
     height: auto;
     display: block;
     margin: 10px auto;
-  }
+    background: #116611; /* cor única do fundo */
+    border-radius: 6px;
+    border: 5px solid #FFFF99; /* borda amarelo claro */
+    box-shadow: 0 0 15px #FFFF99; /* efeito de destaque */
+}
 
   #startScreen {
     position: fixed;
@@ -87,22 +89,6 @@
     background-color: #0f1724;
     min-width: 100px;
   }
-
-  @media (max-width: 480px) {
-    .hud {
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    #startScreen h1, #startScreen p {
-      font-size: 18px;
-    }
-
-    #startScreen button {
-      font-size: 14px;
-    }
-  }
 </style>
 </head>
 <body>
@@ -152,8 +138,9 @@ let isPaused = false;
 const gridSize = 20;
 let cellSize;
 
-const appleImg = new Image();
-appleImg.src = 'https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg';
+// Comida (rato)
+const foodImg = new Image();
+foodImg.src = 'rato.png';
 
 function resizeCanvas() {
   const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.8);
@@ -237,29 +224,47 @@ function loseLife() {
   }
 }
 
-function drawGrid() {
-  ctx.fillStyle = "#0f1724";
+// Fundo verde com linhas quadriculadas
+function drawGrass() {
+  ctx.fillStyle = '#116611';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "#122231";
-  for(let x=0; x<=canvas.width; x+=cellSize){
+
+  ctx.strokeStyle = '#0f3f0f';
+  ctx.lineWidth = 1;
+  for(let i=0; i<=gridSize; i++){
     ctx.beginPath();
-    ctx.moveTo(x,0);
-    ctx.lineTo(x,canvas.height);
+    ctx.moveTo(i*cellSize,0);
+    ctx.lineTo(i*cellSize,canvas.height);
     ctx.stroke();
-  }
-  for(let y=0; y<=canvas.height; y+=cellSize){
+
     ctx.beginPath();
-    ctx.moveTo(0,y);
-    ctx.lineTo(canvas.width,y);
+    ctx.moveTo(0,i*cellSize);
+    ctx.lineTo(canvas.width,i*cellSize);
     ctx.stroke();
   }
 }
 
 function drawGame() {
-  drawGrid();
-  ctx.drawImage(appleImg, food.x*cellSize, food.y*cellSize, cellSize, cellSize);
-  ctx.fillStyle="#ffffff";
-  snake.forEach(seg => ctx.fillRect(seg.x*cellSize, seg.y*cellSize, cellSize, cellSize));
+  drawGrass();
+
+  // Comida maior (1.2x)
+  const foodSize = cellSize * 1.2;
+  ctx.drawImage(foodImg, food.x*cellSize - (foodSize-cellSize)/2, food.y*cellSize - (foodSize-cellSize)/2, foodSize, foodSize);
+
+  snake.forEach((seg,index)=>{
+    ctx.fillStyle="#FFFF99"; // cobra amarelo claro
+    ctx.fillRect(seg.x*cellSize, seg.y*cellSize, cellSize, cellSize);
+
+    // Olhinhos pequenos na cabeça
+    if(index===0){
+      const eyeSize = cellSize/8;
+      ctx.fillStyle="#000000";
+      ctx.beginPath();
+      ctx.arc(seg.x*cellSize + cellSize/4, seg.y*cellSize + cellSize/4, eyeSize, 0, Math.PI*2);
+      ctx.arc(seg.x*cellSize + 3*cellSize/4, seg.y*cellSize + cellSize/4, eyeSize, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
 }
 
 document.addEventListener('keydown', e=>{
