@@ -20,7 +20,6 @@
     align-items:center;
   }
 
-  /* Fundo animado */
   body::before {
     content:"";
     position:absolute;
@@ -130,15 +129,15 @@
   }
 
   .game-info p {
-    font-size:1.5rem;   
-    line-height:1.8;
+    font-size:1.8rem;   
+    line-height:2.0;
     color:#fff;
-    max-width:750px;
+    max-width:800px;
     text-align:center;
-    text-shadow:2px 2px 12px rgba(0,0,0,0.9);
-    background:rgba(0,0,0,0.5);
-    padding:18px;
-    border-radius:14px;
+    text-shadow:2px 2px 15px rgba(0,0,0,0.9);
+    background:linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
+    padding:25px;
+    border-radius:20px;
     opacity:0;
     transform:translateY(15px);
     transition:all 0.6s ease 0.2s;
@@ -150,8 +149,8 @@
   }
 
   @keyframes highlight {
-    0% {box-shadow:0 0 15px #90caf9, 0 0 25px #5c6bc0;}
-    100% {box-shadow:0 0 25px #90caf9, 0 0 45px #5c6bc0;}
+    0% {box-shadow:0 0 20px #90caf9, 0 0 40px #5c6bc0;}
+    100% {box-shadow:0 0 40px #90caf9, 0 0 60px #5c6bc0;}
   }
 
   @keyframes fadeIn {from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
@@ -163,7 +162,7 @@
     <h1>Bem-vindo aos Jogos!</h1>
     <div class="buttons">
       <button class="game-btn" 
-        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
+        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
 
       <button class="game-btn" 
@@ -171,7 +170,7 @@
         onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
 
       <button class="game-btn" 
-        onmouseover="showPreview('imagem3.png','Agilidade e atenção são tudo neste Falling Game! Pegue apenas as bolas certas, acumule pontos rapidamente e prove seu tempo de reação! Controles: Setas do teclado para mover.')"
+        onmouseover="showPreview('imagem3.png','Agilidade e atenção são tudo neste Falling Game! Pegue apenas as bolas certas, acumule pontos rapidamente e prove seu tempo de reação! Controles: Teclas A e D para mover.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
     </div>
   </header>
