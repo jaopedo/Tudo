@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kirby Game</title>
+<title>Kirby Game Neon</title>
 <style>
   * { box-sizing:border-box; margin:0; padding:0; font-family:Arial,sans-serif; }
   body, html { height:100%; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; background: radial-gradient(circle at top, #f9a8d4, #ec4899); overflow:hidden; }
@@ -57,6 +57,7 @@ enemyImgs[2].img.src = 'Inimigo3.png';
 
 // Variáveis do jogo
 const GAME_WIDTH = 500, GAME_HEIGHT = 600;
+const BORDER = 10; // Limite do quadrado neon
 let player = {x:220, y:500, w:60, h:60, speed:6};
 let objects = [];
 let score = 0, lives = 3;
@@ -72,18 +73,18 @@ function rectCollide(a,b){
   return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
 }
 
-// Spawn inimigos e bananas
+// Spawn inimigos e bananas respeitando limite
 function spawnObject(){
   const size = 40;
-  const x = Math.random()*(GAME_WIDTH-size);
+  const x = BORDER + Math.random() * (GAME_WIDTH - 2*BORDER - size);
   const rand = Math.random();
   let obj = {};
   
   if(rand < 0.6){
     const enemyIndex = Math.floor(Math.random()*enemyImgs.length);
-    obj = {x:x, y:-size, w:size, h:size, vy:enemyImgs[enemyIndex].speed, type:"enemy", img:enemyImgs[enemyIndex].img};
+    obj = {x:x, y:BORDER-size, w:size, h:size, vy:enemyImgs[enemyIndex].speed, type:"enemy", img:enemyImgs[enemyIndex].img};
   } else {
-    obj = {x:x, y:-size, w:size, h:size, vy:2.0+Math.random()*2, type:"banana", img:bananaImg};
+    obj = {x:x, y:BORDER-size, w:size, h:size, vy:2.0+Math.random()*2, type:"banana", img:bananaImg};
   }
   objects.push(obj);
 }
@@ -97,15 +98,18 @@ function update(delta){
   if(keys.left) player.x -= player.speed*(delta/16);
   if(keys.right) player.x += player.speed*(delta/16);
 
-  // Limite do quadrado
-  if(player.x<10) player.x=10;
-  if(player.x+player.w>GAME_WIDTH-10) player.x=GAME_WIDTH-10-player.w;
-  if(player.y<10) player.y=10;
-  if(player.y+player.h>GAME_HEIGHT-10) player.y=GAME_HEIGHT-10-player.h;
+  // Limite do quadrado neon
+  if(player.x<BORDER) player.x=BORDER;
+  if(player.x+player.w>GAME_WIDTH-BORDER) player.x=GAME_WIDTH-BORDER-player.w;
+  if(player.y<BORDER) player.y=BORDER;
+  if(player.y+player.h>GAME_HEIGHT-BORDER) player.y=GAME_HEIGHT-BORDER-player.h;
 
   for(let i=objects.length-1;i>=0;i--){
     const obj=objects[i];
     obj.y+=obj.vy*(delta/16);
+
+    // Limite inferior do quadrado neon
+    if(obj.y + obj.h > GAME_HEIGHT-BORDER) obj.y = GAME_HEIGHT-BORDER-obj.h;
 
     if(rectCollide(player,obj)){
       if(obj.type==="enemy"){ score++; scoreSound.currentTime=0; scoreSound.play(); }
@@ -114,6 +118,7 @@ function update(delta){
       updateHUD();
       continue;
     }
+
     if(obj.y>GAME_HEIGHT) objects.splice(i,1);
   }
 }
@@ -127,14 +132,14 @@ function draw(){
   ctx.lineWidth=4;
   ctx.shadowColor="#ff77ff";
   ctx.shadowBlur=20;
-  ctx.strokeRect(10,10,GAME_WIDTH-20,GAME_HEIGHT-20);
+  ctx.strokeRect(BORDER,BORDER,GAME_WIDTH-2*BORDER,GAME_HEIGHT-2*BORDER);
 
-  // Kirby neon
+  // Kirby
   ctx.drawImage(kirbyImg, player.x, player.y, player.w, player.h);
 
+  // Objetos
   for(const obj of objects){
-    if(obj.type==="enemy") ctx.shadowColor="#0ff"; 
-    else ctx.shadowColor="#ff0";
+    ctx.shadowColor = obj.type==="enemy" ? "#0ff" : "#ff0";
     ctx.shadowBlur=15;
     ctx.drawImage(obj.img, obj.x, obj.y, obj.w, obj.h);
   }
