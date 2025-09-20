@@ -12,7 +12,7 @@
   #controls { text-align:center; margin-bottom:10px; }
   #controls button { font-size:1rem; padding:6px 12px; margin:0 5px; border:none; border-radius:6px; background:#06b6d4; color:#fff; font-weight:bold; cursor:pointer; box-shadow:0 0 8px #0ff, 0 0 12px #06b6d4; }
   #controls button:hover { background:#0891b2; box-shadow:0 0 12px #0ff, 0 0 16px #06b6d4; }
-  #gameWrapper { position:relative; width:500px; height:600px; border:4px solid #ff77ff; border-radius:15px; box-shadow:0 0 20px #ff77ff, 0 0 40px #ff44ff inset; }
+  #gameWrapper { position:relative; width:700px; height:700px; border:4px solid #ff77ff; border-radius:15px; box-shadow:0 0 20px #ff77ff, 0 0 40px #ff44ff inset; }
   canvas { background: rgba(0,0,0,0.2); border-radius:10px; display:block; margin:auto; box-shadow:0 0 10px #ff77ff, 0 0 20px #ff44ff inset; }
 </style>
 </head>
@@ -26,7 +26,7 @@
 </div>
 
 <div id="gameWrapper">
-  <canvas id="gameCanvas" width="500" height="600"></canvas>
+  <canvas id="gameCanvas" width="700" height="700"></canvas>
 </div>
 
 <audio id="bgMusic" src="Fundo.mp3" loop></audio>
@@ -56,9 +56,9 @@ enemyImgs[1].img.src = 'Inimigo2.png';
 enemyImgs[2].img.src = 'Inimigo3.png';
 
 // Variáveis do jogo
-const GAME_WIDTH = 700, GAME_HEIGHT = 600;
+const GAME_WIDTH = 700, GAME_HEIGHT = 700;
 const BORDER = 10; // Limite do quadrado neon
-let player = {x:220, y:500, w:60, h:60, speed:6};
+let player = {x:320, y:620, w:60, h:60, speed:6};
 let objects = [];
 let score = 0, lives = 3;
 let running = false, gameOver = false;
@@ -73,7 +73,7 @@ function rectCollide(a,b){
   return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
 }
 
-// Spawn inimigos e bananas respeitando limite
+// Spawn inimigos e bananas respeitando limite lateral e topo
 function spawnObject(){
   const size = 40;
   const x = BORDER + Math.random() * (GAME_WIDTH - 2*BORDER - size);
@@ -98,18 +98,15 @@ function update(delta){
   if(keys.left) player.x -= player.speed*(delta/16);
   if(keys.right) player.x += player.speed*(delta/16);
 
-  // Limite do quadrado neon
+  // Limite lateral e topo do quadrado neon
   if(player.x<BORDER) player.x=BORDER;
   if(player.x+player.w>GAME_WIDTH-BORDER) player.x=GAME_WIDTH-BORDER-player.w;
   if(player.y<BORDER) player.y=BORDER;
-  if(player.y+player.h>GAME_HEIGHT-BORDER) player.y=GAME_HEIGHT-BORDER-player.h;
+  // player pode descer até a parte inferior sem limite
 
   for(let i=objects.length-1;i>=0;i--){
     const obj=objects[i];
     obj.y+=obj.vy*(delta/16);
-
-    // Limite inferior do quadrado neon
-    if(obj.y + obj.h > GAME_HEIGHT-BORDER) obj.y = GAME_HEIGHT-BORDER-obj.h;
 
     if(rectCollide(player,obj)){
       if(obj.type==="enemy"){ score++; scoreSound.currentTime=0; scoreSound.play(); }
@@ -119,7 +116,7 @@ function update(delta){
       continue;
     }
 
-    if(obj.y>GAME_HEIGHT) objects.splice(i,1);
+    if(obj.y>GAME_HEIGHT) objects.splice(i,1); // objeto sai da tela
   }
 }
 
@@ -160,7 +157,7 @@ function loop(ts){
 
 // Start/End
 function startGame(){
-  objects=[]; score=0; lives=3; running=true; gameOver=false; lastSpawn=0; spawnInterval=1000; player.x=(GAME_WIDTH-player.w)/2;
+  objects=[]; score=0; lives=3; running=true; gameOver=false; lastSpawn=0; spawnInterval=1000; player.x=(GAME_WIDTH-player.w)/2; player.y=GAME_HEIGHT-80;
   updateHUD();
   bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
   lastTime=0; requestAnimationFrame(loop);
