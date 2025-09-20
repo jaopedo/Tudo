@@ -6,231 +6,257 @@
 <title>Página Inicial de Jogos</title>
 
 <style>
-  /* Reset e fontes */
-  * {
-    margin:0; padding:0; box-sizing:border-box;
-    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-  }
+/* Reset e fontes */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-  html, body {
-    height:100%;
-    background: radial-gradient(circle at top,#1a237e,#0d133d);
-    overflow-x:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:10px;
-  }
+html, body {
+  height: 100%;
+  background: radial-gradient(circle at top, #1a237e, #0d133d);
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
 
-  /* Fundo animado */
-  body::before {
-    content:"";
-    position:absolute;
-    width:200%; height:200%;
-    background:radial-gradient(circle,#3949ab33,#1a237e22 70%,transparent 90%);
-    animation:rotateBg 25s linear infinite;
-    z-index:-1;
-  }
-  @keyframes rotateBg {
-    0% {transform:rotate(0deg);}
-    100% {transform:rotate(360deg);}
-  }
+/* Fundo animado */
+body::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, #3949ab33, #1a237e22 70%, transparent 90%);
+  animation: rotateBg 25s linear infinite;
+  z-index: -1;
+}
 
-  /* Container principal */
-  .container {
-    background:rgba(255,255,255,0.08);
-    border:2px solid rgba(255,255,255,0.25);
-    border-radius:20px;
-    padding:2vw;
-    width:100%;
-    max-width:1000px;
-    backdrop-filter:blur(20px);
-    box-shadow:0 8px 35px rgba(0,0,0,0.5);
-    animation:fadeIn 1.2s ease-in-out;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-  }
+@keyframes rotateBg {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-  header {
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    margin-bottom:2vw;
-  }
+/* Container principal */
+.container {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 2vw;
+  width: 100%;
+  max-width: 1000px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 35px rgba(0,0,0,0.5);
+  animation: fadeIn 1.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  h1 {
-    color:#fff;
-    font-size:clamp(2rem, 6vw, 3rem);
-    text-shadow:2px 2px 10px rgba(0,0,0,0.8);
-    letter-spacing:2px;
-    animation:glow 2s ease-in-out infinite alternate;
-    margin-bottom:1.5vw;
-    text-align:center;
-  }
-  @keyframes glow {
-    from {text-shadow:0 0 10px #7986cb, 0 0 20px #3949ab;}
-    to   {text-shadow:0 0 20px #90caf9, 0 0 40px #5c6bc0;}
-  }
+header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2vw;
+}
 
-  /* Botões de jogos */
-  .buttons {
-    display:flex; 
-    justify-content:center; 
-    flex-wrap:wrap;
-    gap:2vw;
-    margin-bottom:2vw;
-  }
+h1 {
+  color: #fff;
+  font-size: clamp(2rem, 6vw, 3rem);
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+  letter-spacing: 2px;
+  animation: glow 2s ease-in-out infinite alternate;
+  margin-bottom: 1.5vw;
+  text-align: center;
+}
 
-  .game-btn {
-    padding:1.2vw 2.5vw; 
-    font-size:clamp(1rem, 2.5vw, 1.2rem);
-    background:linear-gradient(145deg,#3f51b5,#1a237e);
-    color:#fff; border:none; border-radius:15px; cursor:pointer;
-    transition:all 0.4s ease;
-    box-shadow:0 6px 18px rgba(0,0,0,0.4);
-    text-transform:uppercase; font-weight:bold;
-    position:relative; overflow:hidden;
-  }
-  .game-btn::after {
-    content:"";
-    position:absolute;
-    top:0; left:-100%;
-    width:100%; height:100%;
-    background:linear-gradient(120deg,transparent,rgba(255,255,255,0.4),transparent);
-    transition:all 0.5s;
-  }
-  .game-btn:hover::after { left:100%; }
-  .game-btn:hover {
-    transform:translateY(-6px) scale(1.08);
-    box-shadow:0 12px 28px rgba(0,0,0,0.55);
-    background:linear-gradient(145deg,#1a237e,#283593);
-  }
+@keyframes glow {
+  from { text-shadow: 0 0 10px #7986cb, 0 0 20px #3949ab; }
+  to { text-shadow: 0 0 20px #90caf9, 0 0 40px #5c6bc0; }
+}
 
-  /* Previews dos jogos */
-  .game-info {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    width:100%;
-    padding:1.5vw;
-    transition:all 0.6s ease;
-  }
+/* Botões de jogos */
+.buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2vw;
+  margin-bottom: 2vw;
+}
 
-  .game-info img {
-    width:100%;
-    max-width:90%;
-    height:auto;
-    object-fit:contain;  
-    background-color:#000;
-    border-radius:18px;
-    margin-bottom:1.5vw;
-    box-shadow:0 6px 25px rgba(0,0,0,0.5);
-    opacity:0;
-    transform:scale(0.9);
-    transition:all 0.6s ease;
-  }
-  .game-info.show img {
-    opacity:1;
-    transform:scale(1);
-  }
+.game-btn {
+  padding: 1.2vw 2.5vw;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  background: linear-gradient(145deg, #3f51b5, #1a237e);
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  text-transform: uppercase;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+}
 
-  .game-info p {
-    font-size:clamp(1rem, 3vw, 1.8rem);   
-    line-height:1.8;
-    color:#fff;
-    max-width:95%;
-    text-align:center;
-    text-shadow:2px 2px 15px rgba(0,0,0,0.9);
-    background:linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
-    padding:2vw;
-    border-radius:20px;
-    opacity:0;
-    transform:translateY(15px);
-    transition:all 0.6s ease 0.2s;
-  }
-  .game-info.show p {
-    opacity:1;
-    transform:translateY(0);
-    animation:highlight 1.5s ease-in-out infinite alternate;
-  }
+.game-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: all 0.5s;
+}
 
-  @keyframes highlight {
-    0% {box-shadow:0 0 20px #90caf9, 0 0 40px #5c6bc0;}
-    100% {box-shadow:0 0 40px #90caf9, 0 0 60px #5c6bc0;}
-  }
+.game-btn:hover::after { left: 100%; }
 
-  @keyframes fadeIn {from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.game-btn:hover {
+  transform: translateY(-6px) scale(1.08);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.55);
+  background: linear-gradient(145deg, #1a237e, #283593);
+}
 
-  /* Créditos melhorados */
-  .credits {
-    margin-top:2vw;
-    text-align:center;
-  }
+/* Previews dos jogos */
+.game-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1.5vw;
+  transition: all 0.6s ease;
+}
 
-  .credits p {
-    margin:0.3vw 0;
-    color:#fff;
-    font-size:clamp(0.8rem, 1.5vw, 1rem);
-    text-shadow: 0 0 5px #90caf9, 0 0 10px #5c6bc0;
-    font-weight:bold;
-  }
+.game-info img {
+  width: 100%;
+  max-width: 90%;
+  height: auto;
+  object-fit: contain;
+  background-color: #000;
+  border-radius: 18px;
+  margin-bottom: 1.5vw;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.6s ease;
+}
 
-  .credits .names {
-    letter-spacing:1.5px;
-    font-size:clamp(0.9rem, 1.8vw, 1.1rem);
-    color:#ff77ff;
-    text-shadow: 0 0 8px #ff77ff, 0 0 15px #ff44ff, 0 0 20px #f50057;
-  }
+.game-info.show img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.game-info p {
+  font-size: clamp(1rem, 3vw, 1.8rem);
+  line-height: 1.8;
+  color: #fff;
+  max-width: 95%;
+  text-align: center;
+  text-shadow: 2px 2px 15px rgba(0,0,0,0.9);
+  background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
+  padding: 2vw;
+  border-radius: 20px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s ease 0.2s;
+}
+
+.game-info.show p {
+  opacity: 1;
+  transform: translateY(0);
+  animation: highlight 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes highlight {
+  0% { box-shadow: 0 0 20px #90caf9, 0 0 40px #5c6bc0; }
+  100% { box-shadow: 0 0 40px #90caf9, 0 0 60px #5c6bc0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Créditos melhorados */
+.credits {
+  margin-top: 2vw;
+  text-align: center;
+}
+
+.credits p {
+  margin: 0.3vw 0;
+  color: #fff;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  text-shadow: 0 0 5px #90caf9, 0 0 10px #5c6bc0;
+  font-weight: bold;
+}
+
+.credits .names {
+  letter-spacing: 1.5px;
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+  color: #ff77ff;
+  text-shadow: 0 0 8px #ff77ff, 0 0 15px #ff44ff, 0 0 20px #f50057;
+  animation: pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { text-shadow: 0 0 8px #ff77ff, 0 0 15px #ff44ff, 0 0 20px #f50057; }
+  to { text-shadow: 0 0 15px #ff77ff, 0 0 25px #ff44ff, 0 0 35px #f50057; }
+}
 </style>
 </head>
 <body>
 <div class="container">
-  <header>
-    <h1>Bem-vindo aos Jogos!</h1>
-    <div class="buttons">
-      <button class="game-btn" 
-        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
-        onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
+  <header>
+    <h1>Bem-vindo aos Jogos!</h1>
+    <div class="buttons">
+      <button class="game-btn" 
+        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
 
-      <button class="game-btn" 
-        onmouseover="showPreview('imagem2.png','Desafie amigos ou a si mesmo no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
-        onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
+      <button class="game-btn" 
+        onmouseover="showPreview('imagem2.png','Desafie amigos ou a si mesmo no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
 
-      <button class="game-btn"
-        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')"
-        onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
-    </div>
-  </header>
+      <button class="game-btn"
+        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
+    </div>
+  </header>
 
-  <div class="game-info" id="gameInfo">
-    <img id="gameImage" src="" alt="Imagem do Jogo">
-    <p id="gameDescription"></p>
-  </div>
+  <div class="game-info" id="gameInfo">
+    <img id="gameImage" src="" alt="Imagem do Jogo">
+    <p id="gameDescription"></p>
+  </div>
 
-  <!-- Créditos melhorados -->
-  <div class="credits">
-    <p>Projeto desenvolvido por:</p>
-    <p class="names">João Pedro | Guilherme | Anna Júlia | Maria Fernanda | Gabrielle</p>
-  </div>
+  <!-- Créditos melhorados -->
+  <div class="credits">
+    <p>Projeto desenvolvido por:</p>
+    <p class="names">João Pedro | Guilherme | Anna Júlia | Maria Fernanda | Gabrielle</p>
+  </div>
 </div>
 
 <script>
 function showPreview(image, description){
-  const gameInfo = document.getElementById('gameInfo');
-  const gameImage = document.getElementById('gameImage');
-  const gameDescription = document.getElementById('gameDescription');
+  const gameInfo = document.getElementById('gameInfo');
+  const gameImage = document.getElementById('gameImage');
+  const gameDescription = document.getElementById('gameDescription');
 
-  gameImage.src = image;
-  gameDescription.textContent = description;
+  gameImage.src = image;
+  gameDescription.textContent = description;
 
-  gameInfo.classList.add('show');
+  gameInfo.classList.add('show');
 }
 
 function goToGame(link){
-  window.location.href = link;
+  window.location.href = link;
 }
 </script>
 </body>
