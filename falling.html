@@ -1,98 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="utf-8">
-<title>Jogo das Bolinhas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kirby Game Neon</title>
 <style>
-  * { box-sizing: border-box; }
-  body {
-    margin:0;
-    font-family: Arial,sans-serif;
-    background: linear-gradient(135deg,#0f172a,#1e3a8a);
-    color:#e6edf3;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
-    height:100vh;
-    overflow:hidden;
-  }
-  h2 {
-    margin:6px 0;
-    text-shadow:0 0 8px cyan;
-    text-align:center;
-    font-size:clamp(14px, 2.5vw, 22px);
-  }
-  #hud {
-    margin:4px 0;
-    font-weight:bold;
-    z-index:10;
-    font-size:clamp(14px, 2.5vw, 20px);
-  }
-  #controls {
-    margin:4px 0 6px 0;
-    z-index:10;
-  }
-  #controls button {
-    font-size:clamp(12px, 2.2vw, 18px);
-    padding:6px 14px;
-    margin:0 4px;
-    border:none;
-    border-radius:6px;
-    background:#06b6d4;
-    color:#fff;
-    font-weight:bold;
-    cursor:pointer;
-  }
-  #controls button:hover { background:#0891b2; }
-  #gameWrapper {
-    position:relative;
-    flex:1;
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  canvas {
-    display:block;
-    background: rgba(0,0,0,0.45);
-    border-radius:10px;
-    box-shadow:0 0 20px rgba(6,182,212,0.35);
-    max-width:100%;
-    max-height:100%;
-  }
-  #floatingContainer {
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    pointer-events:none;
-  }
-  .floatingText {
-    position:absolute;
-    color:#facc15;
-    font-weight:bold;
-    text-shadow:0 0 6px #facc15;
-    pointer-events:none;
-    transform:translateX(-50%);
-  }
+  * { box-sizing:border-box; margin:0; padding:0; font-family:Arial,sans-serif; }
+  body, html { height:100%; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; background: radial-gradient(circle at top, #f9a8d4, #ec4899); overflow:hidden; }
+  h2 { text-align:center; color:#fff; text-shadow:0 0 10px #ff77ff, 0 0 20px #ff44ff; margin:10px; font-size:1.4rem; }
+  #hud { color:#fff; font-weight:bold; text-align:center; margin-bottom:10px; font-size:1.2rem; text-shadow:0 0 8px cyan, 0 0 15px #0ff; }
+  #controls { text-align:center; margin-bottom:10px; }
+  #controls button { font-size:1rem; padding:6px 12px; margin:0 5px; border:none; border-radius:6px; background:#06b6d4; color:#fff; font-weight:bold; cursor:pointer; box-shadow:0 0 8px #0ff, 0 0 12px #06b6d4; }
+  #controls button:hover { background:#0891b2; box-shadow:0 0 12px #0ff, 0 0 16px #06b6d4; }
+  #gameWrapper { position:relative; width:500px; height:600px; border:4px solid #ff77ff; border-radius:15px; box-shadow:0 0 20px #ff77ff, 0 0 40px #ff44ff inset; }
+  canvas { background: rgba(0,0,0,0.2); border-radius:10px; display:block; margin:auto; box-shadow:0 0 10px #ff77ff, 0 0 20px #ff44ff inset; }
 </style>
 </head>
 <body>
-<h2>⚠️ Não pegue a bolinha azul! Ela tira vida.</h2>
+
+<h2>Kirby odeia bananas! Coma os inimigos e desvie das bananas!</h2>
 <div id="hud">Pontos: 0 | Vidas: 3</div>
 <div id="controls">
   <button id="startBtn">Start</button>
-  <button id="restartBtn" style="display:none">Reiniciar</button>
+  <button id="restartBtn" style="display:none;">Reiniciar</button>
 </div>
 
 <div id="gameWrapper">
-  <canvas id="gameCanvas"></canvas>
-  <div id="floatingContainer"></div>
+  <canvas id="gameCanvas" width="500" height="600"></canvas>
 </div>
 
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" loop></audio>
-<audio id="scoreSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
-<audio id="hitSound" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg"></audio>
+<audio id="bgMusic" src="Fundo.mp3" loop></audio>
+<audio id="scoreSound" src="Ponto.mp3"></audio>
+<audio id="hitSound" src="Dano.mp3"></audio>
 
 <script>
 const canvas = document.getElementById("gameCanvas");
@@ -100,146 +39,144 @@ const ctx = canvas.getContext("2d");
 const hud = document.getElementById("hud");
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
-const floatingContainer = document.getElementById("floatingContainer");
 const bgMusic = document.getElementById("bgMusic");
 const scoreSound = document.getElementById("scoreSound");
 const hitSound = document.getElementById("hitSound");
 
-// ===== Variáveis do jogo =====
-const GAME_WIDTH = 500;
-const GAME_HEIGHT = 600;
-let scale = 1;
+// Imagens
+const kirbyImg = new Image(); kirbyImg.src = 'Kirby.png';
+const bananaImg = new Image(); bananaImg.src = 'banana.png';
+const enemyImgs = [
+  {img:new Image(), speed:2.5},
+  {img:new Image(), speed:3.0},
+  {img:new Image(), speed:1.8}
+];
+enemyImgs[0].img.src = 'Inimigo1.png';
+enemyImgs[1].img.src = 'Inimigo2.png';
+enemyImgs[2].img.src = 'Inimigo3.png';
 
-let player = { x: 220, y: 550, w: 60, h: 20, speed: 6 };
+// Variáveis do jogo
+const GAME_WIDTH = 500, GAME_HEIGHT = 600;
+let player = {x:220, y:500, w:60, h:60, speed:6};
 let objects = [];
-let score = 0;
-let lives = 3;
-let running = false;
-let gameOver = false;
-let lastSpawn = 0;
-let spawnInterval = 1000;
-let keys = { left:false, right:false };
-let floatingTexts = [];
+let score = 0, lives = 3;
+let running = false, gameOver = false;
+let lastSpawn = 0, spawnInterval = 1000;
+let keys = {left:false, right:false};
 
-// ===== Responsividade =====
-function resizeCanvas(){
-  // Sempre mantém proporção 500x600
-  const wrapper = document.getElementById("gameWrapper");
-  const availableW = wrapper.clientWidth;
-  const availableH = wrapper.clientHeight;
-  const scaleX = availableW / GAME_WIDTH;
-  const scaleY = availableH / GAME_HEIGHT;
-  scale = Math.min(scaleX, scaleY);
-
-  canvas.width = GAME_WIDTH;
-  canvas.height = GAME_HEIGHT;
-  canvas.style.width = GAME_WIDTH*scale + "px";
-  canvas.style.height = GAME_HEIGHT*scale + "px";
-
-  floatingContainer.style.width = canvas.style.width;
-  floatingContainer.style.height = canvas.style.height;
-}
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
-
-// ===== HUD =====
+// HUD
 function updateHUD() { hud.textContent = `Pontos: ${score} | Vidas: ${lives}`; }
 
-// ===== Textos flutuantes =====
-function addFloatingText(text,x,y){
-  const div = document.createElement("div");
-  div.className="floatingText";
-  div.style.left = x*scale + "px";
-  div.style.top = y*scale + "px";
-  div.style.fontSize = 18*scale + "px";
-  div.textContent = text;
-  floatingContainer.appendChild(div);
-  floatingTexts.push({el:div, x:x, y:y, life:60});
-}
-function updateFloatingTexts(){
-  for(let i=floatingTexts.length-1;i>=0;i--){
-    const ft = floatingTexts[i];
-    ft.y -= 1;
-    ft.el.style.top = ft.y*scale + "px";
-    ft.life--;
-    if(ft.life<=0){ ft.el.remove(); floatingTexts.splice(i,1); }
-  }
+// Colisão
+function rectCollide(a,b){
+  return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
 }
 
-// ===== Spawn bolinhas =====
+// Spawn inimigos e bananas
 function spawnObject(){
-  const size = 15 + Math.random()*20;
-  const type = Math.random()<0.7?"good":"neutral";
+  const size = 40;
   const x = Math.random()*(GAME_WIDTH-size);
-  objects.push({x:x, y:-size, r:size/2, vy:2+Math.random()*2.5, type:type});
+  const rand = Math.random();
+  let obj = {};
+  
+  if(rand < 0.6){
+    const enemyIndex = Math.floor(Math.random()*enemyImgs.length);
+    obj = {x:x, y:-size, w:size, h:size, vy:enemyImgs[enemyIndex].speed, type:"enemy", img:enemyImgs[enemyIndex].img};
+  } else {
+    obj = {x:x, y:-size, w:size, h:size, vy:2.0+Math.random()*2, type:"banana", img:bananaImg};
+  }
+  objects.push(obj);
 }
 
-// ===== Colisão =====
-function rectCircleCollide(circle, rect){
-  const cx = circle.x+circle.r;
-  const cy = circle.y+circle.r;
-  const rx = rect.x + rect.w/2;
-  const ry = rect.y + rect.h/2;
-  const dx = Math.abs(cx-rx);
-  const dy = Math.abs(cy-ry);
-  if(dx>rect.w/2+circle.r || dy>rect.h/2+circle.r) return false;
-  if(dx<=rect.w/2 || dy<=rect.h/2) return true;
-  const dxCorner = dx - rect.w/2;
-  const dyCorner = dy - rect.h/2;
-  return dxCorner*dxCorner+dyCorner*dyCorner <= circle.r*circle.r;
-}
-
-// ===== Update e draw =====
+// Update
 function update(delta){
   if(!running) return;
-  lastSpawn+=delta;
-  if(lastSpawn>spawnInterval){ spawnObject(); lastSpawn=0; spawnInterval=Math.max(350,spawnInterval-8);}
+  lastSpawn += delta;
+  if(lastSpawn>spawnInterval){ spawnObject(); lastSpawn=0; spawnInterval=Math.max(500, spawnInterval-5); }
+
   if(keys.left) player.x -= player.speed*(delta/16);
   if(keys.right) player.x += player.speed*(delta/16);
-  if(player.x<0) player.x=0;
-  if(player.x+player.w>GAME_WIDTH) player.x=GAME_WIDTH-player.w;
+
+  // Limite do quadrado
+  if(player.x<10) player.x=10;
+  if(player.x+player.w>GAME_WIDTH-10) player.x=GAME_WIDTH-10-player.w;
+  if(player.y<10) player.y=10;
+  if(player.y+player.h>GAME_HEIGHT-10) player.y=GAME_HEIGHT-10-player.h;
 
   for(let i=objects.length-1;i>=0;i--){
     const obj=objects[i];
     obj.y+=obj.vy*(delta/16);
-    if(rectCircleCollide(obj,player)){
-      if(obj.type==="good"){ score++; scoreSound.currentTime=0; scoreSound.play(); updateHUD(); }
-      else { lives--; hitSound.currentTime=0; hitSound.play(); updateHUD(); addFloatingText("⚠️ Não pode pegar!", player.x+player.w/2, player.y-22); if(lives<=0){endGame(); return;} }
+
+    if(rectCollide(player,obj)){
+      if(obj.type==="enemy"){ score++; scoreSound.currentTime=0; scoreSound.play(); }
+      else { lives--; hitSound.currentTime=0; hitSound.play(); if(lives<=0){endGame(); return;} }
       objects.splice(i,1);
+      updateHUD();
       continue;
     }
-    if(obj.y-obj.r>GAME_HEIGHT) objects.splice(i,1);
+    if(obj.y>GAME_HEIGHT) objects.splice(i,1);
   }
-  updateFloatingTexts();
 }
 
+// Draw com efeito neon
 function draw(){
   ctx.clearRect(0,0,GAME_WIDTH,GAME_HEIGHT);
-  ctx.fillStyle="#22d3ee"; ctx.shadowColor="#22d3ee"; ctx.shadowBlur=18; ctx.fillRect(player.x,player.y,player.w,player.h);
+
+  // Limite da tela
+  ctx.strokeStyle="#ff44ff";
+  ctx.lineWidth=4;
+  ctx.shadowColor="#ff77ff";
+  ctx.shadowBlur=20;
+  ctx.strokeRect(10,10,GAME_WIDTH-20,GAME_HEIGHT-20);
+
+  // Kirby neon
+  ctx.drawImage(kirbyImg, player.x, player.y, player.w, player.h);
+
   for(const obj of objects){
-    if(obj.type==="good"){ ctx.fillStyle="#f97316"; ctx.shadowColor="#f97316"; } else { ctx.fillStyle="#3b82f6"; ctx.shadowColor="#3b82f6"; }
-    ctx.shadowBlur=14; ctx.beginPath(); ctx.arc(obj.x+obj.r,obj.y+obj.r,obj.r,0,Math.PI*2); ctx.fill();
+    if(obj.type==="enemy") ctx.shadowColor="#0ff"; 
+    else ctx.shadowColor="#ff0";
+    ctx.shadowBlur=15;
+    ctx.drawImage(obj.img, obj.x, obj.y, obj.w, obj.h);
   }
   ctx.shadowBlur=0;
 }
 
+// Loop principal
 let lastTime=0;
-function loop(ts){ if(!running) return; if(!lastTime) lastTime=ts; const delta=ts-lastTime; lastTime=ts; update(delta); draw(); requestAnimationFrame(loop); }
+function loop(ts){
+  if(!running) return;
+  if(!lastTime) lastTime=ts;
+  const delta = ts-lastTime;
+  lastTime=ts;
+  update(delta);
+  draw();
+  requestAnimationFrame(loop);
+}
 
-// ===== Start/End =====
+// Start/End
 function startGame(){
   objects=[]; score=0; lives=3; running=true; gameOver=false; lastSpawn=0; spawnInterval=1000; player.x=(GAME_WIDTH-player.w)/2;
   updateHUD();
-  floatingTexts.forEach(ft=>{if(ft.el) ft.el.remove();}); floatingTexts=[];
   bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
   lastTime=0; requestAnimationFrame(loop);
   startBtn.style.display="none"; restartBtn.style.display="none";
 }
-function endGame(){ running=false; gameOver=true; bgMusic.pause(); updateHUD(); restartBtn.style.display="inline-block"; startBtn.style.display="none"; setTimeout(()=>alert(`Game Over! Pontos: ${score}`),50); }
 
-// ===== Eventos teclado =====
-window.addEventListener("keydown",e=>{ if(e.key==="ArrowLeft"||e.key==="a") keys.left=true; if(e.key==="ArrowRight"||e.key==="d") keys.right=true; });
-window.addEventListener("keyup",e=>{ if(e.key==="ArrowLeft"||e.key==="a") keys.left=false; if(e.key==="ArrowRight"||e.key==="d") keys.right=false; });
+function endGame(){
+  running=false; gameOver=true; bgMusic.pause();
+  restartBtn.style.display="inline-block"; startBtn.style.display="none";
+  setTimeout(()=>alert(`Game Over! Pontos: ${score}`),50);
+}
+
+// Eventos teclado
+window.addEventListener("keydown",e=>{
+  if(e.key==="ArrowLeft"||e.key==="a") keys.left=true;
+  if(e.key==="ArrowRight"||e.key==="d") keys.right=true;
+});
+window.addEventListener("keyup",e=>{
+  if(e.key==="ArrowLeft"||e.key==="a") keys.left=false;
+  if(e.key==="ArrowRight"||e.key==="d") keys.right=false;
+});
 
 startBtn.addEventListener("click",()=>startGame());
 restartBtn.addEventListener("click",()=>startGame());
