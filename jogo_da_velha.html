@@ -67,8 +67,8 @@ button, select {
   grid-template-columns:repeat(3,1fr);
   grid-template-rows:repeat(3,1fr);
   grid-gap:15px;
-  width:600px;   /* largura fixa */
-  height:600px;  /* altura fixa */
+  width:600px;   /* largura fixa para desktop */
+  height:600px;  /* altura fixa para desktop */
 }
 
 .cell {
@@ -76,17 +76,37 @@ button, select {
   display:flex; 
   align-items:center; 
   justify-content:center;
-  font-size:120px;  /* tamanho do X/O */
+  font-size:120px;  /* tamanho do X/O para desktop */
   cursor:pointer;
   border-radius:8px;
   text-shadow:0 0 15px #fff;
   user-select:none;
   box-sizing:border-box;
-  overflow:hidden;    /* evita que o texto aumente a célula */
+  overflow:hidden;
 }
 
 .cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
 .cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
+
+/* ---- RESPONSIVO PARA CELULAR ---- */
+@media(max-width:600px){
+  #board {
+    width:300px;   /* menor no celular */
+    height:300px;
+    grid-gap:8px;
+  }
+  .cell {
+    font-size:60px; /* menor no celular */
+  }
+  h1 {
+    font-size:clamp(30px, 8vw, 50px);
+    margin-top:10vh;
+  }
+  .hud {
+    font-size:clamp(14px, 4vw, 24px);
+    max-width:90%;
+  }
+}
 </style>
 </head>
 <body>
@@ -178,7 +198,7 @@ function playerMove(i){
       currentTurn==="X"?scoreX++:scoreO++;
       endRound(`Jogador ${currentTurn} ganhou!`);return;
     }
-    if(board.every(c=>c)){scoreX++;scoreO++;endRound("Empate!");return;}
+    if(board.every(c)){scoreX++;scoreO++;endRound("Empate!");return;}
     currentTurn=currentTurn==="X"?"O":"X";
   }
 }
@@ -236,4 +256,3 @@ updateHUD();
 </script>
 </body>
 </html>
-
