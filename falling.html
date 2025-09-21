@@ -55,10 +55,8 @@ enemyImgs[0].img.src = 'Inimigo1.png';
 enemyImgs[1].img.src = 'Inimigo2.png';
 enemyImgs[2].img.src = 'Inimigo3.png';
 
-// Variáveis do jogo
-let GAME_WIDTH = 700, GAME_HEIGHT = 700;
-let BORDER = 10; // Limite do quadrado
-let scale = 1; // Escala do canvas
+// Variáveis
+let canvasSize = 700; 
 let player = {x:0, y:0, w:60, h:60, speed:6};
 let objects = [];
 let score = 0, lives = 3;
@@ -66,43 +64,38 @@ let running = false, gameOver = false;
 let lastSpawn = 0, spawnInterval = 1000;
 let keys = {left:false, right:false};
 
-// Redimensiona canvas e escala
+// Redimensiona canvas
 function resizeCanvas(){
-  const wrapperWidth = window.innerWidth;
-  const wrapperHeight = window.innerHeight - 180; // espaço para HUD e botões
-  const size = Math.min(wrapperWidth, wrapperHeight);
-  canvas.width = size;
-  canvas.height = size;
-  scale = size / 700; // base 700x700
-  // Ajusta player para centro do canvas
-  if(!running) {
-    player.x = canvas.width/2 - (player.w*scale)/2;
-    player.y = canvas.height - 80*scale;
+  canvasSize = Math.min(window.innerWidth, window.innerHeight - 180);
+  canvas.width = canvasSize;
+  canvas.height = canvasSize;
+  if(!running){
+    player.x = canvas.width/2 - player.w/2;
+    player.y = canvas.height - 80;
   }
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 // HUD
-function updateHUD() { hud.textContent = `Pontos: ${score} | Vidas: ${lives}`; }
+function updateHUD(){ hud.textContent = `Pontos: ${score} | Vidas: ${lives}`; }
 
 // Colisão
 function rectCollide(a,b){
-  return a.x < b.x+b.w*scale && a.x+a.w*scale > b.x && a.y < b.y+b.h*scale && a.y+a.h*scale > b.y;
+  return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
 }
 
 // Spawn objetos
 function spawnObject(){
   const size = 40;
-  const x = BORDER + Math.random() * (700 - 2*BORDER - size);
+  const x = Math.random() * (canvas.width - size - 20) + 10;
   const rand = Math.random();
   let obj = {};
-  
   if(rand < 0.6){
     const enemyIndex = Math.floor(Math.random()*enemyImgs.length);
-    obj = {x:x, y:BORDER-size, w:size, h:size, vy:enemyImgs[enemyIndex].speed, type:"enemy", img:enemyImgs[enemyIndex].img};
+    obj = {x:x, y:-size, w:size, h:size, vy:enemyImgs[enemyIndex].speed, type:"enemy", img:enemyImgs[enemyIndex].img};
   } else {
-    obj = {x:x, y:BORDER-size, w:size, h:size, vy:2.0+Math.random()*2, type:"banana", img:bananaImg};
+    obj = {x:x, y:-size, w:size, h:size, vy:2+Math.random()*2, type:"banana", img:bananaImg};
   }
   objects.push(obj);
 }
@@ -116,12 +109,12 @@ function update(delta){
   if(keys.left) player.x -= player.speed*(delta/16);
   if(keys.right) player.x += player.speed*(delta/16);
 
-  if(player.x<BORDER*scale) player.x=BORDER*scale;
-  if(player.x+player.w*scale>canvas.width-BORDER*scale) player.x=canvas.width-BORDER*scale-player.w*scale;
+  if(player.x<10) player.x=10;
+  if(player.x+player.w>canvas.width-10) player.x=canvas.width-10-player.w;
 
   for(let i=objects.length-1;i>=0;i--){
-    const obj=objects[i];
-    obj.y+=obj.vy*(delta/16)*scale;
+    const obj = objects[i];
+    obj.y += obj.vy*(delta/16);
 
     if(rectCollide(player,obj)){
       if(obj.type==="enemy"){ score++; scoreSound.currentTime=0; scoreSound.play(); }
@@ -138,22 +131,16 @@ function update(delta){
 // Draw
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle="#ff44ff"; ctx.lineWidth=4;
+  ctx.shadowColor="#ff77ff"; ctx.shadowBlur=20;
+  ctx.strokeRect(10,10,canvas.width-20,canvas.height-20);
 
-  // Limite
-  ctx.strokeStyle="#ff44ff";
-  ctx.lineWidth=4*scale;
-  ctx.shadowColor="#ff77ff";
-  ctx.shadowBlur=20*scale;
-  ctx.strokeRect(BORDER*scale,BORDER*scale,canvas.width-2*BORDER*scale,canvas.height-2*BORDER*scale);
+  ctx.drawImage(kirbyImg, player.x, player.y, player.w, player.h);
 
-  // Kirby
-  ctx.drawImage(kirbyImg, player.x, player.y, player.w*scale, player.h*scale);
-
-  // Objetos
   for(const obj of objects){
     ctx.shadowColor = obj.type==="enemy" ? "#0ff" : "#ff0";
-    ctx.shadowBlur=15*scale;
-    ctx.drawImage(obj.img, obj.x*scale, obj.y*scale, obj.w*scale, obj.h*scale);
+    ctx.shadowBlur=15;
+    ctx.drawImage(obj.img, obj.x, obj.y, obj.w, obj.h);
   }
   ctx.shadowBlur=0;
 }
@@ -173,8 +160,8 @@ function loop(ts){
 // Start/End
 function startGame(){
   objects=[]; score=0; lives=3; running=true; gameOver=false; lastSpawn=0; spawnInterval=1000;
-  player.x = canvas.width/2 - (player.w*scale)/2;
-  player.y = canvas.height - 80*scale;
+  player.x = canvas.width/2 - player.w/2;
+  player.y = canvas.height - 80;
   updateHUD();
   bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
   lastTime=0; requestAnimationFrame(loop);
