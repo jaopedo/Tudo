@@ -18,6 +18,10 @@ html, body {
   height: 100%;
   background: radial-gradient(circle at top, #1a237e, #0d133d);
   overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
 }
 
 /* Fundo animado */
@@ -41,7 +45,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1100px;
+  max-width: 1200px;
   width: 100%;
   padding: 2rem;
 }
@@ -59,66 +63,71 @@ header h1 {
   text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
 }
 
-/* Grid de jogos */
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+/* Área de jogos e preview */
+.games-area {
+  display: flex;
   gap: 2rem;
   width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-/* Card de jogo */
-.game-card {
+/* Coluna de botões */
+.buttons-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Botões de jogos */
+.game-btn {
+  padding: 1.5rem 3rem;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  background: linear-gradient(145deg,#3f51b5,#1a237e);
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.game-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(145deg,#1a237e,#283593);
+}
+
+/* Preview do jogo */
+.game-preview {
+  flex: 1;
+  max-width: 600px;
   background: rgba(0,0,0,0.6);
   border-radius: 20px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+  transition: all 0.4s ease;
 }
 
-.game-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.7);
-}
-
-/* Imagem do jogo */
-.game-card img {
+.game-preview img {
   width: 100%;
-  max-width: 250px;
+  max-width: 400px;
   border-radius: 15px;
   margin-bottom: 1rem;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.5);
 }
 
-/* Botão e descrição */
-.game-card button {
-  padding: 0.8rem 2rem;
-  margin-top: 0.5rem;
-  font-size: 1.2rem;
-  background: linear-gradient(145deg,#3f51b5,#1a237e);
+.game-preview p {
   color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.game-card button:hover {
-  background: linear-gradient(145deg,#1a237e,#283593);
-  transform: scale(1.05);
-}
-
-/* Descrição */
-.game-card p {
-  color: #fff;
-  text-align: center;
-  margin-top: 0.8rem;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.5;
+  text-align: center;
+  background: rgba(0,0,0,0.7);
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
 }
 
 /* Créditos */
@@ -152,26 +161,26 @@ header h1 {
     <p style="color: #ccc; font-size:1rem; margin-top:0.5rem;">Escolha um jogo e divirta-se!</p>
   </header>
 
-  <div class="games-grid">
-    <!-- Snake -->
-    <div class="game-card" onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')" onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder!')">
-      <img id="img-snake" src="imagem1.png" alt="Snake">
-      <p>Controle a cobra faminta neste clássico viciante. Teste seus reflexos!</p>
-      <button>Jogar Snake</button>
+  <div class="games-area">
+    <!-- Coluna de botões -->
+    <div class="buttons-column">
+      <button class="game-btn" 
+        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')" 
+        onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
+
+      <button class="game-btn" 
+        onmouseover="showPreview('imagem2.png','Desafie amigos ou a si mesmo no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')" 
+        onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
+
+      <button class="game-btn" 
+        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')" 
+        onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
     </div>
 
-    <!-- Jogo da Velha -->
-    <div class="game-card" onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')" onmouseover="showPreview('imagem2.png','Desafie amigos ou a si mesmo no tradicional Jogo da Velha.')">
-      <img id="img-velha" src="imagem2.png" alt="Jogo da Velha">
-      <p>Desafie amigos ou a si mesmo no tradicional Jogo da Velha!</p>
-      <button>Jogar Jogo da Velha</button>
-    </div>
-
-    <!-- Falling Game -->
-    <div class="game-card" onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')" onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia!')">
-      <img id="img-falling" src="imagem3.png" alt="Falling Game">
-      <p>Ajude Kirby a comer seus inimigos enquanto desvia das bananas!</p>
-      <button>Jogar Falling Game</button>
+    <!-- Preview do jogo -->
+    <div class="game-preview" id="gamePreview">
+      <img id="gameImage" src="imagem1.png" alt="Imagem do Jogo">
+      <p id="gameDescription">Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.</p>
     </div>
   </div>
 
@@ -184,7 +193,12 @@ header h1 {
 
 <script>
 function showPreview(image, description){
-  // Aqui você pode colocar lógica de preview se quiser
+  const preview = document.getElementById('gamePreview');
+  const gameImage = document.getElementById('gameImage');
+  const gameDescription = document.getElementById('gameDescription');
+
+  gameImage.src = image;
+  gameDescription.textContent = description;
 }
 
 function goToGame(link){
