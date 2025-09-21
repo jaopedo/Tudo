@@ -56,7 +56,6 @@ body::before {
   align-items: center;
 }
 
-/* Cabeçalho */
 header {
   width: 100%;
   display: flex;
@@ -80,22 +79,22 @@ h1 {
   to { text-shadow: 0 0 20px #90caf9, 0 0 40px #5c6bc0; }
 }
 
-/* Retângulo azul escuro para os botões */
+/* Retângulo azul escuro atrás dos botões */
 .button-background {
-  background-color: #0d1450;
+  background: #0d133d;
   border-radius: 20px;
-  padding: 3vw 4vw;
+  padding: 2vw;
   display: flex;
-  flex-direction: row; /* botões lado a lado */
   justify-content: center;
-  align-items: center;
   gap: 2vw;
-  margin-bottom: 3vw;
+  width: 100%;
+  max-width: 800px;
+  transition: all 0.3s ease;
 }
 
 /* Botões de jogos */
 .game-btn {
-  padding: 2vw 3vw;
+  padding: 1.2vw 2.5vw;
   font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
   color: #fff;
@@ -165,7 +164,7 @@ h1 {
   color: #fff;
   max-width: 95%;
   text-align: center;
-  text-shadow: 2px 2px 15px rgba(0,0,0,0.9);
+  text-shadow: none; /* sem neon */
   background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
   padding: 2vw;
   border-radius: 20px;
@@ -179,22 +178,35 @@ h1 {
   transform: translateY(0);
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 /* Créditos menores */
 .credits {
-  margin-top: 1.5vw;
+  margin-top: 1vw;
   text-align: center;
 }
 
 .credits p {
-  margin: 0.2vw 0;
+  margin: 0.3vw 0;
   color: #fff;
   font-size: clamp(0.6rem, 1.2vw, 0.8rem);
   font-weight: bold;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+@media (max-width: 600px) {
+  .button-background {
+    flex-direction: column; /* empilha os botões no celular */
+    gap: 1.5vw;
+    padding: 2vw 3vw;
+  }
+  .game-btn {
+    padding: 1.5vw 2vw;
+    font-size: 1rem; /* menor no celular */
+    width: 100%; /* ocupa toda a largura do retângulo */
+  }
 }
 </style>
 </head>
@@ -202,14 +214,12 @@ h1 {
 <div class="container">
   <header>
     <h1>Bem-vindo aos Jogos!</h1>
-
-    <!-- Retângulo azul com botões lado a lado -->
     <div class="button-background">
-      <button class="game-btn" 
+      <button class="game-btn"
         onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
 
-      <button class="game-btn" 
+      <button class="game-btn"
         onmouseover="showPreview('imagem2.png','Desafie amigos ou a si mesmo no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
 
@@ -224,7 +234,7 @@ h1 {
     <p id="gameDescription"></p>
   </div>
 
-  <!-- Créditos menores -->
+  <!-- Créditos -->
   <div class="credits">
     <p>Projeto desenvolvido por:</p>
     <p>João Pedro | Guilherme | Anna Júlia | Maria Fernanda | Gabrielle</p>
