@@ -20,7 +20,7 @@
     color:#fff;
     text-shadow:0 0 10px #ff77ff, 0 0 20px #ff44ff;
     margin:10px;
-    font-size:clamp(1rem,4vw,1.4rem);
+    font-size:clamp(25rem,4vw,16rem);
   }
   #hud {
     color:#fff;
@@ -112,7 +112,7 @@ function updateHUD(){ hud.textContent = `Pontos: ${score} | Vidas: ${lives}`; }
 function rectCollide(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
 
 function spawnObject(){
-  const size = 40;
+  const size = (canvas.width <= 400) ? 25 : 40; // menor no celular
   const BORDER = 10;
   const GAME_WIDTH = canvas.width;
   const randX = BORDER + Math.random() * (GAME_WIDTH - 2*BORDER - size);
@@ -184,7 +184,8 @@ function loop(ts){
 
 function startGame(){
   objects=[]; score=0; lives=3; running=true; gameOver=false; lastSpawn=0; spawnInterval=1000;
-  player.x=(canvas.width-player.w)/2; player.y=canvas.height-80;
+  player.x=(canvas.width-player.w)/2; 
+  player.y=canvas.height-((canvas.width <= 400) ? 60 : 80); // menor offset no celular
   updateHUD();
   bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
   lastTime=0;
@@ -210,11 +211,21 @@ window.addEventListener("keyup",e=>{
   if(e.key==="ArrowRight"||e.key==="d") keys.right=false;
 });
 
-// Redimensiona canvas para mobile mantendo proporção
+// Redimensiona canvas para mobile mantendo proporção e tamanho sprites
 function resizeCanvas(){
   const wrapper = document.getElementById("gameWrapper");
   canvas.width = wrapper.clientWidth;
   canvas.height = wrapper.clientHeight;
+
+  // Ajusta tamanho do Kirby para celular
+  player.w = (canvas.width <= 400) ? 40 : 60;
+  player.h = (canvas.width <= 400) ? 40 : 60;
+
+  // Ajusta tamanho dos objetos já existentes
+  objects.forEach(obj=>{
+    obj.w = (canvas.width <= 400) ? 25 : 40;
+    obj.h = (canvas.width <= 400) ? 25 : 40;
+  });
 }
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
