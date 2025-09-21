@@ -56,12 +56,26 @@ body::before {
   align-items: center;
 }
 
+/* Retângulo azul escuro atrás dos botões */
+.button-background {
+  background-color: #0d1450;
+  border-radius: 20px;
+  padding: 4vw 2vw;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vw;
+  margin-top: 6vw;
+  margin-bottom: 2vw;
+}
+
+/* Header */
 header {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 2vw;
 }
 
 h1 {
@@ -79,20 +93,9 @@ h1 {
   to { text-shadow: 0 0 20px #90caf9, 0 0 40px #5c6bc0; }
 }
 
-/* Botões da primeira tela (empilhados) */
-.buttons-inicial {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2vw;
-  margin-top: 6vw;
-  margin-bottom: 2vw;
-}
-
 /* Botões de jogos */
 .game-btn {
-  padding: 2vw 3vw; /* maior tamanho */
+  padding: 2vw 3vw;
   font-size: clamp(1.2rem, 3vw, 1.5rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
   color: #fff;
@@ -202,7 +205,9 @@ h1 {
 <div class="container">
   <header>
     <h1>Bem-vindo aos Jogos!</h1>
-    <div class="buttons-inicial">
+
+    <!-- Retângulo azul escuro com botões -->
+    <div class="button-background">
       <button class="game-btn" 
         onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
