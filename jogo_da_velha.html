@@ -20,7 +20,7 @@ html, body {
   overflow:hidden; 
 }
 h1 { 
-  margin:0.5vh 0 0.5vh 0; /* margem menor para aproximar do tabuleiro */
+  margin:1vh 0 0.5vh 0; /* aproxima título */
   text-align:center; 
   font-size:clamp(20px,4vw,36px); 
   text-shadow:0 0 12px #38bdf8; 
@@ -28,10 +28,10 @@ h1 {
 .hud { 
   display:flex; 
   justify-content:space-between; 
-  width:70%; 
+  width:90%; 
   max-width:400px; 
   font-weight:bold; 
-  margin-bottom:0.5vh; /* espaço reduzido abaixo do HUD */
+  margin-bottom:0; /* elimina espaço extra */
   font-size:clamp(14px,2.5vw,18px); 
 }
 #menuScreen, #aiOptions { 
@@ -67,6 +67,7 @@ button, select {
   width:100%; 
   max-width:600px; 
   padding:10px; 
+  margin-top:-6vh; /* aproxima o tabuleiro do HUD */
 }
 #board { 
   display:grid; 
@@ -173,7 +174,7 @@ function playerMove(index){
   if(mode==="single"){
     board[index]=player; renderBoard();
     if(checkWinner(player)){ scoreX++; endRound("Você ganhou!"); return; }
-    if(board.every(c=>c)){ // empate
+    if(board.every(c=>c)){ 
       scoreX++; scoreO++;
       endRound("Empate! Ambos ganham ponto."); return;
     }
@@ -265,4 +266,3 @@ updateHUD();
 </script>
 </body>
 </html>
-
