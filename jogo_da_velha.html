@@ -3,30 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo da Velha Responsivo Fullscreen</title>
+<title>Jogo da Velha - 10 Rodadas</title>
 <style>
-html, body {
-  margin: 0; padding: 0; height: 100%; width: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-  font-family: Arial, sans-serif; background: #1e293b; color: #e2e8f0; overflow: hidden;
-}
-h1 { margin: 2vh 0; text-align: center; font-size: clamp(20px, 4vw, 36px); text-shadow: 0 0 12px #38bdf8; }
-.hud { display: flex; justify-content: space-between; width: 90%; max-width: 400px; font-weight: bold; margin-bottom: 1vh; font-size: clamp(14px,2.5vw,18px); }
-#menuScreen, #aiOptions { display: flex; flex-direction: column; align-items: center; margin-top: 2vh; background: #334155; padding: 20px; border-radius: 10px; box-shadow: 0 0 12px #38bdf8; width: 90%; max-width: 400px; }
-button, select { margin-top: 10px; padding: 10px 20px; border: none; border-radius: 6px; background: #0ea5e9; color: white; font-size: clamp(14px,2.5vw,18px); cursor: pointer; box-shadow:0 0 10px #0ea5e9; width: 100%; max-width: 250px; }
-#boardContainer { display: flex; align-items: center; justify-content: center; flex-grow: 1; width: 100%; max-width: 600px; padding: 10px; }
-#board { display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr); gap: 5px; width: 100%; aspect-ratio:1/1; }
-.cell { background: #111827; display: flex; align-items: center; justify-content: center; font-size: clamp(24px,10vw,64px); cursor: pointer; border-radius: 6px; text-shadow: 0 0 8px #fff; user-select: none; }
-.cell.X { color: #f43f5e; text-shadow:0 0 10px #f43f5e; }
-.cell.O { color: #3b82f6; text-shadow:0 0 10px #3b82f6; }
+html, body { margin:0; padding:0; height:100%; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; font-family:Arial,sans-serif; background:#1e293b; color:#e2e8f0; overflow:hidden; }
+h1 { margin:2vh 0; text-align:center; font-size:clamp(20px,4vw,36px); text-shadow:0 0 12px #38bdf8; }
+.hud { display:flex; justify-content:space-between; width:90%; max-width:400px; font-weight:bold; margin-bottom:1vh; font-size:clamp(14px,2.5vw,18px); }
+#menuScreen, #aiOptions { display:flex; flex-direction:column; align-items:center; margin-top:2vh; background:#334155; padding:20px; border-radius:10px; box-shadow:0 0 12px #38bdf8; width:90%; max-width:400px; }
+button, select { margin-top:10px; padding:10px 20px; border:none; border-radius:6px; background:#0ea5e9; color:white; font-size:clamp(14px,2.5vw,18px); cursor:pointer; box-shadow:0 0 10px #0ea5e9; width:100%; max-width:250px; }
+#boardContainer { display:flex; align-items:center; justify-content:center; flex-grow:1; width:100%; max-width:600px; padding:10px; }
+#board { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:5px; width:100%; aspect-ratio:1/1; }
+.cell { background:#111827; display:flex; align-items:center; justify-content:center; font-size:clamp(24px,10vw,64px); cursor:pointer; border-radius:6px; text-shadow:0 0 8px #fff; user-select:none; }
+.cell.X { color:#f43f5e; text-shadow:0 0 10px #f43f5e; }
+.cell.O { color:#3b82f6; text-shadow:0 0 10px #3b82f6; }
 </style>
 </head>
 <body>
 
-<h1>✨ Jogo da Velha ✨</h1>
+<h1>✨ Jogo da Velha - 10 Rodadas ✨</h1>
 <div class="hud">
   <div>Pontos X: <span id="scoreX">0</span></div>
   <div>Pontos O: <span id="scoreO">0</span></div>
+  <div>Rodada: <span id="round">1</span>/10</div>
 </div>
 
 <div id="menuScreen">
@@ -36,15 +33,13 @@ button, select { margin-top: 10px; padding: 10px 20px; border: none; border-radi
 </div>
 
 <div id="aiOptions" style="display:none;">
-  <label>
-    Símbolo:
+  <label>Símbolo:
     <select id="playerSymbol">
       <option value="X">❌ X</option>
       <option value="O">⭕ O</option>
     </select>
   </label>
-  <label>
-    Dificuldade:
+  <label>Dificuldade:
     <select id="difficulty">
       <option value="easy">Fácil</option>
       <option value="medium" selected>Médio</option>
@@ -70,13 +65,14 @@ const boardEl = document.getElementById("board");
 const boardContainer = document.getElementById("boardContainer");
 const scoreXEl = document.getElementById("scoreX");
 const scoreOEl = document.getElementById("scoreO");
+const roundEl = document.getElementById("round");
 const playerSymbolEl = document.getElementById("playerSymbol");
 const difficultyEl = document.getElementById("difficulty");
 
 let board = Array(9).fill(null);
 let player="X", ai="O", mode="single", difficulty="medium";
 let currentTurn="X", gameOver=false;
-let scoreX=0, scoreO=0;
+let scoreX=0, scoreO=0, round=1, maxRounds=10;
 
 function createBoard(){
   boardEl.innerHTML=""; board=Array(9).fill(null); gameOver=false; currentTurn="X";
@@ -87,37 +83,48 @@ function createBoard(){
   }
 }
 
-function updateHUD(){ scoreXEl.textContent=scoreX; scoreOEl.textContent=scoreO; }
+function updateHUD(){ scoreXEl.textContent=scoreX; scoreOEl.textContent=scoreO; roundEl.textContent=round; }
 
 function playerMove(index){
   if(gameOver||board[index]) return;
   if(mode==="single"){
     board[index]=player; renderBoard();
-    if(checkWinner(player)){ scoreX++; gameOver=true; updateHUD(); alert("Você ganhou!"); return; }
-    if(board.every(c=>c)){ gameOver=true; alert("Empate!"); return; }
+    if(checkWinner(player)){ scoreX++; endRound("Você ganhou!"); return; }
+    if(board.every(c=>c)){ endRound("Empate!"); return; }
     aiMove();
   } else {
     board[index]=currentTurn; renderBoard();
-    if(checkWinner(currentTurn)){ currentTurn==="X"?scoreX++:scoreO++; gameOver=true; updateHUD(); alert(`Jogador ${currentTurn} ganhou!`); return; }
-    if(board.every(c=>c)){ gameOver=true; alert("Empate!"); return; }
+    if(checkWinner(currentTurn)){ currentTurn==="X"?scoreX++:scoreO++; endRound(`Jogador ${currentTurn} ganhou!`); return; }
+    if(board.every(c=>c)){ endRound("Empate!"); return; }
     currentTurn=(currentTurn==="X")?"O":"X";
   }
 }
 
 function aiMove(){
   const empty = board.map((v,i)=>v?null:i).filter(v=>v!==null);
-  let move=null;
-  if(difficulty==="easy"){ move = empty[Math.floor(Math.random()*empty.length)]; }
-  else if(difficulty==="medium"){ move = empty[Math.floor(Math.random()*empty.length)]; }
-  else{ move = empty[Math.floor(Math.random()*empty.length)]; }
+  let move = empty[Math.floor(Math.random()*empty.length)];
   board[move]=ai; renderBoard();
-  if(checkWinner(ai)){ scoreO++; gameOver=true; updateHUD(); alert("Você perdeu!"); return; }
-  if(board.every(c=>c)){ gameOver=true; alert("Empate!"); return; }
+  if(checkWinner(ai)){ scoreO++; endRound("Você perdeu!"); return; }
+  if(board.every(c=>c)){ endRound("Empate!"); return; }
 }
 
 function renderBoard(){ const cells=document.querySelectorAll(".cell"); board.forEach((v,i)=>{ cells[i].textContent=v||""; cells[i].className="cell "+(v||""); }); }
 
 function checkWinner(p){ const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]; return wins.some(c=>c.every(i=>board[i]===p)); }
+
+function endRound(message){
+  gameOver=true; alert(message);
+  if(round>=maxRounds){
+    let finalWinner = scoreX>scoreO ? "X venceu!" : scoreO>scoreX ? "O venceu!" : "Empate geral!";
+    alert(`Fim das ${maxRounds} rodadas! ${finalWinner}`);
+    scoreX=0; scoreO=0; round=1; menuScreen.style.display="flex"; boardContainer.style.display="none"; aiOptions.style.display="none"; updateHUD();
+  } else {
+    round++;
+    createBoard();
+    updateHUD();
+    if(mode==="single" && player==="O") aiMove();
+  }
+}
 
 // Eventos
 singleBtn.addEventListener("click",()=>{ menuScreen.style.display="none"; aiOptions.style.display="flex"; mode="single"; });
