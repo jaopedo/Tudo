@@ -5,14 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jogo da Velha - 10 Rodadas</title>
 <style>
-html, body { margin:0; padding:0; height:100%; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; font-family:Arial,sans-serif; background:#1e293b; color:#e2e8f0; overflow:hidden; }
-h1 { margin:2vh 0; text-align:center; font-size:clamp(20px,4vw,36px); text-shadow:0 0 12px #38bdf8; }
-.hud { display:flex; justify-content:space-between; width:90%; max-width:400px; font-weight:bold; margin-bottom:1vh; font-size:clamp(14px,2.5vw,18px); }
-#menuScreen, #aiOptions { display:flex; flex-direction:column; align-items:center; margin-top:2vh; background:#334155; padding:20px; border-radius:10px; box-shadow:0 0 12px #38bdf8; width:90%; max-width:400px; }
-button, select { margin-top:10px; padding:10px 20px; border:none; border-radius:6px; background:#0ea5e9; color:white; font-size:clamp(14px,2.5vw,18px); cursor:pointer; box-shadow:0 0 10px #0ea5e9; width:100%; max-width:250px; }
-#boardContainer { display:flex; align-items:center; justify-content:center; flex-grow:1; width:100%; max-width:600px; padding:10px; }
-#board { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:5px; width:100%; aspect-ratio:1/1; }
-.cell { background:#111827; display:flex; align-items:center; justify-content:center; font-size:clamp(24px,10vw,64px); cursor:pointer; border-radius:6px; text-shadow:0 0 8px #fff; user-select:none; }
+html, body { 
+  margin:0; 
+  padding:0; 
+  height:100%; 
+  width:100%; 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  justify-content:flex-start; 
+  font-family:Arial,sans-serif; 
+  background:#1e293b; 
+  color:#e2e8f0; 
+  overflow:hidden; 
+}
+h1 { 
+  margin:1vh 0 0.5vh 0; /* margem menor para aproximar do tabuleiro */
+  text-align:center; 
+  font-size:clamp(20px,4vw,36px); 
+  text-shadow:0 0 12px #38bdf8; 
+}
+.hud { 
+  display:flex; 
+  justify-content:space-between; 
+  width:90%; 
+  max-width:400px; 
+  font-weight:bold; 
+  margin-bottom:0.5vh; /* espaço reduzido abaixo do HUD */
+  font-size:clamp(14px,2.5vw,18px); 
+}
+#menuScreen, #aiOptions { 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  margin-top:2vh; 
+  background:#334155; 
+  padding:20px; 
+  border-radius:10px; 
+  box-shadow:0 0 12px #38bdf8; 
+  width:90%; 
+  max-width:400px; 
+}
+button, select { 
+  margin-top:10px; 
+  padding:10px 20px; 
+  border:none; 
+  border-radius:6px; 
+  background:#0ea5e9; 
+  color:white; 
+  font-size:clamp(14px,2.5vw,18px); 
+  cursor:pointer; 
+  box-shadow:0 0 10px #0ea5e9; 
+  width:100%; 
+  max-width:250px; 
+}
+#boardContainer { 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  flex-grow:1; 
+  width:100%; 
+  max-width:600px; 
+  padding:10px; 
+}
+#board { 
+  display:grid; 
+  grid-template-columns:repeat(3,1fr); 
+  grid-template-rows:repeat(3,1fr); 
+  gap:5px; 
+  width:100%; 
+  aspect-ratio:1/1; 
+}
+.cell { 
+  background:#111827; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  font-size:clamp(24px,10vw,64px); 
+  cursor:pointer; 
+  border-radius:6px; 
+  text-shadow:0 0 8px #fff; 
+  user-select:none; 
+}
 .cell.X { color:#f43f5e; text-shadow:0 0 10px #f43f5e; }
 .cell.O { color:#3b82f6; text-shadow:0 0 10px #3b82f6; }
 </style>
@@ -75,7 +149,10 @@ let currentTurn="X", gameOver=false;
 let scoreX=0, scoreO=0, round=1, maxRounds=10;
 
 function createBoard(){
-  boardEl.innerHTML=""; board=Array(9).fill(null); gameOver=false; currentTurn="X";
+  boardEl.innerHTML=""; 
+  board=Array(9).fill(null); 
+  gameOver=false; 
+  currentTurn="X";
   for(let i=0;i<9;i++){
     const cell = document.createElement("div");
     cell.classList.add("cell");
@@ -142,10 +219,8 @@ function checkWinner(p){
 function endRound(message){
   gameOver=true;
   alert(message);
-  // verificar fim de rodadas
   if(round>=maxRounds){
     if(scoreX===scoreO){
-      // rodadas bônus até desempatar
       alert("Empate geral! Rodadas bônus até desempatar.");
       round++;
       createBoard(); updateHUD();
@@ -166,7 +241,6 @@ function endRound(message){
   }
 }
 
-// Eventos
 singleBtn.addEventListener("click",()=>{
   menuScreen.style.display="none";
   aiOptions.style.display="flex";
