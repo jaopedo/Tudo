@@ -17,6 +17,7 @@
 html, body {
   height: 100%;
   background: radial-gradient(circle at top, #1a237e, #0d133d);
+  overflow-x: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,13 +50,12 @@ body::before {
   max-width: 1000px;
   backdrop-filter: blur(20px);
   box-shadow: 0 8px 35px rgba(0,0,0,0.5);
+  animation: fadeIn 1.2s ease-in-out;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
-/* Header */
 header {
   width: 100%;
   display: flex;
@@ -69,28 +69,30 @@ h1 {
   font-size: clamp(2rem, 6vw, 3rem);
   text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
   letter-spacing: 2px;
-  margin-bottom: 2vw;
+  animation: glow 2s ease-in-out infinite alternate;
+  margin-bottom: 1.5vw;
   text-align: center;
 }
 
-/* Botões centralizados */
-/* Botões centralizados com espaçamento para baixo */
-/* Botões empilhados verticalmente */
-.buttons {
+@keyframes glow {
+  from { text-shadow: 0 0 10px #7986cb, 0 0 20px #3949ab; }
+  to { text-shadow: 0 0 20px #90caf9, 0 0 40px #5c6bc0; }
+}
+
+/* Botões da primeira tela (empilhados) */
+.buttons-inicial {
   display: flex;
-  flex-direction: column; /* muda de row para coluna */
+  flex-direction: column;
   justify-content: center;
-  align-items: center; /* centraliza horizontalmente */
-  gap: 2vw; /* espaço entre os botões */
-  margin-top: 6vw; /* espaço maior acima dos botões */
+  align-items: center;
+  gap: 2vw;
+  margin-top: 6vw;
   margin-bottom: 2vw;
 }
 
-
-
-/* Botões maiores */
+/* Botões de jogos */
 .game-btn {
-  padding: 2vw 3vw;
+  padding: 2vw 3vw; /* maior tamanho */
   font-size: clamp(1.2rem, 3vw, 1.5rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
   color: #fff;
@@ -132,21 +134,7 @@ h1 {
   justify-content: center;
   width: 100%;
   padding: 1.5vw;
-  margin-top: 2vw;
-}
-
-/* Inicialmente escondido */
-.game-info img,
-.game-info p {
-  opacity: 0;
-  transform: translateY(30px);
   transition: all 0.6s ease;
-}
-
-.game-info.show img,
-.game-info.show p {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .game-info img {
@@ -158,38 +146,55 @@ h1 {
   border-radius: 18px;
   margin-bottom: 1.5vw;
   box-shadow: 0 6px 25px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.6s ease;
+}
+
+.game-info.show img {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .game-info p {
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-size: clamp(1rem, 3vw, 1.8rem);
   line-height: 1.8;
   color: #fff;
   max-width: 95%;
   text-align: center;
+  text-shadow: none;
   background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
   padding: 2vw;
   border-radius: 20px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s ease 0.2s;
 }
 
-/* Créditos menores e discretos */
+.game-info.show p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Créditos menores */
 .credits {
   margin-top: 2vw;
   text-align: center;
-  background-color: #000;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
 }
 
 .credits p {
+  margin: 0.3vw 0;
   color: #fff;
-  margin: 0.1rem 0;
-  font-size: clamp(0.65rem, 1vw, 0.75rem);
-}
-
-.credits .names {
-  color: #fff;
+  font-size: clamp(0.6rem, 1.2vw, 0.8rem);
   font-weight: bold;
-  font-size: clamp(0.7rem, 1.1vw, 0.8rem);
+  background-color: rgba(0,0,0,0.5);
+  padding: 0.3vw 0.5vw;
+  border-radius: 5px;
 }
 </style>
 </head>
@@ -197,7 +202,7 @@ h1 {
 <div class="container">
   <header>
     <h1>Bem-vindo aos Jogos!</h1>
-    <div class="buttons">
+    <div class="buttons-inicial">
       <button class="game-btn" 
         onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
@@ -217,9 +222,9 @@ h1 {
     <p id="gameDescription"></p>
   </div>
 
+  <!-- Créditos menores -->
   <div class="credits">
-    <p>Projeto desenvolvido por:</p>
-    <p class="names">João Pedro | Guilherme | Anna Júlia | Maria Fernanda | Gabrielle</p>
+    <p>Projeto desenvolvido por: João Pedro | Guilherme | Anna Júlia | Maria Fernanda | Gabrielle</p>
   </div>
 </div>
 
