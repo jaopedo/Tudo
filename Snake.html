@@ -93,7 +93,8 @@
 </head>
 <body>
 
-<div id="startScreen">
+
+<div id="startScreen">
   <h1>Cobrinha</h1>
   <p>Use as setas do teclado.  
   Vidas: <span id="startLives">3</span>.  
@@ -110,7 +111,8 @@
 
 <canvas id="game"></canvas>
 
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+<!-- Música de fundo local -->
+<audio id="bgMusic" src="cobra.mp3" loop></audio>
 <audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 <audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio>
 
@@ -285,3 +287,4 @@ startBtn.addEventListener('click', initGame);
 </script>
 </body>
 </html>
+
