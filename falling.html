@@ -3,23 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kirby Game Responsivo</title>
+<title>Kirby Game Neon</title>
 <style>
   * { box-sizing:border-box; margin:0; padding:0; font-family:Arial,sans-serif; }
-  body, html { height:100%; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; background: radial-gradient(circle at top, #f9a8d4, #ec4899); overflow:hidden; }
-  h2 { text-align:center; color:#fff; margin:10px; font-size:1.4rem; }
-  #hud { color:#fff; font-weight:bold; text-align:center; margin-bottom:10px; font-size:1.2rem; }
-  #controls { text-align:center; margin-bottom:10px; }
-  #controls button { font-size:1rem; padding:6px 12px; margin:0 5px; border:none; border-radius:6px; background:#06b6d4; color:#fff; font-weight:bold; cursor:pointer; }
-  #controls button:hover { background:#0891b2; }
-  #gameWrapper { position:relative; border-radius:15px; width:100%; max-width:700px; flex:1; display:flex; justify-content:center; align-items:center; }
-  canvas { background: rgba(0,0,0,0.2); border-radius:10px; display:block; }
+  html, body {
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    background: radial-gradient(circle at top, #f9a8d4, #ec4899);
+    overflow:hidden;
+  }
+
+  h2 {
+    text-align:center;
+    color:#fff;
+    text-shadow:0 0 10px #ff77ff, 0 0 20px #ff44ff;
+    margin:10px;
+    font-size:clamp(1rem,4vw,1.4rem);
+  }
+
+  #hud {
+    color:#fff;
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:10px;
+    font-size:clamp(1rem,3vw,1.2rem);
+    text-shadow:0 0 8px cyan, 0 0 15px #0ff;
+  }
+
+  #controls {
+    text-align:center;
+    margin-bottom:10px;
+    z-index:100;
+  }
+
+  #controls button {
+    font-size:clamp(0.8rem,3vw,1rem);
+    padding:6px 12px;
+    margin:0 5px;
+    border:none;
+    border-radius:6px;
+    background:#06b6d4;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 0 8px #0ff, 0 0 12px #06b6d4;
+  }
+
+  #controls button:hover {
+    background:#0891b2;
+    box-shadow:0 0 12px #0ff, 0 0 16px #06b6d4;
+  }
+
+  #gameWrapper {
+    position:relative;
+    width:90vw;
+    max-width:700px;
+    aspect-ratio:1/1;
+    border:4px solid #ff77ff;
+    border-radius:15px;
+    box-shadow:0 0 20px #ff77ff, 0 0 40px #ff44ff inset;
+  }
+
+  canvas {
+    width:100%;
+    height:100%;
+    border-radius:10px;
+    display:block;
+    box-shadow:0 0 10px #ff77ff, 0 0 20px #ff44ff inset;
+  }
 </style>
 </head>
 <body>
 
 <h2>Kirby odeia bananas! Coma os inimigos e desvie das bananas!</h2>
 <div id="hud">Pontos: 0 | Vidas: 3</div>
+
 <div id="controls">
   <button id="startBtn">Start</button>
   <button id="restartBtn" style="display:none;">Reiniciar</button>
@@ -43,7 +104,6 @@ const bgMusic = document.getElementById("bgMusic");
 const scoreSound = document.getElementById("scoreSound");
 const hitSound = document.getElementById("hitSound");
 
-// Imagens
 const kirbyImg = new Image(); kirbyImg.src = 'Kirby.png';
 const bananaImg = new Image(); bananaImg.src = 'banana.png';
 const enemyImgs = [
@@ -55,26 +115,24 @@ enemyImgs[0].img.src = 'Inimigo1.png';
 enemyImgs[1].img.src = 'Inimigo2.png';
 enemyImgs[2].img.src = 'Inimigo3.png';
 
-// Variáveis
-let canvasSize = 700; 
-let player = {x:0, y:0, w:60, h:60, speed:6};
+let GAME_WIDTH = 700, GAME_HEIGHT = 700;
+let BORDER = 10;
+let player = {x:320, y:620, w:60, h:60, speed:6};
 let objects = [];
 let score = 0, lives = 3;
 let running = false, gameOver = false;
 let lastSpawn = 0, spawnInterval = 1000;
 let keys = {left:false, right:false};
 
-// Redimensiona canvas
+// Responsividade
 function resizeCanvas(){
-  canvasSize = Math.min(window.innerWidth, window.innerHeight - 180);
-  canvas.width = canvasSize;
-  canvas.height = canvasSize;
-  if(!running){
-    player.x = canvas.width/2 - player.w/2;
-    player.y = canvas.height - 80;
-  }
+  const wrapper = document.getElementById("gameWrapper");
+  GAME_WIDTH = wrapper.clientWidth;
+  GAME_HEIGHT = wrapper.clientHeight;
+  canvas.width = GAME_WIDTH;
+  canvas.height = GAME_HEIGHT;
 }
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 // HUD
@@ -87,15 +145,16 @@ function rectCollide(a,b){
 
 // Spawn objetos
 function spawnObject(){
-  const size = 40;
-  const x = Math.random() * (canvas.width - size - 20) + 10;
+  const size = GAME_WIDTH*0.06; // escala para celular
+  const x = BORDER + Math.random()*(GAME_WIDTH - 2*BORDER - size);
   const rand = Math.random();
   let obj = {};
-  if(rand < 0.6){
+  
+  if(rand<0.6){
     const enemyIndex = Math.floor(Math.random()*enemyImgs.length);
-    obj = {x:x, y:-size, w:size, h:size, vy:enemyImgs[enemyIndex].speed, type:"enemy", img:enemyImgs[enemyIndex].img};
-  } else {
-    obj = {x:x, y:-size, w:size, h:size, vy:2+Math.random()*2, type:"banana", img:bananaImg};
+    obj={x:x,y:BORDER-size,w:size,h:size,vy:enemyImgs[enemyIndex].speed,type:"enemy",img:enemyImgs[enemyIndex].img};
+  }else{
+    obj={x:x,y:BORDER-size,w:size,h:size,vy:2.0+Math.random()*2,type:"banana",img:bananaImg};
   }
   objects.push(obj);
 }
@@ -109,12 +168,12 @@ function update(delta){
   if(keys.left) player.x -= player.speed*(delta/16);
   if(keys.right) player.x += player.speed*(delta/16);
 
-  if(player.x<10) player.x=10;
-  if(player.x+player.w>canvas.width-10) player.x=canvas.width-10-player.w;
+  if(player.x<BORDER) player.x=BORDER;
+  if(player.x+player.w>GAME_WIDTH-BORDER) player.x=GAME_WIDTH-BORDER-player.w;
 
   for(let i=objects.length-1;i>=0;i--){
-    const obj = objects[i];
-    obj.y += obj.vy*(delta/16);
+    const obj=objects[i];
+    obj.y+=obj.vy*(delta/16);
 
     if(rectCollide(player,obj)){
       if(obj.type==="enemy"){ score++; scoreSound.currentTime=0; scoreSound.play(); }
@@ -124,21 +183,27 @@ function update(delta){
       continue;
     }
 
-    if(obj.y>canvas.height) objects.splice(i,1);
+    if(obj.y>GAME_HEIGHT) objects.splice(i,1);
   }
 }
 
 // Draw
 function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.strokeStyle="#ff44ff"; ctx.lineWidth=4;
-  ctx.shadowColor="#ff77ff"; ctx.shadowBlur=20;
-  ctx.strokeRect(10,10,canvas.width-20,canvas.height-20);
+  ctx.clearRect(0,0,GAME_WIDTH,GAME_HEIGHT);
 
+  // Limite neon
+  ctx.strokeStyle="#ff44ff";
+  ctx.lineWidth=4;
+  ctx.shadowColor="#ff77ff";
+  ctx.shadowBlur=20;
+  ctx.strokeRect(BORDER,BORDER,GAME_WIDTH-2*BORDER,GAME_HEIGHT-2*BORDER);
+
+  // Kirby
   ctx.drawImage(kirbyImg, player.x, player.y, player.w, player.h);
 
+  // Objetos
   for(const obj of objects){
-    ctx.shadowColor = obj.type==="enemy" ? "#0ff" : "#ff0";
+    ctx.shadowColor = obj.type==="enemy"?"#0ff":"#ff0";
     ctx.shadowBlur=15;
     ctx.drawImage(obj.img, obj.x, obj.y, obj.w, obj.h);
   }
@@ -150,7 +215,7 @@ let lastTime=0;
 function loop(ts){
   if(!running) return;
   if(!lastTime) lastTime=ts;
-  const delta = ts-lastTime;
+  const delta=ts-lastTime;
   lastTime=ts;
   update(delta);
   draw();
@@ -159,13 +224,13 @@ function loop(ts){
 
 // Start/End
 function startGame(){
+  resizeCanvas();
   objects=[]; score=0; lives=3; running=true; gameOver=false; lastSpawn=0; spawnInterval=1000;
-  player.x = canvas.width/2 - player.w/2;
-  player.y = canvas.height - 80;
+  player.x=(GAME_WIDTH-player.w)/2; player.y=GAME_HEIGHT-80;
   updateHUD();
-  bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
   lastTime=0; requestAnimationFrame(loop);
   startBtn.style.display="none"; restartBtn.style.display="none";
+  bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
 }
 
 function endGame(){
