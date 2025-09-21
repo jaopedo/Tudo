@@ -1,96 +1,260 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogos</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    h1 {
-      margin-top: 20px;
-      color: #38bdf8;
-    }
-    .games-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      margin-top: 30px;
-    }
-    .game-btn {
-      background-color: #1e293b;
-      color: white;
-      border: 2px solid #38bdf8;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 18px;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-    .game-btn:hover {
-      background-color: #38bdf8;
-      color: #0f172a;
-      transform: scale(1.05);
-    }
-    .preview {
-      margin-top: 20px;
-    }
-    .preview img {
-      max-width: 250px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-    .description {
-      max-width: 600px;
-      margin: auto;
-      font-size: 16px;
-      color: #cbd5e1;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página Inicial de Jogos</title>
+
+<style>
+/* Reset e fontes */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: radial-gradient(circle at top, #1a237e, #0d133d);
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Fundo animado */
+body::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, #3949ab33, #1a237e22 70%, transparent 90%);
+  animation: rotateBg 25s linear infinite;
+  z-index: -1;
+}
+
+@keyframes rotateBg {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Container principal */
+.container {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 2vw;
+  width: 100%;
+  max-width: 1000px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 35px rgba(0,0,0,0.5);
+  animation: fadeIn 1.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2vw;
+}
+
+h1 {
+  color: #fff;
+  font-size: clamp(2rem, 6vw, 3rem);
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+  letter-spacing: 2px;
+  animation: glow 2s ease-in-out infinite alternate;
+  margin-bottom: 1.5vw;
+  text-align: center;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px #7986cb, 0 0 20px #3949ab; }
+  to { text-shadow: 0 0 20px #90caf9, 0 0 40px #5c6bc0; }
+}
+
+/* Retângulo azul escuro atrás dos botões */
+.button-background {
+  background: #0d133d;
+  border-radius: 20px;
+  padding: 2vw;
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+  width: 100%;
+  max-width: 800px;
+  transition: all 0.3s ease;
+}
+
+/* Botões de jogos */
+.game-btn {
+  padding: 1.2vw 2.5vw;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  background: linear-gradient(145deg, #3f51b5, #1a237e);
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  text-transform: uppercase;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: all 0.5s;
+}
+
+.game-btn:hover::after { left: 100%; }
+
+.game-btn:hover {
+  transform: translateY(-6px) scale(1.08);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.55);
+  background: linear-gradient(145deg, #1a237e, #283593);
+}
+
+/* Previews dos jogos */
+.game-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1.5vw;
+  transition: all 0.6s ease;
+}
+
+.game-info img {
+  width: 100%;
+  max-width: 90%;
+  height: auto;
+  object-fit: contain;
+  background-color: #000;
+  border-radius: 18px;
+  margin-bottom: 1.5vw;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.6s ease;
+}
+
+.game-info.show img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.game-info p {
+  font-size: clamp(1rem, 3vw, 1.8rem);
+  line-height: 1.8;
+  color: #fff;
+  max-width: 95%;
+  text-align: center;
+  text-shadow: none;
+  background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
+  padding: 2vw;
+  border-radius: 20px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s ease 0.2s;
+}
+
+.game-info.show p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Créditos menores */
+.credits {
+  margin-top: 1vw;
+  text-align: center;
+}
+
+.credits p {
+  margin: 0.3vw 0;
+  color: #fff;
+  font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .button-background {
+    flex-direction: column;
+    gap: 1.5vw;
+    padding: 2vw 3vw;
+  }
+  .game-btn {
+    padding: 1.5vw 2vw;
+    font-size: 1rem;
+    width: 100%;
+  }
+}
+</style>
 </head>
 <body>
-  <h1>Escolha seu Jogo</h1>
-  <div class="games-container">
-    <button class="game-btn"
-      onmouseover="showPreview(
-        'imagem1.png',
-        'Corra o máximo que puder desviando de obstáculos e colete pontos para bater seus recordes. Controles: Setas do teclado.')"
-      onclick="goToGame('https://jaopedo.github.io/Tudo/corrida.html')">
-      Corrida Noturna
-    </button>
+<div class="container">
+  <header>
+    <h1>Bem-vindo aos Jogos!</h1>
+    <div class="button-background">
+      <button class="game-btn"
+        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
 
-    <button class="game-btn"
-      onmouseover="showPreview(
-        'imagem2.png',
-        'Desafie amigos ou a si mesmo no Jogo da Velha! São 10 rodadas com contagem de pontos para X e O. Escolha jogar Contra a IA (escolhendo dificuldade e símbolo) ou Multiplayer Local. Planeje suas jogadas e conquiste a vitória! Controles: Clique do mouse.')"
-      onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">
-      Jogo da Velha
-    </button>
+      <button class="game-btn"
+        onmouseover="showPreview('imagem2.png','Desafie amigos ou a AI em no mínimo 10 rodadas no mesmo e tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
+
+      <button class="game-btn"
+        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
+    </div>
+  </header>
+
+  <div class="game-info" id="gameInfo">
+    <img id="gameImage" src="" alt="Imagem do Jogo">
+    <p id="gameDescription"></p>
   </div>
 
-  <div class="preview" id="preview">
-    <img id="preview-img" src="" alt="" style="display:none;">
-    <div class="description" id="description"></div>
+  <div class="credits">
+    <p>Projeto desenvolvido por:</p>
+    <p>João Pedro | Guilherme | Anna Júlia | Maria Fernanda | Gabrielle</p>
   </div>
+</div>
 
-  <script>
-    function showPreview(image, text) {
-      const img = document.getElementById('preview-img');
-      img.src = image;
-      img.style.display = 'block';
-      document.getElementById('description').textContent = text;
-    }
+<script>
+function showPreview(image, description){
+  const gameInfo = document.getElementById('gameInfo');
+  const gameImage = document.getElementById('gameImage');
+  const gameDescription = document.getElementById('gameDescription');
 
-    function goToGame(url) {
-      window.location.href = url;
-    }
-  </script>
+  gameImage.src = image;
+  gameDescription.textContent = description;
+
+  gameInfo.classList.add('show');
+}
+
+function goToGame(link){
+  window.location.href = link;
+}
+</script>
 </body>
 </html>
