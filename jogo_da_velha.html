@@ -16,9 +16,9 @@ html, body {
 
 /* ---- TÍTULO ---- */
 h1 {
-  margin:30vh 0 1vh 0;        /* mais próximo do tabuleiro */
+  margin:5vh 0 1vh 0;
   text-align:center;
-  font-size:clamp(40px, 6vw, 90px); /* maior no PC */
+  font-size:clamp(40px, 6vw, 90px);
   text-shadow:0 0 20px #38bdf8;
 }
 
@@ -27,7 +27,7 @@ h1 {
   display:flex; justify-content:space-around;
   width:95%; max-width:600px;
   font-weight:bold;
-  margin-bottom:0vh;          /* mais próximo do tabuleiro */
+  margin-bottom:1vh;
   font-size:clamp(18px, 3vw, 60px);
   flex-wrap:wrap;
 }
@@ -54,39 +54,39 @@ button, select {
   width:100%; max-width:250px;
 }
 
-/* ---- TABULEIRO ---- */
+/* ---- TABULEIRO FIXO ---- */
 #boardContainer {
   display:flex; align-items:center; justify-content:center;
-  width:100%; max-width:800px; /* maior no PC */
+  width:100%;
   padding:10px;
   flex-grow:1;
 }
+
 #board {
   display:grid;
   grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
   grid-gap:15px;
-  width:90vmin; max-width:700px; /* maior no PC */
-  aspect-ratio:1/1;
+  width:600px;   /* largura fixa */
+  height:600px;  /* altura fixa */
 }
+
 .cell {
   background:#111827;
-  display:flex; align-items:center; justify-content:center;
-  font-size:clamp(40px, 15vw, 100px); /* células gigantes no PC */
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  font-size:120px;  /* tamanho do X/O */
   cursor:pointer;
   border-radius:8px;
   text-shadow:0 0 15px #fff;
   user-select:none;
+  box-sizing:border-box;
+  overflow:hidden;    /* evita que o texto aumente a célula */
 }
+
 .cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
 .cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
-
-/* ---- RESPONSIVO ---- */
-@media(min-width:1024px){
-  h1 { margin-top:1vh; font-size:80px; }
-  .hud { font-size:26px; max-width:650px; margin-bottom:1vh; }
-  #board { max-width:750px; grid-gap:20px; }
-  .cell { font-size:80px; }
-}
 </style>
 </head>
 <body>
@@ -187,7 +187,7 @@ function aiMove(){
   let move=empty[Math.floor(Math.random()*empty.length)];
   board[move]=ai; renderBoard();
   if(checkWinner(ai)){scoreO++;endRound("Você perdeu!");return;}
-  if(board.every(c=>c)){scoreX++;scoreO++;endRound("Empate!");return;}
+  if(board.every(c)){scoreX++;scoreO++;endRound("Empate!");return;}
 }
 function renderBoard(){
   document.querySelectorAll(".cell").forEach((c,i)=>{
@@ -236,4 +236,3 @@ updateHUD();
 </script>
 </body>
 </html>
-
