@@ -1,204 +1,193 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogo da Velha</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    h1 { color: #38bdf8; }
-    .board {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      gap: 5px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .cell {
-      width: 100px;
-      height: 100px;
-      background: #1e293b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      cursor: pointer;
-      border-radius: 8px;
-    }
-    .scoreboard {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background-color: #38bdf8;
-      color: #0f172a;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo da Velha - 10 Rodadas</title>
+<style>
+html, body { margin:0; padding:0; height:100%; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; font-family:Arial,sans-serif; background:#1e293b; color:#e2e8f0; overflow:hidden; }
+h1 { margin:2vh 0; text-align:center; font-size:clamp(20px,4vw,36px); text-shadow:0 0 12px #38bdf8; }
+.hud { display:flex; justify-content:space-between; width:90%; max-width:400px; font-weight:bold; margin-bottom:1vh; font-size:clamp(14px,2.5vw,18px); }
+#menuScreen, #aiOptions { display:flex; flex-direction:column; align-items:center; margin-top:2vh; background:#334155; padding:20px; border-radius:10px; box-shadow:0 0 12px #38bdf8; width:90%; max-width:400px; }
+button, select { margin-top:10px; padding:10px 20px; border:none; border-radius:6px; background:#0ea5e9; color:white; font-size:clamp(14px,2.5vw,18px); cursor:pointer; box-shadow:0 0 10px #0ea5e9; width:100%; max-width:250px; }
+#boardContainer { display:flex; align-items:center; justify-content:center; flex-grow:1; width:100%; max-width:600px; padding:10px; }
+#board { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:5px; width:100%; aspect-ratio:1/1; }
+.cell { background:#111827; display:flex; align-items:center; justify-content:center; font-size:clamp(24px,10vw,64px); cursor:pointer; border-radius:6px; text-shadow:0 0 8px #fff; user-select:none; }
+.cell.X { color:#f43f5e; text-shadow:0 0 10px #f43f5e; }
+.cell.O { color:#3b82f6; text-shadow:0 0 10px #3b82f6; }
+</style>
 </head>
 <body>
-  <h1>Jogo da Velha</h1>
-  <div id="mode-selection">
-    <button onclick="setMode('local')">Multiplayer Local</button>
-    <button onclick="setMode('ai')">Contra IA</button>
-  </div>
-  <div id="difficulty-selection" style="display:none;">
-    <p>Escolha a dificuldade:</p>
-    <button onclick="setDifficulty('easy')">Fácil</button>
-    <button onclick="setDifficulty('hard')">Difícil</button>
-    <p>Escolha seu símbolo:</p>
-    <button onclick="chooseSymbol('X')">X</button>
-    <button onclick="chooseSymbol('O')">O</button>
-  </div>
 
-  <div class="scoreboard" id="scoreboard" style="display:none;">
-    Rodada: <span id="round">1</span>/10  
-    | X: <span id="scoreX">0</span>  
-    | O: <span id="scoreO">0</span>
-  </div>
+<h1>✨ Jogo da Velha - 10 Rodadas ✨</h1>
+<div class="hud">
+  <div>Pontos X: <span id="scoreX">0</span></div>
+  <div>Pontos O: <span id="scoreO">0</span></div>
+  <div>Rodada: <span id="round">1</span>/10</div>
+</div>
 
-  <div class="board" id="board" style="display:none;"></div>
+<div id="menuScreen">
+  <p>Escolha o modo de jogo:</p>
+  <button id="singleBtn">Contra IA</button>
+  <button id="multiBtn">Multiplayer Local</button>
+</div>
 
-  <script>
-    let board = Array(9).fill('');
-    let currentPlayer = 'X';
-    let mode = '';
-    let difficulty = '';
-    let playerSymbol = 'X';
-    let scoreX = 0, scoreO = 0;
-    let round = 1;
-    const maxRounds = 10;
+<div id="aiOptions" style="display:none;">
+  <label>Símbolo:
+    <select id="playerSymbol">
+      <option value="X">❌ X</option>
+      <option value="O">⭕ O</option>
+    </select>
+  </label>
+  <label>Dificuldade:
+    <select id="difficulty">
+      <option value="easy">Fácil</option>
+      <option value="medium" selected>Médio</option>
+      <option value="hard">Difícil</option>
+    </select>
+  </label>
+  <button id="startAI">Iniciar</button>
+</div>
 
-    const boardElement = document.getElementById('board');
-    const scoreboard = document.getElementById('scoreboard');
+<div id="boardContainer" style="display:none;">
+  <div id="board"></div>
+</div>
 
-    function setMode(selectedMode) {
-      mode = selectedMode;
-      document.getElementById('mode-selection').style.display = 'none';
-      if (mode === 'ai') {
-        document.getElementById('difficulty-selection').style.display = 'block';
-      } else {
-        startGame();
-      }
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" loop autoplay></audio>
+
+<script>
+const menuScreen = document.getElementById("menuScreen");
+const aiOptions = document.getElementById("aiOptions");
+const singleBtn = document.getElementById("singleBtn");
+const multiBtn = document.getElementById("multiBtn");
+const startAI = document.getElementById("startAI");
+const boardEl = document.getElementById("board");
+const boardContainer = document.getElementById("boardContainer");
+const scoreXEl = document.getElementById("scoreX");
+const scoreOEl = document.getElementById("scoreO");
+const roundEl = document.getElementById("round");
+const playerSymbolEl = document.getElementById("playerSymbol");
+const difficultyEl = document.getElementById("difficulty");
+
+let board = Array(9).fill(null);
+let player="X", ai="O", mode="single", difficulty="medium";
+let currentTurn="X", gameOver=false;
+let scoreX=0, scoreO=0, round=1, maxRounds=10;
+
+function createBoard(){
+  boardEl.innerHTML=""; board=Array(9).fill(null); gameOver=false; currentTurn="X";
+  for(let i=0;i<9;i++){
+    const cell = document.createElement("div");
+    cell.classList.add("cell");
+    cell.dataset.index=i;
+    cell.addEventListener("click",()=>playerMove(i));
+    boardEl.appendChild(cell);
+  }
+}
+
+function updateHUD(){
+  scoreXEl.textContent=scoreX;
+  scoreOEl.textContent=scoreO;
+  roundEl.textContent=round;
+}
+
+function playerMove(index){
+  if(gameOver||board[index]) return;
+  if(mode==="single"){
+    board[index]=player; renderBoard();
+    if(checkWinner(player)){ scoreX++; endRound("Você ganhou!"); return; }
+    if(board.every(c=>c)){ // empate
+      scoreX++; scoreO++;
+      endRound("Empate! Ambos ganham ponto."); return;
     }
-
-    function setDifficulty(diff) {
-      difficulty = diff;
+    aiMove();
+  } else {
+    board[index]=currentTurn; renderBoard();
+    if(checkWinner(currentTurn)){
+      currentTurn==="X"?scoreX++:scoreO++;
+      endRound(`Jogador ${currentTurn} ganhou!`); return;
     }
-
-    function chooseSymbol(symbol) {
-      playerSymbol = symbol;
-      currentPlayer = 'X';
-      document.getElementById('difficulty-selection').style.display = 'none';
-      startGame();
+    if(board.every(c=>c)){
+      scoreX++; scoreO++;
+      endRound("Empate! Ambos ganham ponto."); return;
     }
+    currentTurn=(currentTurn==="X")?"O":"X";
+  }
+}
 
-    function startGame() {
-      board = Array(9).fill('');
-      boardElement.style.display = 'grid';
-      scoreboard.style.display = 'block';
-      renderBoard();
-    }
+function aiMove(){
+  const empty = board.map((v,i)=>v?null:i).filter(v=>v!==null);
+  let move = empty[Math.floor(Math.random()*empty.length)];
+  board[move]=ai; renderBoard();
+  if(checkWinner(ai)){ scoreO++; endRound("Você perdeu!"); return; }
+  if(board.every(c=>c)){
+    scoreX++; scoreO++;
+    endRound("Empate! Ambos ganham ponto."); return;
+  }
+}
 
-    function renderBoard() {
-      boardElement.innerHTML = '';
-      board.forEach((cell, index) => {
-        const div = document.createElement('div');
-        div.classList.add('cell');
-        div.textContent = cell;
-        div.onclick = () => makeMove(index);
-        boardElement.appendChild(div);
-      });
-      updateScoreboard();
-    }
+function renderBoard(){
+  const cells=document.querySelectorAll(".cell");
+  board.forEach((v,i)=>{
+    cells[i].textContent=v||"";
+    cells[i].className="cell "+(v||"");
+  });
+}
 
-    function makeMove(index) {
-      if (board[index] !== '') return;
-      board[index] = currentPlayer;
-      renderBoard();
-      if (checkWin(currentPlayer)) {
-        if (currentPlayer === 'X') scoreX++; else scoreO++;
-        endRound(`${currentPlayer} venceu!`);
-        return;
-      }
-      if (board.every(c => c !== '')) {
-        // Empate: ambos pontuam
-        scoreX++;
-        scoreO++;
-        endRound('Empate!');
-        return;
-      }
-      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-      if (mode === 'ai' && currentPlayer !== playerSymbol) {
-        aiMove();
-      }
-    }
+function checkWinner(p){
+  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  return wins.some(c=>c.every(i=>board[i]===p));
+}
 
-    function aiMove() {
-      let move;
-      if (difficulty === 'easy') {
-        const available = board.map((c,i) => c === '' ? i : null).filter(i => i !== null);
-        move = available[Math.floor(Math.random() * available.length)];
-      } else {
-        // dificuldade difícil: escolha simples (primeira posição disponível)
-        move = board.findIndex(c => c === '');
-      }
-      makeMove(move);
+function endRound(message){
+  gameOver=true;
+  alert(message);
+  // verificar fim de rodadas
+  if(round>=maxRounds){
+    if(scoreX===scoreO){
+      // rodadas bônus até desempatar
+      alert("Empate geral! Rodadas bônus até desempatar.");
+      round++;
+      createBoard(); updateHUD();
+      if(mode==="single" && player==="O") aiMove();
+      return;
     }
+    let finalWinner = scoreX>scoreO ? "X venceu!" : "O venceu!";
+    alert(`Fim das ${maxRounds} rodadas! ${finalWinner}`);
+    scoreX=0; scoreO=0; round=1;
+    menuScreen.style.display="flex";
+    boardContainer.style.display="none";
+    aiOptions.style.display="none";
+    updateHUD();
+  } else {
+    round++;
+    createBoard(); updateHUD();
+    if(mode==="single" && player==="O") aiMove();
+  }
+}
 
-    function checkWin(player) {
-      const wins = [
-        [0,1,2],[3,4,5],[6,7,8],
-        [0,3,6],[1,4,7],[2,5,8],
-        [0,4,8],[2,4,6]
-      ];
-      return wins.some(pattern => pattern.every(i => board[i] === player));
-    }
+// Eventos
+singleBtn.addEventListener("click",()=>{
+  menuScreen.style.display="none";
+  aiOptions.style.display="flex";
+  mode="single";
+});
+multiBtn.addEventListener("click",()=>{
+  menuScreen.style.display="none";
+  boardContainer.style.display="flex";
+  mode="multi";
+  createBoard();
+});
+startAI.addEventListener("click",()=>{
+  player=playerSymbolEl.value;
+  ai=(player==="X")?"O":"X";
+  difficulty=difficultyEl.value;
+  aiOptions.style.display="none";
+  boardContainer.style.display="flex";
+  createBoard();
+});
 
-    function endRound(message) {
-      alert(`${message}\nPlacar: X=${scoreX} | O=${scoreO}`);
-      if (round < maxRounds) {
-        round++;
-        resetBoard();
-      } else if (scoreX === scoreO) {
-        alert('Empate após 10 rodadas! Rodadas bônus até desempatar.');
-        round++;
-        resetBoard();
-      } else {
-        declareWinner();
-      }
-    }
-
-    function resetBoard() {
-      board = Array(9).fill('');
-      currentPlayer = 'X';
-      renderBoard();
-    }
-
-    function declareWinner() {
-      const winner = scoreX > scoreO ? 'X' : 'O';
-      alert(`Fim do jogo! Vencedor final: ${winner}\nPlacar final: X=${scoreX} | O=${scoreO}`);
-      // Reinicia tudo
-      scoreX = 0; scoreO = 0; round = 1;
-      resetBoard();
-    }
-
-    function updateScoreboard() {
-      document.getElementById('round').textContent = round;
-      document.getElementById('scoreX').textContent = scoreX;
-      document.getElementById('scoreO').textContent = scoreO;
-    }
-  </script>
+updateHUD();
+</script>
 </body>
 </html>
