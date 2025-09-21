@@ -3,178 +3,66 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo da Velha Responsivo</title>
+<title>Jogo da Velha</title>
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background: #1e293b;
-    color: #e2e8f0;
-    overflow: hidden;
+  body {
+    margin:0; padding:0; font-family:Arial,sans-serif;
+    background:#1e293b; color:#e2e8f0;
+    display:flex; flex-direction:column; align-items:center;
+    min-height:100vh;
   }
+  h1 { margin:20px 0; font-size:clamp(24px,6vw,36px); text-shadow:0 0 12px #38bdf8; text-align:center; }
 
-  h1 {
-    margin: 2vh 0;
-    text-align: center;
-    font-size: clamp(20px, 4vw, 36px);
-    text-shadow: 0 0 12px #38bdf8;
-  }
-
-  /* ===== HUD ===== */
-  .hud {
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    max-width: 400px;
-    font-weight: bold;
-    margin-bottom: 1vh;
-    font-size: clamp(14px, 2.5vw, 18px);
-  }
-
-  /* ===== Telas iniciais ===== */
   .screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 2vh;
-    background: #334155;
-    padding: 25px 20px;
-    border-radius: 15px;
-    box-shadow: 0 0 15px #38bdf8;
-    width: 90%;
-    max-width: 400px;
+    display:flex; flex-direction:column; align-items:center;
+    background:#334155; padding:25px 20px; border-radius:15px;
+    box-shadow:0 0 15px #38bdf8; width:90%; max-width:400px;
+    margin-bottom:20px;
   }
+  .screen p { font-size:clamp(16px,3vw,20px); margin-bottom:15px; text-align:center; }
 
-  .screen p {
-    font-size: clamp(16px, 3vw, 20px);
-    margin-bottom: 15px;
-    text-align: center;
-  }
-
-  .option-group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 15px;
-  }
-
-  .option-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: clamp(14px, 2.5vw, 18px);
-  }
-
-  .option-group select {
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: none;
-    font-size: clamp(14px, 2.5vw, 18px);
-    cursor: pointer;
-    box-shadow: 0 0 8px #0ea5e9;
-    background: #0ea5e9;
-    color: white;
-    width: 100%;
-  }
-
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
-  }
-
+  .buttons { display:flex; flex-direction:column; width:100%; gap:10px; }
   .buttons button {
-    padding: 12px 0;
-    border: none;
-    border-radius: 8px;
-    font-size: clamp(16px, 3vw, 20px);
-    cursor: pointer;
-    font-weight: bold;
-    color: white;
-    box-shadow: 0 0 10px #0ea5e9;
-    background: #0ea5e9;
-    transition: all 0.2s ease-in-out;
+    padding:12px 0; border:none; border-radius:8px;
+    font-size:clamp(16px,3vw,20px); cursor:pointer;
+    font-weight:bold; color:white;
+    background:#0ea5e9; box-shadow:0 0 10px #0ea5e9;
+    transition:0.2s;
+  }
+  .buttons button:hover { background:#0284c7; box-shadow:0 0 15px #38bdf8; }
+
+  .option-group { display:flex; flex-direction:column; width:100%; margin-bottom:15px; }
+  .option-group label { font-weight:bold; margin-bottom:5px; }
+  .option-group select {
+    padding:10px; border-radius:8px; border:none; font-size:clamp(14px,2.5vw,18px);
+    background:#0ea5e9; color:white; box-shadow:0 0 8px #0ea5e9; cursor:pointer;
   }
 
-  .buttons button:hover {
-    background: #0284c7;
-    box-shadow: 0 0 15px #38bdf8;
-  }
-
-  /* ===== Tabuleiro ===== */
-  #boardContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    flex-grow: 1;
-    width: 100%;
-    max-width: 600px;
-    padding: 10px;
-  }
-
-  #board {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 5px;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-  }
-
+  #boardContainer { display:flex; flex-direction:column; align-items:center; width:100%; max-width:600px; }
+  #board { display:grid; grid-template-columns:repeat(3,1fr); grid-gap:5px; width:100%; aspect-ratio:1/1; }
   .cell {
-    background: #111827;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(24px, 10vw, 64px);
-    cursor: pointer;
-    border-radius: 6px;
-    text-shadow: 0 0 8px #fff;
-    user-select: none;
-    transition: all 0.2s ease-in-out;
+    background:#111827; display:flex; justify-content:center; align-items:center;
+    font-size:clamp(24px,10vw,64px); border-radius:6px; cursor:pointer; text-shadow:0 0 8px #fff;
+    user-select:none; transition:0.2s;
   }
+  .cell:hover { background:#1f2937; }
+  .cell.X { color:#f43f5e; text-shadow:0 0 10px #f43f5e; }
+  .cell.O { color:#3b82f6; text-shadow:0 0 10px #3b82f6; }
 
-  .cell:hover { background: #1f2937; }
-  .cell.X { color: #f43f5e; text-shadow: 0 0 10px #f43f5e; }
-  .cell.O { color: #3b82f6; text-shadow: 0 0 10px #3b82f6; }
+  .hud { display:flex; justify-content:space-between; width:90%; max-width:400px; font-weight:bold; font-size:clamp(14px,2.5vw,18px); margin-bottom:10px; }
 
-  #nextBtn {
-    margin: 10px 0;
-    padding: 12px 0;
-    width: 90%;
-    max-width: 250px;
-    font-size: clamp(16px, 3vw, 20px);
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    color: white;
-    background: #0ea5e9;
-    box-shadow: 0 0 10px #0ea5e9;
+  #nextBtn { margin:10px 0; padding:12px 0; width:90%; max-width:250px; font-size:clamp(16px,3vw,20px);
+    border-radius:8px; border:none; cursor:pointer; font-weight:bold; color:white; background:#0ea5e9;
+    box-shadow:0 0 10px #0ea5e9; transition:0.2s;
   }
-
-  #nextBtn:hover { background: #0284c7; box-shadow: 0 0 15px #38bdf8; }
-
+  #nextBtn:hover { background:#0284c7; box-shadow:0 0 15px #38bdf8; }
 </style>
 </head>
 <body>
 
 <h1>✨ Jogo da Velha ✨</h1>
 
-<!-- HUD para multiplayer local -->
-<div class="hud" id="multiHud" style="display:none;">
-  <div>X: <span id="scoreX">0</span></div>
-  <div>O: <span id="scoreO">0</span></div>
-</div>
-
-<!-- Tela inicial modo -->
+<!-- Tela de escolha de modo -->
 <div id="modeScreen" class="screen">
   <p>Escolha o modo de jogo</p>
   <div class="buttons">
@@ -183,30 +71,26 @@
   </div>
 </div>
 
-<!-- Tela opções IA -->
+<!-- Tela de opções IA -->
 <div id="aiOptionsScreen" class="screen" style="display:none;">
   <p>Escolha símbolo e dificuldade</p>
-
   <div class="option-group">
     <label for="playerSymbol">Símbolo:</label>
-    <select id="playerSymbol">
-      <option value="X">❌ X</option>
-      <option value="O">⭕ O</option>
-    </select>
+    <select id="playerSymbol"><option value="X">❌ X</option><option value="O">⭕ O</option></select>
   </div>
-
   <div class="option-group">
     <label for="difficulty">Dificuldade:</label>
-    <select id="difficulty">
-      <option value="easy">Fácil</option>
-      <option value="medium" selected>Médio</option>
-      <option value="hard">Difícil</option>
-    </select>
+    <select id="difficulty"><option value="easy">Fácil</option><option value="medium" selected>Médio</option><option value="hard">Difícil</option></select>
   </div>
-
   <div class="buttons">
     <button id="startBtn">Start</button>
   </div>
+</div>
+
+<!-- HUD para multiplayer local -->
+<div class="hud" id="multiHud" style="display:none;">
+  <div>X: <span id="scoreX">0</span></div>
+  <div>O: <span id="scoreO">0</span></div>
 </div>
 
 <!-- Tabuleiro -->
@@ -235,7 +119,6 @@ let difficulty="medium";
 let scoreX=0, scoreO=0;
 let gameOver=false;
 
-// ----- Funções -----
 function createBoard(){
   boardEl.innerHTML=""; board=Array(9).fill(null);
   for(let i=0;i<9;i++){
@@ -250,6 +133,11 @@ function createBoard(){
 function renderBoard(){
   const cells=document.querySelectorAll(".cell");
   board.forEach((v,i)=>{ cells[i].textContent=v||""; cells[i].className="cell "+(v||""); });
+}
+
+function checkWinner(p){
+  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  return wins.some(c=>c.every(i=>board[i]===p));
 }
 
 function playerMove(index){
@@ -270,35 +158,17 @@ function playerMove(index){
 function aiMove(){
   const empty=board.map((v,i)=>v?null:i).filter(v=>v!==null);
   const move=empty[Math.floor(Math.random()*empty.length)];
-  board[move]=ai;
-  renderBoard();
+  board[move]=ai; renderBoard();
   if(checkWinner(ai)){ alert("IA venceu!"); gameOver=true; return; }
-}
-
-function checkWinner(p){
-  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  return wins.some(c=>c.every(i=>board[i]===p));
 }
 
 function updateMultiHUD(){ scoreXEl.textContent=scoreX; scoreOEl.textContent=scoreO; }
 
-function startGame(){
-  modeScreen.style.display="none";
-  aiOptionsScreen.style.display=(mode==="single")?"flex":"none";
-  boardContainer.style.display=(mode==="multi")?"flex":"none";
-  multiHud.style.display=(mode==="multi")?"flex":"none";
-}
-
 // ----- Eventos -----
-singleBtn.addEventListener("click",()=>{
-  mode="single"; startGame();
-});
-
+singleBtn.addEventListener("click",()=>{ mode="single"; modeScreen.style.display="none"; aiOptionsScreen.style.display="flex"; });
 multiBtn.addEventListener("click",()=>{
-  mode="multi"; startGame();
-  boardContainer.style.display="flex";
-  multiHud.style.display="flex";
-  createBoard();
+  mode="multi"; modeScreen.style.display="none";
+  boardContainer.style.display="flex"; multiHud.style.display="flex"; createBoard();
 });
 
 startBtn.addEventListener("click",()=>{
