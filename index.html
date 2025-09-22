@@ -90,6 +90,8 @@ h1 {
   width: 100%;
   max-width: 800px;
   transition: all 0.3s ease;
+  overflow: visible;      /* Permite mostrar botões maiores */
+  flex-wrap: wrap;        /* Quebra linha se faltar espaço */
 }
 
 /* Botões de jogos */
@@ -123,7 +125,7 @@ h1 {
 .game-btn:hover::after { left: 100%; }
 
 .game-btn:hover {
-  transform: translateY(-6px) scale(1.08);
+  transform: translateY(-4px) scale(1.04); /* Reduzido para evitar corte */
   box-shadow: 0 12px 28px rgba(0,0,0,0.55);
   background: linear-gradient(145deg, #1a237e, #283593);
 }
