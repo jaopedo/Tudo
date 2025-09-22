@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -160,27 +161,18 @@ h1 {
   transform: scale(1);
 }
 
-/* Descrição do jogo */
 .game-info p {
-  font-size: clamp(1rem, 1.5vw, 2.5rem); /* tamanho proporcional para notebooks */
+  font-size: clamp(2rem, 2.5vw, 5rem); /* maior no PC */
   line-height: 1.7;
   color: #fff;
   max-width: 95%;
   text-align: center;
   background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
-  padding: 20px 30px;
+  padding: 25px 40px;
   border-radius: 20px;
   opacity: 0;
   transform: translateY(15px);
   transition: all 0.6s ease 0.2s;
-}
-
-/* Tamanho maior em telas grandes */
-@media (min-width: 1200px) {
-  .game-info p {
-    font-size: clamp(1.5rem, 1.5vw, 3.5rem);
-    padding: 25px 35px;
-  }
 }
 
 .game-info.show p {
@@ -213,6 +205,10 @@ h1 {
     padding: 25px;
     justify-content: center;
   }
+  .game-info p {
+    font-size: clamp(1.8rem, 3vw, 4rem);
+    padding: 20px 30px;
+  }
 }
 
 /* Ajustes para celulares */
@@ -228,7 +224,7 @@ h1 {
   }
   .game-btn {
     font-size: clamp(0.9rem, 3vw, 1.2rem);
-    padding: 12px 15px;
+    padding: 12px 16px;
     width: 100%;
     flex: none;
   }
@@ -245,7 +241,7 @@ h1 {
     border-radius: 12px;
   }
   .game-info p {
-    font-size: clamp(1.5rem, 3vw, 35rem);
+    font-size: clamp(1rem, 4vw, 1.4rem);
     padding: 10px 15px;
     line-height: 1.5;
     max-width: 100%;
@@ -302,3 +298,4 @@ function goToGame(link){
 </script>
 </body>
 </html>
+
