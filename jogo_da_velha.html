@@ -54,6 +54,33 @@ button, select {
   width:100%; max-width:280px;
 }
 
+/* ---- ESTILO NOVO PARA OPÇÕES IA ---- */
+#aiOptions .option {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  margin-top:15px;
+  width:100%;
+}
+
+#aiOptions label {
+  font-size:clamp(16px, 2vw, 22px);
+  color:#e2e8f0;
+  margin-bottom:5px;
+}
+
+#aiOptions select {
+  width:100%;
+  padding:12px 16px;
+  border-radius:8px;
+  border:none;
+  background:#0ea5e9;
+  color:white;
+  font-size:clamp(16px, 2vw, 20px);
+  box-shadow:0 0 15px #0ea5e9;
+  cursor:pointer;
+}
+
 /* ---- TABULEIRO FIXO AJUSTADO PARA NOTEBOOK ---- */
 #boardContainer {
   display:flex; align-items:center; justify-content:center;
@@ -143,19 +170,21 @@ button, select {
 </div>
 
 <div id="aiOptions" style="display:none;">
-  <label>Símbolo:
+  <div class="option">
+    <label for="playerSymbol">Escolha seu símbolo:</label>
     <select id="playerSymbol">
       <option value="X">❌ X</option>
       <option value="O">⭕ O</option>
     </select>
-  </label>
-  <label>Dificuldade:
+  </div>
+  <div class="option">
+    <label for="difficulty">Dificuldade:</label>
     <select id="difficulty">
       <option value="easy">Fácil</option>
       <option value="medium" selected>Médio</option>
       <option value="hard">Difícil</option>
     </select>
-  </label>
+  </div>
   <button id="startAI">Iniciar</button>
 </div>
 
@@ -278,4 +307,4 @@ startAI.onclick=()=>{
 updateHUD();
 </script>
 </body>
-</html>
+  </html>
