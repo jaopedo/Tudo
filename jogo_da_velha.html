@@ -9,56 +9,56 @@ html, body {
   margin:0; padding:0;
   height:100%; width:100%;
   display:flex; flex-direction:column;
-  align-items:center; justify-content:flex-start;
+  align-items:center; justify-content:center;
   font-family:Arial, sans-serif;
   background:#1e293b; color:#e2e8f0;
+  overflow:hidden;
 }
 
 /* ---- CONTAINER PRINCIPAL ---- */
 #gameWrapper {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  width:100%; max-width:1000px;
+  height:100%;
+  padding:20px;
+  box-sizing:border-box;
 }
 
 /* ---- TÍTULO ---- */
 h1 {
-  margin:0;
+  margin:0 0 20px 0;
   text-align:center;
-  font-size:clamp(120px, 12vw, 220px);
+  font-size:clamp(80px, 10vw, 180px);
   text-shadow:0 0 60px #38bdf8;
-  line-height:1; /* sem espaçamento extra */
+  line-height:1;
 }
 
 /* ---- HUD ---- */
 .hud {
   display:flex;
-  justify-content:space-around;
-  width:95%; max-width:900px;
+  justify-content:center;
+  gap:50px;
+  width:100%;
   font-weight:bold;
-  margin:0; 
-  font-size:clamp(32px, 4vw, 100px);
+  margin-bottom:20px;
+  font-size:clamp(28px, 4vw, 80px);
   flex-wrap:wrap;
-  padding:0; /* removido espaço extra */
-  margin-top:5px; /* pequeno espaço mínimo */
+  text-align:center;
 }
 
 /* ---- TABULEIRO ---- */
 #boardContainer {
   display:flex; align-items:center; justify-content:center;
-  width:100%;
-  flex-grow:1;
-  margin-top:5px; /* colado no HUD */
 }
 
 #board {
   display:grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  grid-gap: 35px; 
-  width: min(95vw, 900px);
-  height: min(95vw, 900px);
+  grid-gap:40px;
+  width:min(90vw,600px);
+  height:min(90vw,600px);
 }
 
 .cell {
@@ -66,7 +66,7 @@ h1 {
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size: min(20vw, 200px); 
+  font-size:min(20vw,180px);
   cursor:pointer;
   border-radius:12px;
   text-shadow:0 0 50px #fff;
@@ -82,21 +82,22 @@ h1 {
 #menuScreen, #aiOptions {
   display:flex; flex-direction:column;
   align-items:center;
-  margin-top:2vh;
+  margin-top:20px;
   background:#334155;
-  padding:5vw 20px;
-  border-radius:10px;
-  box-shadow:0 0 25px #38bdf8;
+  padding:5vw 30px;
+  border-radius:12px;
+  box-shadow:0 0 30px #38bdf8;
   width:90%; max-width:500px;
 }
+
 button, select {
-  margin-top:10px;
-  padding:16px 32px;
-  border:none; border-radius:8px;
+  margin-top:15px;
+  padding:18px 36px;
+  border:none; border-radius:10px;
   background:#0ea5e9; color:white;
-  font-size:clamp(18px, 3vw, 26px);
+  font-size:clamp(20px, 3.5vw, 28px);
   cursor:pointer;
-  box-shadow:0 0 20px #0ea5e9;
+  box-shadow:0 0 25px #0ea5e9;
   width:100%; max-width:300px;
 }
 
@@ -104,41 +105,41 @@ button, select {
 #aiOptions .option {
   display:flex; flex-direction:column;
   align-items:flex-start;
-  margin-top:15px;
+  margin-top:20px;
   width:100%;
 }
 
 #aiOptions label {
-  font-size:clamp(18px, 2.2vw, 24px);
+  font-size:clamp(18px, 2.2vw, 26px);
   color:#e2e8f0;
-  margin-bottom:5px;
+  margin-bottom:8px;
 }
 
 #aiOptions select {
   width:100%;
-  padding:12px 16px;
+  padding:14px 20px;
   border-radius:8px;
   border:none;
   background:#0ea5e9;
   color:white;
-  font-size:clamp(16px, 2vw, 22px);
-  box-shadow:0 0 18px #0ea5e9;
+  font-size:clamp(16px, 2.2vw, 24px);
+  box-shadow:0 0 20px #0ea5e9;
   cursor:pointer;
 }
 
 /* ---- RESPONSIVO ---- */
-@media(max-width: 1024px){
-  #board { width:min(90vw,600px); height:min(90vw,600px); grid-gap:20px; }
-  .cell { font-size:min(16vw,120px); }
-  h1 { font-size: clamp(70px, 10vw, 140px); }
-  .hud { font-size: clamp(22px, 3vw, 60px); margin-top:2px;}
+@media(max-width:1024px){
+  #board { width:min(90vw,500px); height:min(90vw,500px); grid-gap:25px; }
+  .cell { font-size:min(16vw,140px); }
+  h1 { font-size: clamp(60px, 8vw, 120px); }
+  .hud { font-size: clamp(22px, 3vw, 60px); gap:25px; }
 }
 
-@media(max-width: 600px){
-  #board { width:90vw; height:90vw; grid-gap:10px; }
+@media(max-width:600px){
+  #board { width:85vw; height:85vw; grid-gap:15px; }
   .cell { font-size:18vw; }
   h1 { font-size: clamp(35px, 8vw, 60px); }
-  .hud { font-size: clamp(14px, 4vw, 28px); margin-top:2px;}
+  .hud { font-size: clamp(14px, 4vw, 28px); gap:15px; }
 }
 </style>
 </head>
@@ -185,7 +186,7 @@ button, select {
 <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" loop autoplay></audio>
 
 <script>
-// mesmo JS do seu código original
+// Mesma lógica JS do seu código original
 const menuScreen=document.getElementById("menuScreen");
 const aiOptions=document.getElementById("aiOptions");
 const singleBtn=document.getElementById("singleBtn");
@@ -237,7 +238,7 @@ function playerMove(i){
       currentTurn==="X"?scoreX++:scoreO++;
       endRound(`Jogador ${currentTurn} ganhou!`);return;
     }
-    if(board.every(c)){scoreX++;scoreO++;endRound("Empate!");return;}
+    if(board.every(c=>c)){scoreX++;scoreO++;endRound("Empate!");return;}
     currentTurn=currentTurn==="X"?"O":"X";
   }
 }
