@@ -23,7 +23,7 @@ html, body {
   justify-content: center;
   align-items: flex-start;
   position: relative;
-  padding: 20px 0;
+  padding: 40px 0;
 }
 
 /* Fundo animado */
@@ -45,69 +45,68 @@ body::before {
 /* Container principal */
 .container {
   background: rgba(255,255,255,0.08);
-  border: 2px solid rgba(255,255,255,0.25);
-  border-radius: 25px;
-  padding: 80px 100px;
-  width: 85%;
-  max-width: 1700px;
-  backdrop-filter: blur(25px);
-  box-shadow: 0 12px 55px rgba(0,0,0,0.7);
-  animation: fadeIn 1.2s ease-in-out;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 30px;
+  padding: 100px 120px;
+  width: 90%;
+  max-width: 1800px;
+  backdrop-filter: blur(30px);
+  box-shadow: 0 15px 65px rgba(0,0,0,0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: visible;
+  position: relative;
 }
 
-/* Header */
+/* Header gigante */
 header {
   width: 100%;
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 }
 
 h1 {
   color: #fff;
-  font-size: clamp(4rem, 5vw, 12rem);
-  text-shadow: 3px 3px 15px rgba(0,0,0,0.9);
-  letter-spacing: 4px;
+  font-size: clamp(5rem, 6vw, 14rem);
+  text-shadow: 4px 4px 20px rgba(0,0,0,0.95);
+  letter-spacing: 5px;
   animation: glow 2s ease-in-out infinite alternate;
-  margin-bottom: 35px;
+  margin-bottom: 50px;
 }
 
 @keyframes glow {
-  from { text-shadow: 0 0 12px #7986cb, 0 0 25px #3949ab; }
-  to { text-shadow: 0 0 25px #90caf9, 0 0 50px #5c6bc0; }
+  from { text-shadow: 0 0 15px #7986cb, 0 0 30px #3949ab; }
+  to { text-shadow: 0 0 30px #90caf9, 0 0 60px #5c6bc0; }
 }
 
-/* Retângulo para botões */
+/* Botões lado a lado */
 .button-background {
   background: #0d133d;
-  border-radius: 25px;
-  padding: 50px;
+  border-radius: 30px;
+  padding: 60px;
   display: flex;
   justify-content: space-evenly;
-  gap: 50px;
+  gap: 60px;
   width: 100%;
-  flex-wrap: nowrap; /* mantém lado a lado no PC */
-  transition: all 0.3s ease;
-  overflow: visible;
+  position: relative;
+  flex-wrap: nowrap; /* PC: lado a lado */
+  z-index: 1;
 }
 
-/* Botões */
+/* Botões enormes */
 .game-btn {
-  flex: 0 0 400px; /* largura fixa no PC */
-  min-width: 400px;
-  max-width: 400px;
-  padding: 25px 35px;
-  font-size: clamp(1.5rem, 2vw, 2rem);
+  flex: 0 0 450px; 
+  min-width: 450px;
+  max-width: 450px;
+  padding: 35px 45px;
+  font-size: clamp(2rem, 2.5vw, 2.5rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
   color: #fff;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
   cursor: pointer;
   transition: all 0.4s ease;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.55);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.65);
   text-transform: uppercase;
   font-weight: bold;
   position: relative;
@@ -127,21 +126,32 @@ h1 {
 
 .game-btn:hover::after { left: 100%; }
 .game-btn:hover {
-  transform: translateY(-6px) scale(1.1);
-  box-shadow: 0 16px 38px rgba(0,0,0,0.65);
+  transform: translateY(-8px) scale(1.15);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.7);
   background: linear-gradient(145deg, #1a237e, #283593);
 }
 
-/* Previews */
+/* Previews absolute */
 .game-info {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
   max-width: 1700px;
-  padding: 35px 60px;
-  transition: all 0.6s ease;
+  padding: 40px 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.game-info.show {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .game-info img {
@@ -150,29 +160,26 @@ h1 {
   height: auto;
   object-fit: contain;
   background-color: #000;
-  border-radius: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.65);
-  opacity: 0;
+  border-radius: 30px;
+  margin-bottom: 35px;
+  box-shadow: 0 12px 50px rgba(0,0,0,0.7);
   transform: scale(0.9);
   transition: all 0.6s ease;
 }
 
 .game-info.show img {
-  opacity: 1;
   transform: scale(1);
 }
 
-/* Descrição grande */
 .game-info p {
-  font-size: clamp(2rem, 2vw, 3rem);
+  font-size: clamp(2rem, 2.5vw, 4rem);
   line-height: 1.7;
   color: #fff;
-  max-width: 95%;
+  max-width: 90%;
   text-align: center;
-  background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
-  padding: 25px 40px;
-  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(0,0,0,0.75), rgba(30,30,30,0.75));
+  padding: 30px 50px;
+  border-radius: 25px;
   opacity: 0;
   transform: translateY(15px);
   transition: all 0.6s ease 0.2s;
@@ -183,40 +190,36 @@ h1 {
   transform: translateY(0);
 }
 
-/* Créditos */
+/* Créditos grandes */
 .credits {
-  margin-top: 30px;
+  margin-top: 50px;
   text-align: center;
 }
 
 .credits p {
-  margin: 5px 0;
+  margin: 6px 0;
   color: #fff;
-  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  font-size: clamp(1rem, 1.2vw, 1.3rem);
   font-weight: bold;
 }
 
 /* Responsividade */
 @media (max-width: 1024px) {
-  .container { padding: 40px 50px; }
-  .button-background {
-    flex-wrap: wrap; /* permite quebra em tablets */
-    gap: 25px;
-    padding: 25px;
-  }
-  h1 { font-size: clamp(2.5rem, 4vw, 6rem); }
-  .game-btn { flex: 1 1 300px; min-width: 200px; max-width: 350px; padding: 16px 24px; font-size: clamp(1rem, 1.5vw, 1.5rem); }
-  .game-info { padding: 20px 30px; }
+  .container { padding: 60px 50px; }
+  .button-background { flex-wrap: wrap; gap: 35px; padding: 40px; }
+  h1 { font-size: clamp(3rem, 5vw, 8rem); }
+  .game-btn { flex: 1 1 300px; min-width: 250px; max-width: 350px; padding: 25px 30px; font-size: clamp(1.5rem, 2vw, 2rem); }
+  .game-info { padding: 25px 20px; }
+  .game-info p { font-size: clamp(1.5rem, 2vw, 2.5rem); padding: 20px 30px; }
 }
 
 @media (max-width: 480px) {
-  .container { padding: 15px 10px; }
-  .button-background { flex-direction: column; gap: 15px; padding: 10px; flex-wrap: wrap; }
-  .game-btn { flex: none; width: 100%; max-width: 100%; font-size: clamp(0.9rem, 4vw, 1.4rem); padding: 12px 16px; }
-  h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); margin-bottom: 10px; }
-  .game-info { padding: 10px; }
-  .game-info img { max-width: 100%; height: auto; border-radius: 12px; }
-  .game-info p { font-size: clamp(1rem, 4vw, 1.4rem); padding: 10px 15px; line-height: 1.5; max-width: 100%; }
+  .container { padding: 20px 10px; }
+  .button-background { flex-direction: column; gap: 20px; padding: 15px; }
+  .game-btn { width: 100%; flex: none; font-size: clamp(1rem, 4vw, 1.5rem); padding: 15px 20px; }
+  h1 { font-size: clamp(2rem, 6vw, 2.8rem); margin-bottom: 15px; }
+  .game-info img { max-width: 100%; border-radius: 15px; }
+  .game-info p { font-size: clamp(1rem, 4vw, 1.5rem); padding: 12px 15px; }
 }
 </style>
 </head>
@@ -238,7 +241,7 @@ h1 {
         onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
     </div>
-  </header>
+      </header>
 
   <div class="game-info" id="gameInfo">
     <img id="gameImage" src="" alt="Imagem do Jogo">
@@ -259,6 +262,7 @@ function showPreview(image, description){
 
   gameImage.src = image;
   gameDescription.textContent = description;
+
   gameInfo.classList.add('show');
 }
 
