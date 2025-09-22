@@ -16,19 +16,19 @@ html, body {
 
 /* ---- TÍTULO ---- */
 h1 {
-  margin:30vh 0 1vh 0;
+  margin:20vh 0 2vh 0;
   text-align:center;
-  font-size:clamp(40px, 6vw, 90px);
-  text-shadow:0 0 20px #38bdf8;
+  font-size:clamp(60px, 8vw, 120px); /* maior no PC */
+  text-shadow:0 0 30px #38bdf8;
 }
 
 /* ---- HUD ---- */
 .hud {
   display:flex; justify-content:space-around;
-  width:95%; max-width:600px;
+  width:95%; max-width:700px; /* maior no PC */
   font-weight:bold;
-  margin-bottom:1vh;
-  font-size:clamp(18px, 3vw, 60px);
+  margin-bottom:2vh;
+  font-size:clamp(24px, 3vw, 80px); /* maior no PC */
   flex-wrap:wrap;
 }
 
@@ -40,18 +40,18 @@ h1 {
   background:#334155;
   padding:5vw 20px;
   border-radius:10px;
-  box-shadow:0 0 15px #38bdf8;
-  width:90%; max-width:400px;
+  box-shadow:0 0 20px #38bdf8;
+  width:90%; max-width:450px;
 }
 button, select {
   margin-top:10px;
-  padding:14px 28px;
-  border:none; border-radius:6px;
+  padding:16px 32px;
+  border:none; border-radius:8px;
   background:#0ea5e9; color:white;
-  font-size:clamp(18px, 3vw, 22px);
+  font-size:clamp(18px, 3vw, 24px);
   cursor:pointer;
-  box-shadow:0 0 15px #0ea5e9;
-  width:100%; max-width:250px;
+  box-shadow:0 0 20px #0ea5e9;
+  width:100%; max-width:280px;
 }
 
 /* ---- TABULEIRO FIXO AJUSTADO PARA NOTEBOOK ---- */
@@ -66,9 +66,9 @@ button, select {
   display:grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  grid-gap: 15px;
-  width: min(80vw, 500px);   /* largura proporcional à tela */
-  height: min(80vw, 500px);  /* altura proporcional à tela */
+  grid-gap: 20px; /* maior espaço no PC */
+  width: min(90vw, 600px);   /* maior largura no PC */
+  height: min(90vw, 600px);  /* maior altura no PC */
 }
 
 .cell {
@@ -76,34 +76,34 @@ button, select {
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size: min(10vw, 80px); /* letras proporcionais */
+  font-size: min(12vw, 120px); /* maior no PC */
   cursor:pointer;
-  border-radius:8px;
-  text-shadow:0 0 15px #fff;
+  border-radius:12px;
+  text-shadow:0 0 25px #fff;
   user-select:none;
   box-sizing:border-box;
   overflow:hidden;
 }
 
-.cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
-.cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
+.cell.X { color:#f43f5e; text-shadow:0 0 30px #f43f5e; }
+.cell.O { color:#3b82f6; text-shadow:0 0 30px #3b82f6; }
 
 /* ---- RESPONSIVO PARA NOTEBOOKS E CELULARES ---- */
 @media(max-width: 1024px){
   #board {
-    width: min(90vw, 400px);
-    height: min(90vw, 400px);
-    grid-gap: 12px;
+    width: min(90vw, 500px);
+    height: min(90vw, 500px);
+    grid-gap: 15px;
   }
   .cell {
-    font-size: min(12vw, 60px);
+    font-size: min(14vw, 80px);
   }
   h1 {
-    font-size: clamp(40px, 6vw, 70px);
-    margin-top: 15vh;
+    font-size: clamp(50px, 7vw, 90px);
+    margin-top: 12vh;
   }
   .hud {
-    font-size: clamp(16px, 2vw, 30px);
+    font-size: clamp(20px, 2.5vw, 50px);
   }
 }
 
@@ -111,10 +111,10 @@ button, select {
   #board {
     width: 90vw;
     height: 90vw;
-    grid-gap: 8px;
+    grid-gap: 10px;
   }
   .cell {
-    font-size: 20vw;
+    font-size: 18vw;
   }
   h1 {
     font-size: clamp(30px, 8vw, 50px);
