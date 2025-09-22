@@ -12,80 +12,26 @@ html, body {
   align-items:center; justify-content:flex-start;
   font-family:Arial, sans-serif;
   background:#1e293b; color:#e2e8f0;
-  overflow-x:hidden;
-}
-
-/* ---- CONTAINER PRINCIPAL ---- */
-#gameWrapper {
-  position:relative;
-  display:flex; flex-direction:column;
-  align-items:center;
-  width:100%;
-  flex-grow:1;
 }
 
 /* ---- TÍTULO ---- */
 h1 {
-  position:absolute;
-  top:0;
-  left:50%;
-  transform:translateX(-50%);
-  margin:0;
-  font-size:clamp(120px, 12vw, 220px);
+  margin:0; 
+  text-align:center;
+  font-size:clamp(120px, 12vw, 220px); /* gigante no PC */
   text-shadow:0 0 60px #38bdf8;
-  z-index:2;
-  pointer-events:none; /* não interfere nos cliques */
 }
 
 /* ---- HUD ---- */
 .hud {
-  position:absolute;
-  top:calc(50% + 120px); /* ajusta para ficar logo abaixo do título */
-  left:50%;
-  transform:translateX(-50%);
   display:flex; justify-content:space-around;
   width:95%; max-width:900px;
   font-weight:bold;
+  margin:0; /* colado no tabuleiro */
   font-size:clamp(32px, 4vw, 100px);
   flex-wrap:wrap;
-  z-index:2;
-  pointer-events:none;
+  padding-bottom:20px; /* pequeno espaçamento do tabuleiro */
 }
-
-/* ---- TABULEIRO ---- */
-#boardContainer {
-  display:flex; align-items:center; justify-content:center;
-  width:100%;
-  flex-grow:1;
-  margin-top:180px; /* espaço do título e HUD */
-  z-index:1;
-}
-
-#board {
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  grid-gap: 35px; 
-  width: min(95vw, 900px);
-  height: min(95vw, 900px);
-}
-
-.cell {
-  background:#111827;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size: min(20vw, 200px);
-  cursor:pointer;
-  border-radius:12px;
-  text-shadow:0 0 50px #fff;
-  user-select:none;
-  box-sizing:border-box;
-  overflow:hidden;
-}
-
-.cell.X { color:#f43f5e; text-shadow:0 0 45px #f43f5e; }
-.cell.O { color:#3b82f6; text-shadow:0 0 45px #3b82f6; }
 
 /* ---- MENUS ---- */
 #menuScreen, #aiOptions {
@@ -135,66 +81,98 @@ button, select {
   cursor:pointer;
 }
 
+/* ---- TABULEIRO ---- */
+#boardContainer {
+  display:flex; align-items:center; justify-content:center;
+  width:100%;
+  flex-grow:1;
+  margin-top:10px; /* pequeno espaçamento do HUD */
+}
+
+#board {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 35px; 
+  width: min(95vw, 900px);
+  height: min(95vw, 900px);
+}
+
+.cell {
+  background:#111827;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: min(20vw, 200px); 
+  cursor:pointer;
+  border-radius:12px;
+  text-shadow:0 0 50px #fff;
+  user-select:none;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+
+.cell.X { color:#f43f5e; text-shadow:0 0 45px #f43f5e; }
+.cell.O { color:#3b82f6; text-shadow:0 0 45px #3b82f6; }
+
 /* ---- RESPONSIVO ---- */
 @media(max-width: 1024px){
-  h1 { font-size: clamp(70px, 10vw, 140px); }
-  .hud { font-size: clamp(22px, 3vw, 60px); top:calc(50% + 70px);}
   #board { width:min(90vw,600px); height:min(90vw,600px); grid-gap:20px; }
   .cell { font-size:min(16vw,120px); }
+  h1 { font-size: clamp(70px, 10vw, 140px); }
+  .hud { font-size: clamp(22px, 3vw, 60px); padding-bottom:15px; }
 }
 
 @media(max-width: 600px){
-  h1 { font-size: clamp(35px, 8vw, 60px); }
-  .hud { font-size: clamp(14px, 4vw, 28px); top:calc(50% + 50px);}
   #board { width:90vw; height:90vw; grid-gap:10px; }
   .cell { font-size:18vw; }
+  h1 { font-size: clamp(35px, 8vw, 60px); }
+  .hud { font-size: clamp(14px, 4vw, 28px); max-width:90%; padding-bottom:10px; }
 }
 </style>
 </head>
 <body>
+<h1>✨ Jogo da Velha ✨</h1>
 
-<div id="gameWrapper">
-  <h1>✨ Jogo da Velha ✨</h1>
-  <div class="hud">
-    <div>Pontos X: <span id="scoreX">0</span></div>
-    <div>Pontos O: <span id="scoreO">0</span></div>
-    <div>Rodada: <span id="round">1</span>/10</div>
-  </div>
+<div class="hud">
+  <div>Pontos X: <span id="scoreX">0</span></div>
+  <div>Pontos O: <span id="scoreO">0</span></div>
+  <div>Rodada: <span id="round">1</span>/10</div>
+</div>
 
-  <div id="menuScreen">
-    <p>Escolha o modo de jogo:</p>
-    <button id="singleBtn">Contra IA</button>
-    <button id="multiBtn">Multiplayer Local</button>
-  </div>
+<div id="menuScreen">
+  <p>Escolha o modo de jogo:</p>
+  <button id="singleBtn">Contra IA</button>
+  <button id="multiBtn">Multiplayer Local</button>
+</div>
 
-  <div id="aiOptions" style="display:none;">
-    <div class="option">
-      <label for="playerSymbol">Escolha seu símbolo:</label>
-      <select id="playerSymbol">
-        <option value="X">❌ X</option>
-        <option value="O">⭕ O</option>
-      </select>
-    </div>
-    <div class="option">
-      <label for="difficulty">Dificuldade:</label>
-      <select id="difficulty">
-        <option value="easy">Fácil</option>
-        <option value="medium" selected>Médio</option>
-        <option value="hard">Difícil</option>
-      </select>
-    </div>
-    <button id="startAI">Iniciar</button>
+<div id="aiOptions" style="display:none;">
+  <div class="option">
+    <label for="playerSymbol">Escolha seu símbolo:</label>
+    <select id="playerSymbol">
+      <option value="X">❌ X</option>
+      <option value="O">⭕ O</option>
+    </select>
   </div>
+  <div class="option">
+    <label for="difficulty">Dificuldade:</label>
+    <select id="difficulty">
+      <option value="easy">Fácil</option>
+      <option value="medium" selected>Médio</option>
+      <option value="hard">Difícil</option>
+    </select>
+  </div>
+  <button id="startAI">Iniciar</button>
+</div>
 
-  <div id="boardContainer" style="display:none;">
-    <div id="board"></div>
-  </div>
+<div id="boardContainer" style="display:none;">
+  <div id="board"></div>
 </div>
 
 <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" loop autoplay></audio>
 
 <script>
-// Mesmo JS do seu código original
+// mesmo JS do seu código original
 const menuScreen=document.getElementById("menuScreen");
 const aiOptions=document.getElementById("aiOptions");
 const singleBtn=document.getElementById("singleBtn");
