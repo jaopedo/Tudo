@@ -46,8 +46,8 @@ body::before {
   border: 2px solid rgba(255,255,255,0.25);
   border-radius: 20px;
   padding: 40px 60px;
-  width: 95%;            /* quase toda a largura */
-  max-width: 1600px;     /* para notebooks grandes */
+  width: 95%;
+  max-width: 1600px; /* notebooks grandes */
   backdrop-filter: blur(20px);
   box-shadow: 0 8px 35px rgba(0,0,0,0.5);
   animation: fadeIn 1.2s ease-in-out;
@@ -82,10 +82,10 @@ h1 {
   border-radius: 20px;
   padding: 30px;
   display: flex;
-  justify-content: space-evenly; /* aproveita toda a largura */
+  justify-content: space-evenly;
   gap: 30px;
   width: 100%;
-  max-width: 100%; /* ocupa largura total do container */
+  max-width: 100%;
   transition: all 0.3s ease;
   overflow: visible;
   flex-wrap: wrap;
@@ -93,9 +93,9 @@ h1 {
 
 /* Botões */
 .game-btn {
-  flex: 1 1 200px; /* cada botão cresce para preencher espaço */
-  min-width: 200px; /* evita que fique muito pequeno */
-  max-width: 350px; /* evita que fique gigante */
+  flex: 1 1 200px;
+  min-width: 200px;
+  max-width: 350px;
   padding: 16px 24px;
   font-size: clamp(1rem, 1.5vw, 1.5rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
@@ -137,14 +137,14 @@ h1 {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 1600px; /* imagens grandes */
+  max-width: 1600px;
   padding: 20px 40px;
   transition: all 0.6s ease;
 }
 
 .game-info img {
   width: 100%;
-  max-width: 1400px; /* maior para notebooks largos */
+  max-width: 1400px;
   height: auto;
   object-fit: contain;
   background-color: #000;
@@ -198,7 +198,7 @@ h1 {
   font-weight: bold;
 }
 
-/* Ajustes para telas menores */
+/* Ajustes para notebooks grandes */
 @media (max-width: 1024px) {
   .button-background {
     gap: 25px;
@@ -207,6 +207,7 @@ h1 {
   }
 }
 
+/* Ajustes para tablets */
 @media (max-width: 768px) {
   .button-background {
     flex-direction: column;
@@ -216,6 +217,38 @@ h1 {
   .game-btn {
     width: 100%;
     flex: none;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    padding: 14px 20px;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    margin-bottom: 20px;
+  }
+}
+
+/* Ajustes para celulares */
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 15px;
+  }
+  .button-background {
+    gap: 15px;
+    padding: 15px;
+  }
+  .game-btn {
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    padding: 12px 18px;
+  }
+  .game-info p {
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    padding: 15px 20px;
+  }
+  h1 {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    margin-bottom: 15px;
+  }
+  .game-info img {
+    max-width: 95%;
   }
 }
 </style>
@@ -226,15 +259,15 @@ h1 {
     <h1>Bem-vindo aos Jogos!</h1>
     <div class="button-background">
       <button class="game-btn"
-        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
+        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos e veja até onde consegue chegar. Controles: Setas e espaço.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
 
       <button class="game-btn"
-        onmouseover="showPreview('imagem2.png','Desafie amigos ou a AI em no mínimo 10 rodadas no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
+        onmouseover="showPreview('imagem2.png','Desafie amigos ou a AI em 10 rodadas no tradicional Jogo da Velha. Planeje suas jogadas e conquiste a vitória! Controles: Clique do mouse.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
 
       <button class="game-btn"
-        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')"
+        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas. Teste sua agilidade neste divertido jogo. Controles: Setas do teclado.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
     </div>
   </header>
@@ -267,4 +300,4 @@ function goToGame(link){
 }
 </script>
 </body>
-</html>
+    </html>
