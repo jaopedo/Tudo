@@ -1,258 +1,186 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo da Velha - 10 Rodadas</title>
-<style>
-html, body {
-  margin:0; padding:0;
-  height:100%; width:100%;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:flex-start;
-  font-family:Arial, sans-serif;
-  background:#1e293b; color:#e2e8f0;
-}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo da Velha - 10 Rodadas</title>
+  <style>
+    * {
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
 
-/* ---- TÍTULO ---- */
-h1 {
-  margin:30vh 0 1vh 0;
-  text-align:center;
-  font-size:clamp(40px, 6vw, 90px);
-  text-shadow:0 0 20px #38bdf8;
-}
+    body {
+      background:#0f172a;
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      min-height:100vh;
+      padding:2vh 2vw;
+    }
 
-/* ---- HUD ---- */
-.hud {
-  display:flex; justify-content:space-around;
-  width:95%; max-width:600px;
-  font-weight:bold;
-  margin-bottom:1vh;
-  font-size:clamp(18px, 3vw, 60px);
-  flex-wrap:wrap;
-}
+    h1 {
+      margin:8vh 0 1vh 0;
+      font-size:clamp(32px,5vw,64px);
+      text-align:center;
+      color:#38bdf8;
+      text-shadow:0 0 10px #38bdf8;
+    }
 
-/* ---- MENUS ---- */
-#menuScreen, #aiOptions {
-  display:flex; flex-direction:column;
-  align-items:center;
-  margin-top:2vh;
-  background:#334155;
-  padding:5vw 20px;
-  border-radius:10px;
-  box-shadow:0 0 15px #38bdf8;
-  width:90%; max-width:400px;
-}
-button, select {
-  margin-top:10px;
-  padding:14px 28px;
-  border:none; border-radius:6px;
-  background:#0ea5e9; color:white;
-  font-size:clamp(18px, 3vw, 22px);
-  cursor:pointer;
-  box-shadow:0 0 15px #0ea5e9;
-  width:100%; max-width:250px;
-}
+    .hud {
+      font-size:clamp(16px,2.5vw,28px);
+      margin-bottom:2vh;
+      text-align:center;
+    }
 
-/* ---- TABULEIRO FIXO ---- */
-#boardContainer {
-  display:flex; align-items:center; justify-content:center;
-  width:100%;
-  padding:10px;
-  flex-grow:1;
-}
+    #board {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      grid-template-rows:repeat(3,1fr);
+      grid-gap:2%;
+      width:min(90vw,500px);
+      height:min(90vw,500px);
+    }
 
-#board {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  grid-template-rows:repeat(3,1fr);
-  grid-gap:15px;
-  width:600px;   /* largura fixa para desktop */
-  height:600px;  /* altura fixa para desktop */
-}
+    .cell {
+      background:#111827;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:calc(min(90vw,500px) / 4);
+      cursor:pointer;
+      border-radius:8px;
+      text-shadow:0 0 15px #fff;
+      user-select:none;
+      transition:background 0.3s;
+    }
 
-.cell {
-  background:#111827;
-  display:flex; 
-  align-items:center; 
-  justify-content:center;
-  font-size:120px;  /* tamanho do X/O para desktop */
-  cursor:pointer;
-  border-radius:8px;
-  text-shadow:0 0 15px #fff;
-  user-select:none;
-  box-sizing:border-box;
-  overflow:hidden;
-}
+    .cell:hover {
+      background:#1e293b;
+    }
 
-.cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
-.cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
+    button {
+      margin-top:3vh;
+      padding:0.8em 2em;
+      background:#2563eb;
+      border:none;
+      border-radius:8px;
+      color:#fff;
+      font-size:clamp(16px,2.5vw,22px);
+      cursor:pointer;
+      transition:background 0.3s, transform 0.2s;
+    }
 
-/* ---- RESPONSIVO PARA CELULAR ---- */
-@media(max-width:600px){
-  #board {
-    width:300px;   /* menor no celular */
-    height:300px;
-    grid-gap:8px;
-  }
-  .cell {
-    font-size:60px; /* menor no celular */
-  }
-  h1 {
-    font-size:clamp(30px, 8vw, 50px);
-    margin-top:10vh;
-  }
-  .hud {
-    font-size:clamp(14px, 4vw, 24px);
-    max-width:90%;
-  }
-}
-</style>
+    button:hover {
+      background:#1d4ed8;
+      transform:scale(1.05);
+    }
+
+    @media (max-width:600px){
+      h1 { margin:5vh 0 1vh 0; }
+      .hud { margin-bottom:1.5vh; }
+    }
+  </style>
 </head>
 <body>
 
-<h1>✨ Jogo da Velha ✨</h1>
-
-<div class="hud">
-  <div>Pontos X: <span id="scoreX">0</span></div>
-  <div>Pontos O: <span id="scoreO">0</span></div>
-  <div>Rodada: <span id="round">1</span>/10</div>
-</div>
-
-<div id="menuScreen">
-  <p>Escolha o modo de jogo:</p>
-  <button id="singleBtn">Contra IA</button>
-  <button id="multiBtn">Multiplayer Local</button>
-</div>
-
-<div id="aiOptions" style="display:none;">
-  <label>Símbolo:
-    <select id="playerSymbol">
-      <option value="X">❌ X</option>
-      <option value="O">⭕ O</option>
-    </select>
-  </label>
-  <label>Dificuldade:
-    <select id="difficulty">
-      <option value="easy">Fácil</option>
-      <option value="medium" selected>Médio</option>
-      <option value="hard">Difícil</option>
-    </select>
-  </label>
-  <button id="startAI">Iniciar</button>
-</div>
-
-<div id="boardContainer" style="display:none;">
+  <h1>Jogo da Velha - 10 Rodadas</h1>
+  <div class="hud">
+    Rodada: <span id="round">1</span>/10 |
+    Placar - X: <span id="scoreX">0</span> O: <span id="scoreO">0</span>
+  </div>
   <div id="board"></div>
-</div>
+  <button id="reset">Reiniciar Jogo</button>
 
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" loop autoplay></audio>
+  <script>
+    const boardEl = document.getElementById('board');
+    const roundEl = document.getElementById('round');
+    const scoreXEl = document.getElementById('scoreX');
+    const scoreOEl = document.getElementById('scoreO');
+    const resetBtn = document.getElementById('reset');
 
-<script>
-const menuScreen=document.getElementById("menuScreen");
-const aiOptions=document.getElementById("aiOptions");
-const singleBtn=document.getElementById("singleBtn");
-const multiBtn=document.getElementById("multiBtn");
-const startAI=document.getElementById("startAI");
-const boardEl=document.getElementById("board");
-const boardContainer=document.getElementById("boardContainer");
-const scoreXEl=document.getElementById("scoreX");
-const scoreOEl=document.getElementById("scoreO");
-const roundEl=document.getElementById("round");
-const playerSymbolEl=document.getElementById("playerSymbol");
-const difficultyEl=document.getElementById("difficulty");
+    let board = Array(9).fill('');
+    let currentPlayer = 'X';
+    let round = 1;
+    let scoreX = 0;
+    let scoreO = 0;
+    let gameActive = true;
 
-let board=Array(9).fill(null);
-let player="X", ai="O", mode="single", difficulty="medium";
-let currentTurn="X", gameOver=false;
-let scoreX=0, scoreO=0, round=1, maxRounds=10;
-
-function createBoard(){
-  boardEl.innerHTML="";
-  board=Array(9).fill(null);
-  gameOver=false;
-  currentTurn="X";
-  for(let i=0;i<9;i++){
-    const cell=document.createElement("div");
-    cell.classList.add("cell");
-    cell.dataset.index=i;
-    cell.addEventListener("click",()=>playerMove(i));
-    boardEl.appendChild(cell);
-  }
-}
-function updateHUD(){
-  scoreXEl.textContent=scoreX;
-  scoreOEl.textContent=scoreO;
-  roundEl.textContent=round;
-}
-function playerMove(i){
-  if(gameOver||board[i])return;
-  if(mode==="single"){
-    board[i]=player; renderBoard();
-    if(checkWinner(player)){scoreX++;endRound("Você ganhou!");return;}
-    if(board.every(c=>c)){scoreX++;scoreO++;endRound("Empate!");return;}
-    aiMove();
-  }else{
-    board[i]=currentTurn; renderBoard();
-    if(checkWinner(currentTurn)){
-      currentTurn==="X"?scoreX++:scoreO++;
-      endRound(`Jogador ${currentTurn} ganhou!`);return;
+    function createBoard() {
+      boardEl.innerHTML = '';
+      board.forEach((_, i) => {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.addEventListener('click', handleCellClick);
+        boardEl.appendChild(cell);
+      });
     }
-    if(board.every(c)){scoreX++;scoreO++;endRound("Empate!");return;}
-    currentTurn=currentTurn==="X"?"O":"X";
-  }
-}
-function aiMove(){
-  const empty=board.map((v,i)=>v?null:i).filter(v=>v!==null);
-  let move=empty[Math.floor(Math.random()*empty.length)];
-  board[move]=ai; renderBoard();
-  if(checkWinner(ai)){scoreO++;endRound("Você perdeu!");return;}
-  if(board.every(c)){scoreX++;scoreO++;endRound("Empate!");return;}
-}
-function renderBoard(){
-  document.querySelectorAll(".cell").forEach((c,i)=>{
-    c.textContent=board[i]||"";
-    c.className="cell "+(board[i]||"");
-  });
-}
-function checkWinner(p){
-  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  return wins.some(c=>c.every(i=>board[i]===p));
-}
-function endRound(msg){
-  gameOver=true;
-  alert(msg);
-  if(round>=maxRounds){
-    if(scoreX===scoreO){
-      alert("Empate geral! Rodadas bônus.");
-      round++;createBoard();updateHUD();
-      if(mode==="single"&&player==="O")aiMove();
-      return;
+
+    function handleCellClick(e) {
+      const idx = e.target.dataset.index;
+      if (!gameActive || board[idx] !== '') return;
+      board[idx] = currentPlayer;
+      e.target.textContent = currentPlayer;
+      if (checkWin()) {
+        if (currentPlayer === 'X') scoreX++;
+        else scoreO++;
+        updateHUD();
+        nextRound(`${currentPlayer} venceu!`);
+      } else if (!board.includes('')) {
+        nextRound('Empate!');
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      }
     }
-    alert(`Fim das ${maxRounds} rodadas! ${scoreX>scoreO?"X venceu!":"O venceu!"}`);
-    scoreX=0;scoreO=0;round=1;
-    menuScreen.style.display="flex";
-    boardContainer.style.display="none";
-    aiOptions.style.display="none";
-    updateHUD();
-  }else{
-    round++;createBoard();updateHUD();
-    if(mode==="single"&&player==="O")aiMove();
-  }
-}
 
-singleBtn.onclick=()=>{menuScreen.style.display="none";aiOptions.style.display="flex";mode="single";}
-multiBtn.onclick=()=>{menuScreen.style.display="none";boardContainer.style.display="flex";mode="multi";createBoard();}
-startAI.onclick=()=>{
-  player=playerSymbolEl.value;
-  ai=(player==="X")?"O":"X";
-  difficulty=difficultyEl.value;
-  aiOptions.style.display="none";
-  boardContainer.style.display="flex";
-  createBoard();
-};
+    function checkWin() {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return wins.some(([a,b,c]) => board[a] && board[a]===board[b] && board[a]===board[c]);
+    }
 
-updateHUD();
-</script>
+    function nextRound(message) {
+      alert(message);
+      round++;
+      if (round > 10) {
+        alert(`Fim das rodadas!\nPlacar final - X: ${scoreX} | O: ${scoreO}`);
+        resetGame();
+      } else {
+        currentPlayer = 'X';
+        board = Array(9).fill('');
+        updateHUD();
+        createBoard();
+      }
+    }
+
+    function updateHUD() {
+      roundEl.textContent = round > 10 ? 10 : round;
+      scoreXEl.textContent = scoreX;
+      scoreOEl.textContent = scoreO;
+    }
+
+    function resetGame() {
+      board = Array(9).fill('');
+      currentPlayer = 'X';
+      round = 1;
+      scoreX = 0;
+      scoreO = 0;
+      gameActive = true;
+      updateHUD();
+      createBoard();
+    }
+
+    resetBtn.addEventListener('click', resetGame);
+
+    createBoard();
+  </script>
 </body>
 </html>
