@@ -34,7 +34,7 @@
     border-radius: 6px;
     border: 5px solid #FFFF99; /* borda amarelo claro */
     box-shadow: 0 0 15px #FFFF99; /* efeito de destaque */
-}
+  }
 
   #startScreen {
     position: fixed;
@@ -76,34 +76,55 @@
     display: flex;
     justify-content: center;
     gap: 30px;
-    font-size: 80px;
+    font-size: clamp(1.5rem, 2.5vw, 4rem); /* maior no PC e proporcional */
     margin-top: 10px;
     flex-wrap: wrap;
     padding: 20px;
   }
 
   .hud div {
-    padding: 8px 12px;
+    padding: 12px 16px;
     border: 2px solid #122231;
     border-radius: 6px;
     background-color: #0f1724;
-    min-width: 100px;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  @media (max-width: 480px){
+    .hud {
+      font-size: clamp(1rem, 4vw, 1.5rem); /* menor em celular */
+      gap: 15px;
+      padding: 10px;
+    }
+
+    .hud div {
+      min-width: 90px;
+      padding: 8px 10px;
+    }
+
+    #startScreen h1, #startScreen p {
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      max-width: 90%;
+      padding: 8px;
+    }
+
+    #startScreen button {
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      padding: 10px 16px;
+    }
   }
 </style>
 </head>
 <body>
 
-
 <div id="startScreen">
   <h1>Cobrinha</h1>
-  <p>Use as setas do teclado. 
-   
-  Vidas:3 <span id="startLives">3</span>. 
-   
+  <p>Use as setas do teclado.  
+  Vidas:3 <span id="startLives">3</span>.  
   Aperte Espaço para pausar.</p>
   <button id="startBtn">Começar</button>
 </div>
-
 
 <div class="hud">
   <div>Pontos: <span id="score">0</span></div>
@@ -289,5 +310,3 @@ startBtn.addEventListener('click', initGame);
 </script>
 </body>
 </html>
-
-
