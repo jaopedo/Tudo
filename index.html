@@ -160,8 +160,9 @@ h1 {
   transform: scale(1);
 }
 
+/* Descrição do jogo */
 .game-info p {
-  font-size: clamp(1rem, 1.2vw, 7rem);
+  font-size: clamp(1rem, 1.5vw, 2.5rem); /* tamanho proporcional para notebooks */
   line-height: 1.7;
   color: #fff;
   max-width: 95%;
@@ -172,6 +173,14 @@ h1 {
   opacity: 0;
   transform: translateY(15px);
   transition: all 0.6s ease 0.2s;
+}
+
+/* Tamanho maior em telas grandes */
+@media (min-width: 1200px) {
+  .game-info p {
+    font-size: clamp(1.5rem, 1.5vw, 3.5rem);
+    padding: 25px 35px;
+  }
 }
 
 .game-info.show p {
@@ -219,7 +228,7 @@ h1 {
   }
   .game-btn {
     font-size: clamp(0.9rem, 3vw, 1.2rem);
-    padding: 12px 16px;
+    padding: 12px 15px;
     width: 100%;
     flex: none;
   }
@@ -227,7 +236,6 @@ h1 {
     font-size: clamp(1.8rem, 6vw, 2.4rem);
     margin-bottom: 10px;
   }
-  /* Imagem e descrição responsivas */
   .game-info {
     padding: 10px 10px;
   }
@@ -293,4 +301,4 @@ function goToGame(link){
 }
 </script>
 </body>
-  </html>
+</html>
