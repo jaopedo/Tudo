@@ -16,9 +16,9 @@ html, body {
 
 /* ---- TÍTULO ---- */
 h1 {
-  margin:10vh 0 10vh 0; 
+  margin:0; 
   text-align:center;
-  font-size:clamp(120px, 15vw, 220px); /* gigante no PC */
+  font-size:clamp(120px, 12vw, 220px); /* gigante no PC */
   text-shadow:0 0 60px #38bdf8;
 }
 
@@ -27,9 +27,10 @@ h1 {
   display:flex; justify-content:space-around;
   width:95%; max-width:900px;
   font-weight:bold;
-  margin-bottom:20vh; 
+  margin:0; /* colado no tabuleiro */
   font-size:clamp(32px, 4vw, 100px);
   flex-wrap:wrap;
+  padding-bottom:20px; /* pequeno espaçamento do tabuleiro */
 }
 
 /* ---- MENUS ---- */
@@ -84,15 +85,15 @@ button, select {
 #boardContainer {
   display:flex; align-items:center; justify-content:center;
   width:100%;
-  padding:-10px;
   flex-grow:1;
+  margin-top:10px; /* pequeno espaçamento do HUD */
 }
 
 #board {
   display:grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  grid-gap: 35px; /* grande no PC */
+  grid-gap: 35px; 
   width: min(95vw, 900px);
   height: min(95vw, 900px);
 }
@@ -102,7 +103,7 @@ button, select {
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size: min(20vw, 200px); /* gigante no PC */
+  font-size: min(20vw, 200px); 
   cursor:pointer;
   border-radius:12px;
   text-shadow:0 0 50px #fff;
@@ -118,15 +119,15 @@ button, select {
 @media(max-width: 1024px){
   #board { width:min(90vw,600px); height:min(90vw,600px); grid-gap:20px; }
   .cell { font-size:min(16vw,120px); }
-  h1 { font-size: clamp(70px, 10vw, 140px); margin-top:8vh; }
-  .hud { font-size: clamp(22px, 3vw, 60px); }
+  h1 { font-size: clamp(70px, 10vw, 140px); }
+  .hud { font-size: clamp(22px, 3vw, 60px); padding-bottom:15px; }
 }
 
 @media(max-width: 600px){
   #board { width:90vw; height:90vw; grid-gap:10px; }
   .cell { font-size:18vw; }
-  h1 { font-size: clamp(35px, 8vw, 60px); margin-top:6vh; }
-  .hud { font-size: clamp(14px, 4vw, 28px); max-width:90%; }
+  h1 { font-size: clamp(35px, 8vw, 60px); }
+  .hud { font-size: clamp(14px, 4vw, 28px); max-width:90%; padding-bottom:10px; }
 }
 </style>
 </head>
@@ -171,6 +172,7 @@ button, select {
 <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" loop autoplay></audio>
 
 <script>
+// mesmo JS do seu código original
 const menuScreen=document.getElementById("menuScreen");
 const aiOptions=document.getElementById("aiOptions");
 const singleBtn=document.getElementById("singleBtn");
@@ -284,6 +286,3 @@ updateHUD();
 </script>
 </body>
 </html>
-
-
-
