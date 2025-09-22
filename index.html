@@ -47,7 +47,7 @@ body::before {
   border-radius: 20px;
   padding: 40px 60px;
   width: 95%;
-  max-width: 1600px; /* notebooks grandes */
+  max-width: 1600px;
   backdrop-filter: blur(20px);
   box-shadow: 0 8px 35px rgba(0,0,0,0.5);
   animation: fadeIn 1.2s ease-in-out;
@@ -123,7 +123,6 @@ h1 {
 }
 
 .game-btn:hover::after { left: 100%; }
-
 .game-btn:hover {
   transform: translateY(-4px) scale(1.05);
   box-shadow: 0 12px 28px rgba(0,0,0,0.55);
@@ -198,7 +197,7 @@ h1 {
   font-weight: bold;
 }
 
-/* Ajustes para notebooks grandes */
+/* Ajustes para tablets e notebooks menores */
 @media (max-width: 1024px) {
   .button-background {
     gap: 25px;
@@ -207,67 +206,61 @@ h1 {
   }
 }
 
-/* Ajustes para tablets */
-@media (max-width: 768px) {
-  .button-background {
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-  }
-  .game-btn {
-    width: 100%;
-    flex: none;
-    font-size: clamp(1rem, 2.5vw, 1.3rem);
-    padding: 14px 20px;
-  }
-  h1 {
-    font-size: clamp(2rem, 5vw, 2.8rem);
-    margin-bottom: 20px;
-  }
-}
-
 /* Ajustes para celulares */
 @media (max-width: 480px) {
   .container {
-    padding: 20px 15px;
+    padding: 15px 10px;
   }
   .button-background {
+    flex-direction: column;
     gap: 15px;
-    padding: 15px;
+    padding: 10px;
+    justify-content: center;
   }
   .game-btn {
     font-size: clamp(0.9rem, 3vw, 1.2rem);
-    padding: 12px 18px;
-  }
-  .game-info p {
-    font-size: clamp(0.9rem, 3vw, 1.2rem);
-    padding: 15px 20px;
+    padding: 12px 16px;
+    width: 100%;
+    flex: none;
   }
   h1 {
     font-size: clamp(1.8rem, 6vw, 2.4rem);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+  }
+  /* Imagem e descrição responsivas */
+  .game-info {
+    padding: 10px 10px;
   }
   .game-info img {
-    max-width: 95%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+  .game-info p {
+    font-size: clamp(0.85rem, 3vw, 1.1rem);
+    padding: 10px 15px;
+    line-height: 1.5;
+    max-width: 100%;
   }
 }
 </style>
 </head>
+
 <body>
 <div class="container">
   <header>
     <h1>Bem-vindo aos Jogos!</h1>
     <div class="button-background">
       <button class="game-btn"
-        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos e veja até onde consegue chegar. Controles: Setas e espaço.')"
+        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
 
       <button class="game-btn"
-        onmouseover="showPreview('imagem2.png','Desafie amigos ou a AI em 10 rodadas no tradicional Jogo da Velha. Planeje suas jogadas e conquiste a vitória! Controles: Clique do mouse.')"
+        onmouseover="showPreview('imagem2.png','Desafie amigos ou a AI em no mínimo 10 rodadas no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
 
       <button class="game-btn"
-        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas. Teste sua agilidade neste divertido jogo. Controles: Setas do teclado.')"
+        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
     </div>
   </header>
@@ -300,4 +293,4 @@ function goToGame(link){
 }
 </script>
 </body>
-    </html>
+  </html>
