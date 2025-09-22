@@ -16,19 +16,19 @@ html, body {
 
 /* ---- TÍTULO ---- */
 h1 {
-  margin:20vh 0 2vh 0;
+  margin:3vh 0 1vh 0; 
   text-align:center;
-  font-size:clamp(60px, 8vw, 120px); /* maior no PC */
-  text-shadow:0 0 30px #38bdf8;
+  font-size:clamp(120px, 15vw, 220px); /* gigante no PC */
+  text-shadow:0 0 60px #38bdf8;
 }
 
 /* ---- HUD ---- */
 .hud {
   display:flex; justify-content:space-around;
-  width:95%; max-width:700px; /* maior no PC */
+  width:95%; max-width:900px;
   font-weight:bold;
-  margin-bottom:2vh;
-  font-size:clamp(24px, 3vw, 80px); /* maior no PC */
+  margin-bottom:1vh; 
+  font-size:clamp(32px, 4vw, 100px);
   flex-wrap:wrap;
 }
 
@@ -40,31 +40,30 @@ h1 {
   background:#334155;
   padding:5vw 20px;
   border-radius:10px;
-  box-shadow:0 0 20px #38bdf8;
-  width:90%; max-width:450px;
+  box-shadow:0 0 25px #38bdf8;
+  width:90%; max-width:500px;
 }
 button, select {
   margin-top:10px;
   padding:16px 32px;
   border:none; border-radius:8px;
   background:#0ea5e9; color:white;
-  font-size:clamp(18px, 3vw, 24px);
+  font-size:clamp(18px, 3vw, 26px);
   cursor:pointer;
   box-shadow:0 0 20px #0ea5e9;
-  width:100%; max-width:280px;
+  width:100%; max-width:300px;
 }
 
-/* ---- ESTILO NOVO PARA OPÇÕES IA ---- */
+/* ---- OPÇÕES IA ---- */
 #aiOptions .option {
-  display:flex;
-  flex-direction:column;
+  display:flex; flex-direction:column;
   align-items:flex-start;
   margin-top:15px;
   width:100%;
 }
 
 #aiOptions label {
-  font-size:clamp(16px, 2vw, 22px);
+  font-size:clamp(18px, 2.2vw, 24px);
   color:#e2e8f0;
   margin-bottom:5px;
 }
@@ -76,16 +75,16 @@ button, select {
   border:none;
   background:#0ea5e9;
   color:white;
-  font-size:clamp(16px, 2vw, 20px);
-  box-shadow:0 0 15px #0ea5e9;
+  font-size:clamp(16px, 2vw, 22px);
+  box-shadow:0 0 18px #0ea5e9;
   cursor:pointer;
 }
 
-/* ---- TABULEIRO FIXO AJUSTADO PARA NOTEBOOK ---- */
+/* ---- TABULEIRO ---- */
 #boardContainer {
   display:flex; align-items:center; justify-content:center;
   width:100%;
-  padding:10px;
+  padding:5px;
   flex-grow:1;
 }
 
@@ -93,9 +92,9 @@ button, select {
   display:grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  grid-gap: 20px; /* maior espaço no PC */
-  width: min(90vw, 600px);   /* maior largura no PC */
-  height: min(90vw, 600px);  /* maior altura no PC */
+  grid-gap: 35px; /* grande no PC */
+  width: min(95vw, 900px);
+  height: min(95vw, 900px);
 }
 
 .cell {
@@ -103,54 +102,31 @@ button, select {
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size: min(12vw, 120px); /* maior no PC */
+  font-size: min(20vw, 200px); /* gigante no PC */
   cursor:pointer;
   border-radius:12px;
-  text-shadow:0 0 25px #fff;
+  text-shadow:0 0 50px #fff;
   user-select:none;
   box-sizing:border-box;
   overflow:hidden;
 }
 
-.cell.X { color:#f43f5e; text-shadow:0 0 30px #f43f5e; }
-.cell.O { color:#3b82f6; text-shadow:0 0 30px #3b82f6; }
+.cell.X { color:#f43f5e; text-shadow:0 0 45px #f43f5e; }
+.cell.O { color:#3b82f6; text-shadow:0 0 45px #3b82f6; }
 
-/* ---- RESPONSIVO PARA NOTEBOOKS E CELULARES ---- */
+/* ---- RESPONSIVO ---- */
 @media(max-width: 1024px){
-  #board {
-    width: min(90vw, 500px);
-    height: min(90vw, 500px);
-    grid-gap: 15px;
-  }
-  .cell {
-    font-size: min(14vw, 80px);
-  }
-  h1 {
-    font-size: clamp(50px, 7vw, 90px);
-    margin-top: 12vh;
-  }
-  .hud {
-    font-size: clamp(20px, 2.5vw, 50px);
-  }
+  #board { width:min(90vw,600px); height:min(90vw,600px); grid-gap:20px; }
+  .cell { font-size:min(16vw,120px); }
+  h1 { font-size: clamp(70px, 10vw, 140px); margin-top:8vh; }
+  .hud { font-size: clamp(22px, 3vw, 60px); }
 }
 
 @media(max-width: 600px){
-  #board {
-    width: 90vw;
-    height: 90vw;
-    grid-gap: 10px;
-  }
-  .cell {
-    font-size: 18vw;
-  }
-  h1 {
-    font-size: clamp(30px, 8vw, 50px);
-    margin-top: 10vh;
-  }
-  .hud {
-    font-size: clamp(14px, 4vw, 24px);
-    max-width: 90%;
-  }
+  #board { width:90vw; height:90vw; grid-gap:10px; }
+  .cell { font-size:18vw; }
+  h1 { font-size: clamp(35px, 8vw, 60px); margin-top:6vh; }
+  .hud { font-size: clamp(14px, 4vw, 28px); max-width:90%; }
 }
 </style>
 </head>
@@ -307,4 +283,4 @@ startAI.onclick=()=>{
 updateHUD();
 </script>
 </body>
-  </html>
+</html>
