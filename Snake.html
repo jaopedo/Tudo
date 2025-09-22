@@ -76,7 +76,7 @@
     display: flex;
     justify-content: center;
     gap: 30px;
-    font-size: clamp(20rem, 20vw, 40rem); /* maior no PC e proporcional */
+    font-size: clamp(10rem, 10vw, 20rem); /* maior no PC e proporcional */
     margin-top: 10px;
     flex-wrap: wrap;
     padding: 20px;
@@ -121,7 +121,7 @@
 <div id="startScreen">
   <h1>Cobrinha</h1>
   <p>Use as setas do teclado.  
-  Vidas:3 <span id="startLives">3</span>.  
+  Vidas:<span id="startLives">3</span>.  
   Aperte Espaço para pausar.</p>
   <button id="startBtn">Começar</button>
 </div>
@@ -310,4 +310,5 @@ startBtn.addEventListener('click', initGame);
 </script>
 </body>
 </html>
+
 
