@@ -18,7 +18,7 @@ html, body {
   height: 100%;
   background: radial-gradient(circle at top, #1a237e, #0d133d);
   overflow-x: hidden;
-  overflow-y: auto; /* scroll vertical se necessário */
+  overflow-y: auto;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -89,16 +89,16 @@ h1 {
   justify-content: space-evenly;
   gap: 50px;
   width: 100%;
-  flex-wrap: nowrap; /* Mantém os botões lado a lado no PC */
+  flex-wrap: nowrap; /* mantém lado a lado no PC */
   transition: all 0.3s ease;
   overflow: visible;
 }
 
 /* Botões */
 .game-btn {
-  flex: 1 1 300px;
-  min-width: 300px;
-  max-width: 450px;
+  flex: 0 0 400px; /* largura fixa no PC */
+  min-width: 400px;
+  max-width: 400px;
   padding: 25px 35px;
   font-size: clamp(1.5rem, 2vw, 2rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
@@ -200,30 +200,19 @@ h1 {
 @media (max-width: 1024px) {
   .container { padding: 40px 50px; }
   .button-background {
-    flex-wrap: wrap; /* permite quebra */
+    flex-wrap: wrap; /* permite quebra em tablets */
     gap: 25px;
     padding: 25px;
   }
   h1 { font-size: clamp(2.5rem, 4vw, 6rem); }
-  .game-btn { min-width: 200px; max-width: 350px; padding: 16px 24px; font-size: clamp(1rem, 1.5vw, 1.5rem); }
+  .game-btn { flex: 1 1 300px; min-width: 200px; max-width: 350px; padding: 16px 24px; font-size: clamp(1rem, 1.5vw, 1.5rem); }
   .game-info { padding: 20px 30px; }
 }
 
 @media (max-width: 480px) {
   .container { padding: 15px 10px; }
-  .button-background {
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px;
-    flex-wrap: wrap;
-  }
-  .game-btn {
-    flex: none;
-    width: 100%;
-    max-width: 100%;
-    font-size: clamp(0.9rem, 4vw, 1.4rem);
-    padding: 12px 16px;
-  }
+  .button-background { flex-direction: column; gap: 15px; padding: 10px; flex-wrap: wrap; }
+  .game-btn { flex: none; width: 100%; max-width: 100%; font-size: clamp(0.9rem, 4vw, 1.4rem); padding: 12px 16px; }
   h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); margin-bottom: 10px; }
   .game-info { padding: 10px; }
   .game-info img { max-width: 100%; height: auto; border-radius: 12px; }
@@ -270,7 +259,6 @@ function showPreview(image, description){
 
   gameImage.src = image;
   gameDescription.textContent = description;
-
   gameInfo.classList.add('show');
 }
 
