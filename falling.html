@@ -15,7 +15,6 @@
     background:#a21caf; 
     overflow:hidden;
   }
-
   h2 {
     text-align:center;
     color:#fff;
@@ -23,7 +22,6 @@
     margin:5px 0;
     font-size: clamp(2rem, 4vw, 3.5rem);
   }
-
   #hud {
     color:#fff;
     font-weight:bold;
@@ -32,12 +30,10 @@
     font-size: clamp(1.2rem, 3vw, 2.5rem);
     text-shadow:0 0 15px cyan, 0 0 25px #0ff;
   }
-
   #controls {
     text-align:center;
     margin-bottom:10px;
   }
-
   #controls button {
     font-size: clamp(1rem, 2.5vw, 1.5rem);
     padding:8px 16px;
@@ -49,7 +45,6 @@
     font-weight:bold;
     cursor:pointer;
   }
-
   #gameWrapper {
     width:95vw;
     max-width:900px;
@@ -60,18 +55,11 @@
     background: url('back.png') no-repeat center center;
     background-size: cover;
   }
-
   canvas {
     width:100%;
     height:100%;
     border-radius:12px;
     display:block;
-  }
-
-  @media(max-width:600px){
-    h2 { font-size: clamp(1.5rem, 5vw, 2rem); }
-    #hud { font-size: clamp(1rem, 4vw, 1.5rem); }
-    #controls button { font-size: clamp(0.9rem,4vw,1.2rem); padding:6px 12px; }
   }
 </style>
 </head>
@@ -103,15 +91,15 @@ const hitSound = document.getElementById("hitSound");
 const kirbyImg = new Image(); kirbyImg.src = 'Kirby.png';
 const bananaImg = new Image(); bananaImg.src = 'banana.png';
 const enemyImgs = [
-  {img:new Image(), speed:3},
-  {img:new Image(), speed:3.5},
-  {img:new Image(), speed:2.5}
+  {img:new Image(), speedFactor:0.004}, // velocidade proporcional
+  {img:new Image(), speedFactor:0.0045},
+  {img:new Image(), speedFactor:0.0035}
 ];
 enemyImgs[0].img.src = 'Inimigo1.png';
 enemyImgs[1].img.src = 'Inimigo2.png';
 enemyImgs[2].img.src = 'Inimigo3.png';
 
-let player = {x:0, y:0, w:100, h:100, speed:8};
+let player = {x:0, y:0, w:0, h:0, speed:0};
 let objects = [];
 let score = 0, lives = 3;
 let running = false, gameOver = false;
@@ -122,16 +110,19 @@ function updateHUD(){ hud.textContent = `Pontos: ${score} | Vidas: ${lives}`; }
 function rectCollide(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
 
 function spawnObject(){
-  const size = (canvas.width <= 400) ? 35 : 60;
-  const BORDER = 10;
-  const randX = BORDER + Math.random() * (canvas.width - 2*BORDER - size);
+  const size = canvas.width * 0.08;
+  const randX = Math.random()*(canvas.width-size);
   const rand = Math.random();
   let obj = {};
   if(rand<0.6){
     const enemyIndex = Math.floor(Math.random()*enemyImgs.length);
-    obj = {x:randX, y:-size, w:size, h:size, vy:enemyImgs[enemyIndex].speed, type:"enemy", img:enemyImgs[enemyIndex].img};
+    obj = {
+      x:randX, y:-size, w:size, h:size,
+      vy:enemyImgs[enemyIndex].speedFactor*canvas.width,
+      type:"enemy", img:enemyImgs[enemyIndex].img
+    };
   } else {
-    obj = {x:randX, y:-size, w:size, h:size, vy:2+Math.random()*2, type:"banana", img:bananaImg};
+    obj = {x:randX, y:-size, w:size, h:size, vy:0.003*canvas.width*(2+Math.random()*2), type:"banana", img:bananaImg};
   }
   objects.push(obj);
 }
@@ -140,11 +131,12 @@ function update(delta){
   if(!running) return;
   lastSpawn += delta;
   if(lastSpawn>spawnInterval){ spawnObject(); lastSpawn=0; spawnInterval=Math.max(500, spawnInterval-5); }
+
   if(keys.left) player.x -= player.speed*(delta/16);
   if(keys.right) player.x += player.speed*(delta/16);
-  const BORDER=10;
-  if(player.x<BORDER) player.x=BORDER;
-  if(player.x+player.w>canvas.width-BORDER) player.x=canvas.width-BORDER-player.w;
+
+  if(player.x<0) player.x=0;
+  if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
 
   for(let i=objects.length-1;i>=0;i--){
     const obj=objects[i];
@@ -162,13 +154,8 @@ function update(delta){
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  const BORDER=10;
-  ctx.strokeStyle="#000"; ctx.lineWidth=6;
-  ctx.shadowColor="#000"; ctx.shadowBlur=15;
-  ctx.strokeRect(BORDER,BORDER,canvas.width-2*BORDER,canvas.height-2*BORDER);
   ctx.drawImage(kirbyImg, player.x, player.y, player.w, player.h);
   for(const obj of objects){
-    ctx.shadowBlur = 0;
     ctx.drawImage(obj.img, obj.x, obj.y, obj.w, obj.h);
   }
 }
@@ -188,7 +175,7 @@ function startGame(){
   objects=[]; score=0; lives=3; running=true; gameOver=false; lastSpawn=0; spawnInterval=1000;
   resizeCanvas();
   player.x=(canvas.width-player.w)/2;
-  player.y=canvas.height-((canvas.width <= 400) ? 80 : 100);
+  player.y=canvas.height-player.h-10;
   updateHUD();
   bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
   lastTime=0;
@@ -218,16 +205,18 @@ function resizeCanvas(){
   canvas.width = wrapper.clientWidth;
   canvas.height = wrapper.clientHeight;
 
-  // Ajusta o player
-  player.w = canvas.width <= 400 ? 60 : 100;
-  player.h = canvas.width <= 400 ? 60 : 100;
+  // Kirby proporcional
+  player.w = canvas.width*0.12;
+  player.h = canvas.width*0.12;
+  player.speed = canvas.width*0.02;
 
-  // Ajusta todos os objetos existentes
+  // Objetos proporcionais
   objects.forEach(obj=>{
-    if(obj.type === "banana" || obj.type === "enemy"){
-      obj.w = canvas.width <= 400 ? 35 : 60;
-      obj.h = canvas.width <= 400 ? 35 : 60;
-    }
+    obj.w = canvas.width*0.08;
+    obj.h = canvas.width*0.08;
+    // Ajusta a velocidade proporcional
+    if(obj.type==="enemy") obj.vy = obj.vy/obj.vy*canvas.width*0.004;
+    if(obj.type==="banana") obj.vy = 0.003*canvas.width*(2+Math.random()*2);
   });
 }
 window.addEventListener("resize", resizeCanvas);
