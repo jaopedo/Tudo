@@ -18,9 +18,10 @@ html, body {
   height: 100%;
   background: radial-gradient(circle at top, #1a237e, #0d133d);
   overflow-x: hidden;
+  overflow-y: auto; /* Permite scroll vertical se necessário */
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Container inicia do topo */
   position: relative;
   padding: 20px 0;
 }
@@ -41,7 +42,7 @@ body::before {
   100% { transform: rotate(360deg); }
 }
 
-/* Container principal */
+/* Container principal gigante para PC */
 .container {
   background: rgba(255,255,255,0.08);
   border: 2px solid rgba(255,255,255,0.25);
@@ -55,9 +56,10 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: visible; /* garante que a descrição não corte os botões */
 }
 
-/* Header */
+/* Header gigante */
 header {
   width: 100%;
   text-align: center;
@@ -78,22 +80,25 @@ h1 {
   to { text-shadow: 0 0 25px #90caf9, 0 0 50px #5c6bc0; }
 }
 
-/* Retângulo para botões */
+/* Retângulo para botões grande */
 .button-background {
   background: #0d133d;
   border-radius: 25px;
   padding: 50px;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   gap: 50px;
   width: 100%;
-  flex-wrap: nowrap;        /* Mantém os botões lado a lado */
-  overflow-x: auto;         /* Scroll se não couber na tela */
+  flex-wrap: wrap; /* Permite quebra de linha se necessário */
+  transition: all 0.3s ease;
+  overflow: visible;
 }
 
-/* Botões */
+/* Botões enormes */
 .game-btn {
-  flex: 0 0 350px;          /* largura fixa, não cresce nem encolhe */
+  flex: 1 1 300px;
+  min-width: 300px;
+  max-width: 450px;
   padding: 25px 35px;
   font-size: clamp(1.5rem, 2vw, 2rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
@@ -127,7 +132,7 @@ h1 {
   background: linear-gradient(145deg, #1a237e, #283593);
 }
 
-/* Previews */
+/* Previews gigantes */
 .game-info {
   display: flex;
   flex-direction: column;
@@ -158,16 +163,16 @@ h1 {
   transform: scale(1);
 }
 
-/* Descrição grande e legível */
+/* Descrição grande (PC) */
 .game-info p {
-  font-size: clamp(2rem, 3vw, 4rem); /* grande mas elegante */
-  line-height: 1.6;
+  font-size: clamp(2rem, 2vw, 3rem); /* Ajustável ao gosto */
+  line-height: 1.7;
   color: #fff;
   max-width: 95%;
   text-align: center;
   background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
   padding: 25px 40px;
-  border-radius: 25px;
+  border-radius: 20px;
   opacity: 0;
   transform: translateY(15px);
   transition: all 0.6s ease 0.2s;
@@ -178,7 +183,7 @@ h1 {
   transform: translateY(0);
 }
 
-/* Créditos */
+/* Créditos grandes */
 .credits {
   margin-top: 30px;
   text-align: center;
@@ -194,16 +199,28 @@ h1 {
 /* Responsividade */
 @media (max-width: 1024px) {
   .container { padding: 40px 50px; }
+  .button-background { gap: 25px; padding: 25px; }
   h1 { font-size: clamp(2.5rem, 4vw, 6rem); }
-  .button-background { gap: 25px; flex-wrap: wrap; }
-  .game-btn { flex: 0 0 250px; padding: 16px 24px; font-size: clamp(1rem, 1.5vw, 1.5rem); }
+  .game-btn { min-width: 200px; max-width: 350px; padding: 16px 24px; font-size: clamp(1rem, 1.5vw, 1.5rem); }
   .game-info { padding: 20px 30px; }
 }
 
 @media (max-width: 480px) {
   .container { padding: 15px 10px; }
-  .button-background { flex-direction: column; gap: 15px; padding: 10px; }
-  .game-btn { flex: none; font-size: clamp(0.9rem, 3vw, 1.2rem); padding: 12px 16px; width: 100%; }
+  .button-background {
+    flex-direction: column; /* Botões empilhados */
+    gap: 15px;
+    padding: 10px;
+    flex-wrap: wrap;
+    overflow-x: hidden; /* Remove scroll horizontal */
+  }
+  .game-btn {
+    flex: none;
+    width: 100%; /* Largura total da tela */
+    max-width: 100%;
+    font-size: clamp(0.9rem, 4vw, 1.4rem);
+    padding: 12px 16px;
+  }
   h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); margin-bottom: 10px; }
   .game-info { padding: 10px; }
   .game-info img { max-width: 100%; height: auto; border-radius: 12px; }
