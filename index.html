@@ -20,8 +20,8 @@ html, body {
   overflow-x: hidden;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 10px;
+  align-items: flex-start;
+  padding: 20px 0;
 }
 
 /* Fundo animado */
@@ -45,9 +45,9 @@ body::before {
   background: rgba(255,255,255,0.08);
   border: 2px solid rgba(255,255,255,0.25);
   border-radius: 20px;
-  padding: 2vw;
-  width: 100%;
-  max-width: 1000px;
+  padding: 40px 60px;
+  width: 95%;            /* quase toda a largura */
+  max-width: 1600px;     /* para notebooks grandes */
   backdrop-filter: blur(20px);
   box-shadow: 0 8px 35px rgba(0,0,0,0.5);
   animation: fadeIn 1.2s ease-in-out;
@@ -58,20 +58,17 @@ body::before {
 
 header {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 2vw;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 h1 {
   color: #fff;
-  font-size: clamp(2rem, 6vw, 3rem);
+  font-size: clamp(2.5rem, 3vw, 4rem);
   text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
   letter-spacing: 2px;
   animation: glow 2s ease-in-out infinite alternate;
-  margin-bottom: 1.5vw;
-  text-align: center;
+  margin-bottom: 25px;
 }
 
 @keyframes glow {
@@ -79,25 +76,28 @@ h1 {
   to { text-shadow: 0 0 20px #90caf9, 0 0 40px #5c6bc0; }
 }
 
-/* Retângulo azul escuro atrás dos botões */
+/* Retângulo para botões */
 .button-background {
   background: #0d133d;
   border-radius: 20px;
-  padding: 2vw;
+  padding: 30px;
   display: flex;
-  justify-content: center;
-  gap: 2vw;
+  justify-content: space-evenly; /* aproveita toda a largura */
+  gap: 30px;
   width: 100%;
-  max-width: 800px;
+  max-width: 100%; /* ocupa largura total do container */
   transition: all 0.3s ease;
-  overflow: visible;      /* Permite mostrar botões maiores */
-  flex-wrap: wrap;        /* Quebra linha se faltar espaço */
+  overflow: visible;
+  flex-wrap: wrap;
 }
 
-/* Botões de jogos */
+/* Botões */
 .game-btn {
-  padding: 1.2vw 2.5vw;
-  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  flex: 1 1 200px; /* cada botão cresce para preencher espaço */
+  min-width: 200px; /* evita que fique muito pequeno */
+  max-width: 350px; /* evita que fique gigante */
+  padding: 16px 24px;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
   color: #fff;
   border: none;
@@ -125,30 +125,31 @@ h1 {
 .game-btn:hover::after { left: 100%; }
 
 .game-btn:hover {
-  transform: translateY(-4px) scale(1.04); /* Reduzido para evitar corte */
+  transform: translateY(-4px) scale(1.05);
   box-shadow: 0 12px 28px rgba(0,0,0,0.55);
   background: linear-gradient(145deg, #1a237e, #283593);
 }
 
-/* Previews dos jogos */
+/* Previews */
 .game-info {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1.5vw;
+  max-width: 1600px; /* imagens grandes */
+  padding: 20px 40px;
   transition: all 0.6s ease;
 }
 
 .game-info img {
   width: 100%;
-  max-width: 90%;
+  max-width: 1400px; /* maior para notebooks largos */
   height: auto;
   object-fit: contain;
   background-color: #000;
   border-radius: 18px;
-  margin-bottom: 1.5vw;
+  margin-bottom: 20px;
   box-shadow: 0 6px 25px rgba(0,0,0,0.5);
   opacity: 0;
   transform: scale(0.9);
@@ -161,14 +162,13 @@ h1 {
 }
 
 .game-info p {
-  font-size: clamp(1rem, 3vw, 1.8rem);
-  line-height: 1.8;
+  font-size: clamp(1rem, 1.2vw, 1.5rem);
+  line-height: 1.7;
   color: #fff;
   max-width: 95%;
   text-align: center;
-  text-shadow: none;
   background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(30,30,30,0.7));
-  padding: 2vw;
+  padding: 20px 30px;
   border-radius: 20px;
   opacity: 0;
   transform: translateY(15px);
@@ -185,29 +185,37 @@ h1 {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Créditos menores */
+/* Créditos */
 .credits {
-  margin-top: 1vw;
+  margin-top: 20px;
   text-align: center;
 }
 
 .credits p {
-  margin: 0.3vw 0;
+  margin: 4px 0;
   color: #fff;
-  font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+  font-size: clamp(0.7rem, 1vw, 0.9rem);
   font-weight: bold;
 }
 
-@media (max-width: 600px) {
+/* Ajustes para telas menores */
+@media (max-width: 1024px) {
+  .button-background {
+    gap: 25px;
+    padding: 25px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
   .button-background {
     flex-direction: column;
-    gap: 1.5vw;
-    padding: 2vw 3vw;
+    gap: 20px;
+    padding: 20px;
   }
   .game-btn {
-    padding: 1.5vw 2vw;
-    font-size: 1rem;
     width: 100%;
+    flex: none;
   }
 }
 </style>
@@ -222,7 +230,7 @@ h1 {
         onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
 
       <button class="game-btn"
-        onmouseover="showPreview('imagem2.png','Desafie amigos ou a AI em no mínimo 10 rodadas no mesmo e tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
+        onmouseover="showPreview('imagem2.png','Desafie amigos ou a AI em no mínimo 10 rodadas no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
 
       <button class="game-btn"
