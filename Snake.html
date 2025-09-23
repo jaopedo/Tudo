@@ -24,14 +24,14 @@
   }
 
   canvas {
-    width: 70vmin;       /* ocupa 70% do menor lado da tela */
-    height: 70vmin;      /* mantém quadrado */
+    width: 70vmin;
+    height: 70vmin;
     display: block;
     margin: 10px auto;
-    background: #116611; /* cor única do fundo */
+    background: #116611;
     border-radius: 8px;
-    border: 5px solid #FFFF99; /* borda amarelo claro */
-    box-shadow: 0 0 15px #FFFF99; /* efeito de destaque */
+    border: 5px solid #FFFF99;
+    box-shadow: 0 0 15px #FFFF99;
   }
 
   #startScreen {
@@ -48,24 +48,37 @@
     text-align: center;
   }
 
-  #startScreen h1, #startScreen p {
+  #startScreen h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem); /* menor que antes */
     margin: 10px 0;
-    padding: 10px;
+    padding: 20px;
     border: 2px solid #122231;
-    border-radius: 8px;
+    border-radius: 12px;
+    background-color: #0f1724;
+    width: 90%;
+    max-width: 500px;
+  }
+
+  #startScreen p {
+    font-size: clamp(0.9rem, 2.5vw, 1.5rem); /* menor que antes */
+    margin: 8px 0;
+    padding: 12px;
+    border: 2px solid #122231;
+    border-radius: 10px;
     background-color: #0f1724;
     width: 90%;
     max-width: 400px;
+    line-height: 1.4;
   }
 
   #startScreen button {
-    padding: 12px 25px;
-    margin: 10px;
+    padding: 16px 35px;
+    margin: 15px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
-    font-size: 16px;
+    font-size: clamp(0.9rem, 2.5vw, 1.5rem); /* menor que antes */
     background: #06b6d4;
     color: #062024;
   }
@@ -74,7 +87,7 @@
     display: flex;
     justify-content: center;
     gap: 30px;
-    font-size: clamp(1.2rem, 2vw, 2rem); /* proporcional ao notebook */
+    font-size: clamp(1.2rem, 2vw, 2rem);
     margin-top: 10px;
     flex-wrap: wrap;
     padding: 20px;
@@ -90,27 +103,11 @@
   }
 
   @media (max-width: 480px){
-    .hud {
-      font-size: clamp(1rem, 4vw, 1.2rem);
-      gap: 15px;
-      padding: 10px;
-    }
-
-    .hud div {
-      min-width: 90px;
-      padding: 8px 10px;
-    }
-
-    #startScreen h1, #startScreen p {
-      font-size: clamp(1rem, 4vw, 1.2rem);
-      max-width: 90%;
-      padding: 8px;
-    }
-
-    #startScreen button {
-      font-size: clamp(0.9rem, 3vw, 1.1rem);
-      padding: 10px 16px;
-    }
+    .hud { font-size: clamp(1rem, 4vw, 1.2rem); gap: 15px; padding: 10px; }
+    .hud div { min-width: 90px; padding: 8px 10px; }
+    #startScreen h1 { font-size: clamp(1.8rem, 5vw, 3rem); }
+    #startScreen p { font-size: clamp(0.8rem, 3vw, 1.2rem); }
+    #startScreen button { font-size: clamp(0.8rem, 3vw, 1.2rem); padding: 12px 25px; }
   }
 </style>
 </head>
@@ -118,9 +115,12 @@
 
 <div id="startScreen">
   <h1>Cobrinha</h1>
-  <p>Use as setas do teclado.  
-  Vidas:<span id="startLives">3</span>.  
-  Aperte Espaço para pausar.</p>
+  <p>
+    Controles:<br>
+    - Setas do teclado: mover<br>
+    - Espaço: pausar/jogar
+  </p>
+  <p>Vidas: <span id="startLives">3</span></p>
   <button id="startBtn">Começar</button>
 </div>
 
@@ -132,7 +132,6 @@
 
 <canvas id="game"></canvas>
 
-<!-- Música de fundo local -->
 <audio id="bgMusic" src="cobra.mp3" loop></audio>
 <audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 <audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio>
@@ -143,7 +142,6 @@ const ctx = canvas.getContext('2d');
 
 const startScreen = document.getElementById('startScreen');
 const startBtn = document.getElementById('startBtn');
-
 const scoreEl = document.getElementById('score');
 const livesEl = document.getElementById('lives');
 const startLivesEl = document.getElementById('startLives');
@@ -160,16 +158,14 @@ let score = 0;
 let lives = 3;
 let gameInterval;
 let isPaused = false;
-
 const gridSize = 20;
 let cellSize;
 
-// Comida (rato)
 const foodImg = new Image();
 foodImg.src = 'rato.png';
 
 function resizeCanvas() {
-  const size = Math.min(window.innerWidth, window.innerHeight) * 0.7; // proporcional
+  const size = Math.min(window.innerWidth, window.innerHeight) * 0.7;
   canvas.width = size;
   canvas.height = size;
   cellSize = canvas.width / gridSize;
@@ -202,22 +198,14 @@ function initGame() {
 
 function gameLoop() {
   if(isPaused) return;
-
   const head = {...snake[0]};
   if(direction==='RIGHT') head.x++;
   if(direction==='LEFT') head.x--;
   if(direction==='UP') head.y--;
   if(direction==='DOWN') head.y++;
 
-  if(head.x<0 || head.x>=gridSize || head.y<0 || head.y>=gridSize){
-    loseLife();
-    return;
-  }
-
-  if(snake.some(seg=>seg.x===head.x && seg.y===head.y)){
-    loseLife();
-    return;
-  }
+  if(head.x<0 || head.x>=gridSize || head.y<0 || head.y>=gridSize){ loseLife(); return; }
+  if(snake.some(seg=>seg.x===head.x && seg.y===head.y)){ loseLife(); return; }
 
   snake.unshift(head);
 
@@ -227,9 +215,7 @@ function gameLoop() {
     eatSound.currentTime = 0;
     eatSound.play();
     placeFood();
-  } else {
-    snake.pop();
-  }
+  } else { snake.pop(); }
 
   drawGame();
 }
@@ -240,17 +226,10 @@ function loseLife() {
   startLivesEl.textContent = lives;
   hitSound.currentTime = 0;
   hitSound.play();
-  if(lives <= 0){
-    alert("Game Over!");
-    startScreen.style.display = 'flex';
-    clearInterval(gameInterval);
-  } else {
-    snake = [{x:10, y:10}];
-    direction = 'RIGHT';
-  }
+  if(lives <= 0){ alert("Game Over!"); startScreen.style.display = 'flex'; clearInterval(gameInterval); } 
+  else { snake = [{x:10, y:10}]; direction = 'RIGHT'; }
 }
 
-// Fundo quadriculado
 function drawGrass() {
   ctx.fillStyle = '#116611';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -272,13 +251,11 @@ function drawGrass() {
 
 function drawGame() {
   drawGrass();
-
-  // Comida maior (1.2x)
   const foodSize = cellSize * 1.2;
   ctx.drawImage(foodImg, food.x*cellSize - (foodSize-cellSize)/2, food.y*cellSize - (foodSize-cellSize)/2, foodSize, foodSize);
 
   snake.forEach((seg,index)=>{
-    ctx.fillStyle="#FFFF99"; // cobra amarelo claro
+    ctx.fillStyle="#FFFF99";
     ctx.fillRect(seg.x*cellSize, seg.y*cellSize, cellSize, cellSize);
 
     if(index===0){
