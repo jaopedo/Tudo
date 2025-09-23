@@ -47,9 +47,9 @@ body::before {
   background: rgba(255,255,255,0.08);
   border: 3px solid rgba(255,255,255,0.3);
   border-radius: 30px;
-  padding: 100px 120px;
+  padding: 80px 100px;
   width: 90%;
-  max-width: 1800px;
+  max-width: 1600px;
   backdrop-filter: blur(30px);
   box-shadow: 0 15px 65px rgba(0,0,0,0.8);
   display: flex;
@@ -58,20 +58,20 @@ body::before {
   position: relative;
 }
 
-/* Header gigante */
+/* Header */
 header {
   width: 100%;
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 
 h1 {
   color: #fff;
-  font-size: clamp(5rem, 6vw, 14rem);
+  font-size: clamp(2.5rem, 4vw, 6rem);
   text-shadow: 4px 4px 20px rgba(0,0,0,0.95);
   letter-spacing: 5px;
   animation: glow 2s ease-in-out infinite alternate;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 @keyframes glow {
@@ -83,23 +83,23 @@ h1 {
 .button-background {
   background: #0d133d;
   border-radius: 30px;
-  padding: 60px;
+  padding: 40px;
   display: flex;
   justify-content: space-evenly;
-  gap: 60px;
+  gap: 40px;
   width: 100%;
   position: relative;
-  flex-wrap: nowrap; /* PC: lado a lado */
+  flex-wrap: nowrap;
   z-index: 1;
 }
 
-/* Botões enormes */
+/* Botões */
 .game-btn {
-  flex: 0 0 450px; 
-  min-width: 450px;
-  max-width: 450px;
-  padding: 35px 45px;
-  font-size: clamp(2rem, 2.5vw, 2.5rem);
+  flex: 0 0 320px; 
+  min-width: 280px;
+  max-width: 350px;
+  padding: 25px 35px;
+  font-size: clamp(1.3rem, 1.6vw, 1.8rem);
   background: linear-gradient(145deg, #3f51b5, #1a237e);
   color: #fff;
   border: none;
@@ -126,12 +126,12 @@ h1 {
 
 .game-btn:hover::after { left: 100%; }
 .game-btn:hover {
-  transform: translateY(-8px) scale(1.15);
+  transform: translateY(-8px) scale(1.08);
   box-shadow: 0 20px 45px rgba(0,0,0,0.7);
   background: linear-gradient(145deg, #1a237e, #283593);
 }
 
-/* Previews absolute */
+/* Previews */
 .game-info {
   position: absolute;
   top: 100%;
@@ -141,8 +141,8 @@ h1 {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1700px;
-  padding: 40px 0;
+  max-width: 1400px;
+  padding: 30px 0;
   opacity: 0;
   pointer-events: none;
   transition: all 0.4s ease;
@@ -156,14 +156,14 @@ h1 {
 
 .game-info img {
   width: 100%;
-  max-width: 1600px;
+  max-width: 1000px;
   height: auto;
   object-fit: contain;
   background-color: #000;
-  border-radius: 30px;
-  margin-bottom: 35px;
-  box-shadow: 0 12px 50px rgba(0,0,0,0.7);
-  transform: scale(0.9);
+  border-radius: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+  transform: scale(0.95);
   transition: all 0.6s ease;
 }
 
@@ -171,15 +171,15 @@ h1 {
   transform: scale(1);
 }
 
-/* Mantemos tamanho da descrição - PC maior */
+/* Texto da descrição */
 .game-info p {
-  font-size: clamp(30rem, 20vw, 70rem); /* aumenta bastante */
-  line-height: 1.7;
+  font-size: clamp(1.3rem, 1.8vw, 2.2rem);
+  line-height: 1.6;
   color: #fff;
   max-width: 90%;
   text-align: center;
   background: linear-gradient(145deg, rgba(0,0,0,0.75), rgba(30,30,30,0.75));
-  padding: 30px 50px;
+  padding: 30px 40px;
   border-radius: 25px;
   opacity: 0;
   transform: translateY(15px);
@@ -191,9 +191,9 @@ h1 {
   transform: translateY(0);
 }
 
-/* Créditos grandes */
+/* Créditos */
 .credits {
-  margin-top: 50px;
+  margin-top: 40px;
   text-align: center;
 }
 
@@ -206,21 +206,21 @@ h1 {
 
 /* Responsividade */
 @media (max-width: 1024px) {
-  .container { padding: 60px 50px; }
-  .button-background { flex-wrap: wrap; gap: 35px; padding: 40px; }
-  h1 { font-size: clamp(3rem, 5vw, 8rem); }
-  .game-btn { flex: 1 1 300px; min-width: 250px; max-width: 350px; padding: 25px 30px; font-size: clamp(1.5rem, 2vw, 2rem); }
-  .game-info { padding: 25px 20px; }
-  .game-info p { font-size: clamp(1.5rem, 2vw, 2.5rem); padding: 20px 30px; }
+  .container { padding: 50px 40px; }
+  .button-background { flex-wrap: wrap; gap: 25px; padding: 25px; }
+  h1 { font-size: clamp(2rem, 5vw, 4rem); }
+  .game-btn { flex: 1 1 280px; min-width: 220px; max-width: 320px; padding: 20px 28px; font-size: clamp(1.1rem, 1.5vw, 1.6rem); }
+  .game-info { padding: 20px 15px; }
+  .game-info p { font-size: clamp(1.1rem, 1.5vw, 1.6rem); padding: 18px 25px; }
 }
 
 @media (max-width: 480px) {
   .container { padding: 20px 10px; }
-  .button-background { flex-direction: column; gap: 20px; padding: 15px; }
-  .game-btn { width: 100%; flex: none; font-size: clamp(1rem, 4vw, 1.5rem); padding: 15px 20px; }
-  h1 { font-size: clamp(2rem, 6vw, 2.8rem); margin-bottom: 15px; }
+  .button-background { flex-direction: column; gap: 15px; padding: 10px; }
+  .game-btn { width: 100%; flex: none; font-size: clamp(1rem, 4vw, 1.2rem); padding: 15px 20px; }
+  h1 { font-size: clamp(1.8rem, 6vw, 2.5rem); margin-bottom: 15px; }
   .game-info img { max-width: 100%; border-radius: 15px; }
-  .game-info p { font-size: clamp(1rem, 4vw, 1.5rem); padding: 12px 15px; }
+  .game-info p { font-size: clamp(1rem, 4vw, 1.2rem); padding: 12px 15px; }
 }
 </style>
 </head>
@@ -242,7 +242,7 @@ h1 {
         onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')"
         onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
     </div>
-      </header>
+  </header>
 
   <div class="game-info" id="gameInfo">
     <img id="gameImage" src="" alt="Imagem do Jogo">
