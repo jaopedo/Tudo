@@ -20,14 +20,14 @@
     color:#fff;
     text-shadow:0 0 20px #ff77ff, 0 0 35px #ff44ff;
     margin:5px 0;
-    font-size: clamp(2rem, 3vw, 3rem);
+    font-size: clamp(1.5rem, 3vw, 2.5rem); /* título menor */
   }
   #hud {
     color:#fff;
     font-weight:bold;
     text-align:center;
     margin-bottom:5px;
-    font-size: clamp(1.2rem, 2vw, 2rem);
+    font-size: clamp(1.2rem, 3vw, 2.5rem);
     text-shadow:0 0 15px cyan, 0 0 25px #0ff;
   }
   #controls {
@@ -35,7 +35,7 @@
     margin-bottom:10px;
   }
   #controls button {
-    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
     padding:8px 16px;
     margin:0 5px;
     border:none;
@@ -46,8 +46,9 @@
     cursor:pointer;
   }
   #gameWrapper {
-    width:70vmin;   /* proporcional ao notebook */
-    height:70vmin;  /* mantém quadrado */
+    width:80vw; /* ocupa mais tela */
+    max-width:700px;
+    aspect-ratio:1/1; /* quadrado */
     border:6px solid #000;
     border-radius:15px;
     box-shadow:0 0 25px #000, 0 0 50px #000 inset;
@@ -90,15 +91,15 @@ const hitSound = document.getElementById("hitSound");
 const kirbyImg = new Image(); kirbyImg.src = 'Kirby.png';
 const bananaImg = new Image(); bananaImg.src = 'banana.png';
 const enemyImgs = [
-  {img:new Image(), speedFactor:0.004}, 
-  {img:new Image(), speedFactor:0.0045},
-  {img:new Image(), speedFactor:0.0035}
+  {img:new Image(), speedFactor:0.003}, // menor velocidade
+  {img:new Image(), speedFactor:0.0035},
+  {img:new Image(), speedFactor:0.0028}
 ];
 enemyImgs[0].img.src = 'Inimigo1.png';
 enemyImgs[1].img.src = 'Inimigo2.png';
 enemyImgs[2].img.src = 'Inimigo3.png';
 
-let player = {x:0, y:0, w:0, h:0, speed:0};
+let player = {x:0, y:0, w:0, h:0, speed:0.015}; // kirby mais lento
 let objects = [];
 let score = 0, lives = 3;
 let running = false, gameOver = false;
@@ -131,8 +132,8 @@ function update(delta){
   lastSpawn += delta;
   if(lastSpawn>spawnInterval){ spawnObject(); lastSpawn=0; spawnInterval=Math.max(500, spawnInterval-5); }
 
-  if(keys.left) player.x -= player.speed*(delta/16);
-  if(keys.right) player.x += player.speed*(delta/16);
+  if(keys.left) player.x -= player.speed*(delta/16)*canvas.width;
+  if(keys.right) player.x += player.speed*(delta/16)*canvas.width;
 
   if(player.x<0) player.x=0;
   if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
@@ -207,12 +208,13 @@ function resizeCanvas(){
   // Kirby proporcional
   player.w = canvas.width*0.12;
   player.h = canvas.width*0.12;
-  player.speed = canvas.width*0.02;
 
-  // Ajusta objetos proporcionais
+  // Objetos proporcionais
   objects.forEach(obj=>{
     obj.w = canvas.width*0.08;
     obj.h = canvas.width*0.08;
+    if(obj.type==="enemy") obj.vy = obj.vy/obj.vy*canvas.width*0.003;
+    if(obj.type==="banana") obj.vy = 0.003*canvas.width*(2+Math.random()*2);
   });
 }
 window.addEventListener("resize", resizeCanvas);
