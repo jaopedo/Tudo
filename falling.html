@@ -20,14 +20,14 @@
     color:#fff;
     text-shadow:0 0 20px #ff77ff, 0 0 35px #ff44ff;
     margin:5px 0;
-    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-size: clamp(2rem, 3vw, 3rem);
   }
   #hud {
     color:#fff;
     font-weight:bold;
     text-align:center;
     margin-bottom:5px;
-    font-size: clamp(1.2rem, 3vw, 2.5rem);
+    font-size: clamp(1.2rem, 2vw, 2rem);
     text-shadow:0 0 15px cyan, 0 0 25px #0ff;
   }
   #controls {
@@ -35,7 +35,7 @@
     margin-bottom:10px;
   }
   #controls button {
-    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    font-size: clamp(1rem, 2vw, 1.3rem);
     padding:8px 16px;
     margin:0 5px;
     border:none;
@@ -46,9 +46,8 @@
     cursor:pointer;
   }
   #gameWrapper {
-    width:95vw;
-    max-width:900px;
-    aspect-ratio:1/1;
+    width:70vmin;   /* proporcional ao notebook */
+    height:70vmin;  /* mantém quadrado */
     border:6px solid #000;
     border-radius:15px;
     box-shadow:0 0 25px #000, 0 0 50px #000 inset;
@@ -91,7 +90,7 @@ const hitSound = document.getElementById("hitSound");
 const kirbyImg = new Image(); kirbyImg.src = 'Kirby.png';
 const bananaImg = new Image(); bananaImg.src = 'banana.png';
 const enemyImgs = [
-  {img:new Image(), speedFactor:0.004}, // velocidade proporcional
+  {img:new Image(), speedFactor:0.004}, 
   {img:new Image(), speedFactor:0.0045},
   {img:new Image(), speedFactor:0.0035}
 ];
@@ -210,13 +209,10 @@ function resizeCanvas(){
   player.h = canvas.width*0.12;
   player.speed = canvas.width*0.02;
 
-  // Objetos proporcionais
+  // Ajusta objetos proporcionais
   objects.forEach(obj=>{
     obj.w = canvas.width*0.08;
     obj.h = canvas.width*0.08;
-    // Ajusta a velocidade proporcional
-    if(obj.type==="enemy") obj.vy = obj.vy/obj.vy*canvas.width*0.004;
-    if(obj.type==="banana") obj.vy = 0.003*canvas.width*(2+Math.random()*2);
   });
 }
 window.addEventListener("resize", resizeCanvas);
