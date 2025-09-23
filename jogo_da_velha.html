@@ -29,20 +29,20 @@ html, body {
 h1 {
   margin:0 0 20px 0;
   text-align:center;
-  font-size:clamp(80px, 10vw, 180px);
-  text-shadow:0 0 60px #38bdf8;
-  line-height:1;
+  font-size:clamp(2.5rem, 4vw, 4.5rem); /* Ajustado p/ notebook */
+  text-shadow:0 0 25px #38bdf8;
+  line-height:1.2;
 }
 
 /* ---- HUD ---- */
 .hud {
   display:flex;
   justify-content:center;
-  gap:50px;
+  gap:40px;
   width:100%;
   font-weight:bold;
   margin-bottom:20px;
-  font-size:clamp(28px, 4vw, 80px);
+  font-size:clamp(1.2rem, 2vw, 1.8rem); /* Ajustado */
   flex-wrap:wrap;
   text-align:center;
 }
@@ -56,9 +56,9 @@ h1 {
   display:grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  grid-gap:40px;
-  width:min(90vw,600px);
-  height:min(90vw,600px);
+  grid-gap:25px; /* reduzido para notebook */
+  width:min(80vw, 450px);
+  height:min(80vw, 450px);
 }
 
 .cell {
@@ -66,17 +66,17 @@ h1 {
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:min(20vw,180px);
+  font-size:clamp(2.5rem, 8vw, 6rem); /* tamanho bom p/ notebook */
   cursor:pointer;
   border-radius:12px;
-  text-shadow:0 0 50px #fff;
+  text-shadow:0 0 20px #fff;
   user-select:none;
   box-sizing:border-box;
   overflow:hidden;
 }
 
-.cell.X { color:#f43f5e; text-shadow:0 0 45px #f43f5e; }
-.cell.O { color:#3b82f6; text-shadow:0 0 45px #3b82f6; }
+.cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
+.cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
 
 /* ---- MENUS ---- */
 #menuScreen, #aiOptions {
@@ -84,62 +84,47 @@ h1 {
   align-items:center;
   margin-top:20px;
   background:#334155;
-  padding:5vw 30px;
+  padding:30px 40px;
   border-radius:12px;
-  box-shadow:0 0 30px #38bdf8;
-  width:90%; max-width:500px;
+  box-shadow:0 0 20px #38bdf8;
+  width:90%; max-width:450px;
 }
 
 button, select {
   margin-top:15px;
-  padding:18px 36px;
+  padding:14px 28px;
   border:none; border-radius:10px;
   background:#0ea5e9; color:white;
-  font-size:clamp(20px, 3.5vw, 28px);
+  font-size:clamp(1rem, 1.5vw, 1.3rem);
   cursor:pointer;
-  box-shadow:0 0 25px #0ea5e9;
-  width:100%; max-width:300px;
+  box-shadow:0 0 15px #0ea5e9;
+  width:100%; max-width:260px;
 }
 
 /* ---- OPÇÕES IA ---- */
 #aiOptions .option {
   display:flex; flex-direction:column;
   align-items:flex-start;
-  margin-top:20px;
+  margin-top:15px;
   width:100%;
 }
 
 #aiOptions label {
-  font-size:clamp(18px, 2.2vw, 26px);
+  font-size:clamp(0.95rem, 1.4vw, 1.2rem);
   color:#e2e8f0;
-  margin-bottom:8px;
+  margin-bottom:6px;
 }
 
 #aiOptions select {
   width:100%;
-  padding:14px 20px;
+  padding:10px 18px;
   border-radius:8px;
   border:none;
   background:#0ea5e9;
   color:white;
-  font-size:clamp(16px, 2.2vw, 24px);
-  box-shadow:0 0 20px #0ea5e9;
+  font-size:clamp(0.9rem, 1.2vw, 1.1rem);
+  box-shadow:0 0 12px #0ea5e9;
   cursor:pointer;
-}
-
-/* ---- RESPONSIVO ---- */
-@media(max-width:1024px){
-  #board { width:min(90vw,500px); height:min(90vw,500px); grid-gap:25px; }
-  .cell { font-size:min(16vw,140px); }
-  h1 { font-size: clamp(60px, 8vw, 120px); }
-  .hud { font-size: clamp(22px, 3vw, 60px); gap:25px; }
-}
-
-@media(max-width:600px){
-  #board { width:85vw; height:85vw; grid-gap:15px; }
-  .cell { font-size:18vw; }
-  h1 { font-size: clamp(35px, 8vw, 60px); }
-  .hud { font-size: clamp(14px, 4vw, 28px); gap:15px; }
 }
 </style>
 </head>
