@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,14 +30,8 @@
     font-size: clamp(1rem, 3vw, 2rem);
     text-shadow:0 0 10px cyan, 0 0 20px #0ff;
   }
-  #hud span {
-    display:inline-block;
-    min-width: 60px;
-  }
-  #controls {
-    text-align:center;
-    margin-bottom:10px;
-  }
+  #hud span { display:inline-block; min-width: 60px; }
+  #controls { text-align:center; margin-bottom:10px; }
   #controls button {
     font-size: clamp(0.9rem, 2vw, 1.3rem);
     padding:6px 12px;
@@ -50,8 +44,8 @@
     cursor:pointer;
   }
   #gameWrapper {
-    width:100vw;  /* aumentei um pouco */
-    max-width:690px; /* maior que antes */
+    width:100vw;
+    max-width:690px;
     aspect-ratio:1/1;
     border:6px solid #000;
     border-radius:15px;
@@ -60,12 +54,7 @@
     background-size: cover;
     position: relative;
   }
-  canvas {
-    width:100%;
-    height:100%;
-    border-radius:12px;
-    display:block;
-  }
+  canvas { width:100%; height:100%; border-radius:12px; display:block; }
 
   /* Overlay de pause */
   #pausedOverlay {
@@ -77,7 +66,7 @@
     justify-content: center;
     align-items: center;
     font-size: clamp(2rem, 5vw, 4rem);
-    color: #f17bb4; /* sem neon */
+    color: #f17bb4;
     text-align:center;
     display: none;
     pointer-events: none;
@@ -89,7 +78,7 @@
     text-align:center;
     font-size: clamp(1rem, 2.5vw, 1.5rem);
     color:#fff;
-    text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+    text-shadow: 0 0 5px rgb(6, 53, 53), 0 0 10px rgb(10, 56, 56);
     margin-bottom:5px;
   }
 </style>
@@ -209,15 +198,21 @@ function loop(ts){
 
 function startGame(){
   objects=[]; score=0; lives=3; running=true; gameOver=false; lastSpawn=0; spawnInterval=1000;
+
+  // Redimensiona canvas e Kirby
   resizeCanvas();
-  player.x=(canvas.width-player.w)/2;
-  player.y=canvas.height-player.h-10;
+
+  // Centraliza Kirby
+  player.x = (canvas.width - player.w) / 2;
+  player.y = canvas.height - player.h - 10;
+
   updateHUD();
   bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
   pausedOverlay.style.display = "none";
   isPaused = false;
   lastTime=0;
   requestAnimationFrame(loop);
+
   startBtn.style.display="none";
   restartBtn.style.display="none";
 }
@@ -227,7 +222,6 @@ function endGame(){
   restartBtn.style.display="inline-block";
   startBtn.style.display="none";
   pausedOverlay.style.display = "none";
-  setTimeout(()=>alert(`Game Over! Pontos: ${score}`),50);
 }
 
 window.addEventListener("keydown",e=>{
@@ -270,3 +264,4 @@ updateHUD();
 </script>
 </body>
 </html>
+
