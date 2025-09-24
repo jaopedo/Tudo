@@ -8,15 +8,13 @@
 html, body {
   margin:0; padding:0;
   height:100%; width:100%;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
   font-family:Arial, sans-serif;
   background:#1e293b; color:#e2e8f0;
   overflow:hidden;
 }
 #gameWrapper {
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
+  align-items:center; justify-content:flex-start;
   width:100%; max-width:1000px;
   height:100%;
   padding:20px;
@@ -106,8 +104,10 @@ button, select {
   box-shadow:0 0 12px #0ea5e9;
   cursor:pointer;
 }
+
+/* Mensagem flutuante */
 #message {
-  position: absolute;
+  position: fixed;
   top:20px;
   left:50%;
   transform:translateX(-50%);
@@ -132,8 +132,6 @@ button, select {
     <div>Pontos O: <span id="scoreO">0</span></div>
     <div>Rodada: <span id="round">1</span>/10</div>
   </div>
-
-  <div id="message"></div>
 
   <div id="menuScreen">
     <p>Escolha o modo de jogo:</p>
@@ -165,6 +163,10 @@ button, select {
   </div>
 </div>
 
+<!-- Mensagem flutuante FORA do wrapper -->
+<div id="message"></div>
+
+<!-- Sons -->
 <audio id="bgMusic" src="elec.mp3" loop autoplay></audio>
 <audio id="clickSound" src="click.mp3"></audio>
 <audio id="winSound" src="win.mp3"></audio>
@@ -193,6 +195,7 @@ const winSound=document.getElementById("winSound");
 const loseSound=document.getElementById("loseSound");
 const drawSound=document.getElementById("drawSound");
 
+// helper para tocar sons e pausar a música
 function playWithPause(sound){
   bgMusic.pause();
   sound.currentTime=0;
@@ -200,14 +203,12 @@ function playWithPause(sound){
   sound.onended=()=>{ bgMusic.play(); };
 }
 
-// Aviso funcionando corretamente
-let messageTimeout;
-function showMessage(text,color="#38bdf8") {
-  clearTimeout(messageTimeout);
+// função para mostrar mensagem flutuante
+function showMessage(text,color="#38bdf8"){
   messageEl.textContent=text;
   messageEl.style.color=color;
   messageEl.style.display="block";
-  messageTimeout = setTimeout(()=>{ messageEl.style.display="none"; },2000);
+  setTimeout(()=>{ messageEl.style.display="none"; },2000);
 }
 
 let board=Array(9).fill(null);
@@ -337,7 +338,6 @@ function endRound(msg,color){
   }
 }
 
-// Botões
 singleBtn.onclick=()=>{ menuScreen.style.display="none"; aiOptions.style.display="flex"; mode="single"; }
 multiBtn.onclick=()=>{ menuScreen.style.display="none"; boardContainer.style.display="flex"; mode="multi"; createBoard(); }
 startAI.onclick=()=>{
