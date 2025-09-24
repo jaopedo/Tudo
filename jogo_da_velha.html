@@ -106,8 +106,6 @@ button, select {
   box-shadow:0 0 12px #0ea5e9;
   cursor:pointer;
 }
-
-/* Área de mensagens */
 #message {
   position: absolute;
   top:20px;
@@ -167,7 +165,6 @@ button, select {
   </div>
 </div>
 
-<!-- Música e sons -->
 <audio id="bgMusic" src="elec.mp3" loop autoplay></audio>
 <audio id="clickSound" src="click.mp3"></audio>
 <audio id="winSound" src="win.mp3"></audio>
@@ -196,7 +193,6 @@ const winSound=document.getElementById("winSound");
 const loseSound=document.getElementById("loseSound");
 const drawSound=document.getElementById("drawSound");
 
-// helper para tocar sons e pausar a música
 function playWithPause(sound){
   bgMusic.pause();
   sound.currentTime=0;
@@ -204,12 +200,14 @@ function playWithPause(sound){
   sound.onended=()=>{ bgMusic.play(); };
 }
 
-// função para mostrar mensagem flutuante
-function showMessage(text,color="#38bdf8"){
+// Aviso funcionando corretamente
+let messageTimeout;
+function showMessage(text,color="#38bdf8") {
+  clearTimeout(messageTimeout);
   messageEl.textContent=text;
   messageEl.style.color=color;
   messageEl.style.display="block";
-  setTimeout(()=>{ messageEl.style.display="none"; },2000);
+  messageTimeout = setTimeout(()=>{ messageEl.style.display="none"; },2000);
 }
 
 let board=Array(9).fill(null);
@@ -339,6 +337,7 @@ function endRound(msg,color){
   }
 }
 
+// Botões
 singleBtn.onclick=()=>{ menuScreen.style.display="none"; aiOptions.style.display="flex"; mode="single"; }
 multiBtn.onclick=()=>{ menuScreen.style.display="none"; boardContainer.style.display="flex"; mode="multi"; createBoard(); }
 startAI.onclick=()=>{
