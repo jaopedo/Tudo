@@ -8,13 +8,15 @@
 html, body {
   margin:0; padding:0;
   height:100%; width:100%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
   font-family:Arial, sans-serif;
   background:#1e293b; color:#e2e8f0;
   overflow:hidden;
 }
 #gameWrapper {
   display:flex; flex-direction:column;
-  align-items:center; justify-content:flex-start;
+  align-items:center; justify-content:center;
   width:100%; max-width:1000px;
   height:100%;
   padding:20px;
@@ -105,9 +107,9 @@ button, select {
   cursor:pointer;
 }
 
-/* Mensagem flutuante */
+/* Área de mensagens */
 #message {
-  position: fixed;
+  position: absolute;
   top:20px;
   left:50%;
   transform:translateX(-50%);
@@ -132,6 +134,8 @@ button, select {
     <div>Pontos O: <span id="scoreO">0</span></div>
     <div>Rodada: <span id="round">1</span>/10</div>
   </div>
+
+  <div id="message"></div>
 
   <div id="menuScreen">
     <p>Escolha o modo de jogo:</p>
@@ -163,10 +167,7 @@ button, select {
   </div>
 </div>
 
-<!-- Mensagem flutuante FORA do wrapper -->
-<div id="message"></div>
-
-<!-- Sons -->
+<!-- Música e sons -->
 <audio id="bgMusic" src="elec.mp3" loop autoplay></audio>
 <audio id="clickSound" src="click.mp3"></audio>
 <audio id="winSound" src="win.mp3"></audio>
@@ -208,7 +209,11 @@ function showMessage(text,color="#38bdf8"){
   messageEl.textContent=text;
   messageEl.style.color=color;
   messageEl.style.display="block";
-  setTimeout(()=>{ messageEl.style.display="none"; },2000);
+}
+
+// esconder mensagem
+function hideMessage(){
+  messageEl.style.display="none";
 }
 
 let board=Array(9).fill(null);
@@ -221,7 +226,7 @@ function createBoard(){
   board=Array(9).fill(null);
   gameOver=false;
   currentTurn="X";
-  messageEl.style.display="none";
+  hideMessage();
   for(let i=0;i<9;i++){
     const cell=document.createElement("div");
     cell.classList.add("cell");
@@ -245,11 +250,11 @@ function playerMove(i){
     board[i]=player; renderBoard();
     if(checkWinner(player)){
       scoreX++; playWithPause(winSound);
-      endRound("Você ganhou!", "#22c55e"); return;
+      endRound("Você ganhou esta rodada!", "#22c55e"); return;
     }
     if(board.every(c=>c)){
       scoreX++; scoreO++; playWithPause(drawSound);
-      endRound("Empate!", "#eab308"); return;
+      endRound("Empate nesta rodada!", "#eab308"); return;
     }
     aiMove();
   } else {
@@ -257,11 +262,11 @@ function playerMove(i){
     if(checkWinner(currentTurn)){
       currentTurn==="X"?scoreX++:scoreO++;
       if(currentTurn===player) playWithPause(winSound); else playWithPause(loseSound);
-      endRound(`Jogador ${currentTurn} ganhou!`, currentTurn===player?"#22c55e":"#ef4444"); return;
+      endRound(`Jogador ${currentTurn} ganhou esta rodada!`, currentTurn===player?"#22c55e":"#ef4444"); return;
     }
     if(board.every(c=>c)){
       scoreX++; scoreO++; playWithPause(drawSound);
-      endRound("Empate!", "#eab308"); return;
+      endRound("Empate nesta rodada!", "#eab308"); return;
     }
     currentTurn=currentTurn==="X"?"O":"X";
   }
@@ -275,8 +280,8 @@ function aiMove(){
   else if(difficulty==="hard"){ move=findBestMove(ai); }
 
   board[move]=ai; renderBoard();
-  if(checkWinner(ai)){scoreO++; playWithPause(loseSound); endRound("Você perdeu!", "#ef4444"); return;}
-  if(board.every(c)){scoreX++;scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
+  if(checkWinner(ai)){scoreO++; playWithPause(loseSound); endRound("Você perdeu esta rodada!", "#ef4444"); return;}
+  if(board.every(c)){scoreX++;scoreO++; playWithPause(drawSound); endRound("Empate nesta rodada!", "#eab308"); return;}
 }
 
 function renderBoard(){
@@ -316,28 +321,36 @@ function findBestMove(playerSymbol){
   return move;
 }
 
+// versão com delay para mostrar mensagem
 function endRound(msg,color){
   gameOver=true;
   showMessage(msg,color);
-  if(round>=maxRounds){
-    if(scoreX===scoreO){
-      showMessage("Empate geral! Rodadas bônus.", "#eab308");
-      round++; createBoard(); updateHUD();
+
+  setTimeout(()=>{
+    hideMessage();
+    if(round>=maxRounds){
+      if(scoreX===scoreO){
+        showMessage("Empate geral! Rodadas bônus.", "#eab308");
+        round++; createBoard(); updateHUD();
+        if(mode==="single" && player==="O") aiMove();
+        return;
+      }
+      showMessage(`Fim das ${maxRounds} rodadas! ${scoreX>scoreO?"X venceu!":"O venceu!"}`, scoreX>scoreO?"#22c55e":"#ef4444");
+      scoreX=0; scoreO=0; round=1;
+      menuScreen.style.display="flex";
+      boardContainer.style.display="none";
+      aiOptions.style.display="none";
+      updateHUD();
+    } else {
+      round++; 
+      createBoard(); 
+      updateHUD();
       if(mode==="single" && player==="O") aiMove();
-      return;
     }
-    showMessage(`Fim das ${maxRounds} rodadas! ${scoreX>scoreO?"X venceu!":"O venceu!"}`, scoreX>scoreO?"#22c55e":"#ef4444");
-    scoreX=0; scoreO=0; round=1;
-    menuScreen.style.display="flex";
-    boardContainer.style.display="none";
-    aiOptions.style.display="none";
-    updateHUD();
-  } else {
-    round++; createBoard(); updateHUD();
-    if(mode==="single" && player==="O") aiMove();
-  }
+  }, 2000); // espera 2 segundos para mostrar mensagem
 }
 
+// botões
 singleBtn.onclick=()=>{ menuScreen.style.display="none"; aiOptions.style.display="flex"; mode="single"; }
 multiBtn.onclick=()=>{ menuScreen.style.display="none"; boardContainer.style.display="flex"; mode="multi"; createBoard(); }
 startAI.onclick=()=>{
