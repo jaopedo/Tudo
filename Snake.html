@@ -1,288 +1,285 @@
-<!DOCTYPE html>  
-<html lang="pt-BR">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>Jogo da Cobrinha</title>  
-<style>  
-  * { box-sizing: border-box; }  
-  html, body {  
-    margin: 0;  
-    padding: 0;  
-    height: 100%;  
-    overflow: hidden;  
-  }  
-  
-  body {  
-    background: #0b1220;  
-    color: #e6eef8;  
-    font-family: Arial, sans-serif;  
-    display: flex;  
-    flex-direction: column;  
-    align-items: center;  
-    justify-content: center;  
-  }  
-  
-  canvas {  
-    width: 70vmin;  
-    height: 70vmin;  
-    display: block;  
-    margin: 10px auto;  
-    background: #116611;  
-    border-radius: 8px;  
-    border: 5px solid #FFFF99;  
-    box-shadow: 0 0 15px #FFFF99;  
-  }  
-  
-  #startScreen {  
-    position: fixed;  
-    top: 0; left: 0;  
-    width: 100%; height: 100%;  
-    background: rgba(11,18,32,0.95);  
-    display: flex;  
-    flex-direction: column;  
-    justify-content: center;  
-    align-items: center;  
-    z-index: 10;  
-    padding: 20px;  
-    text-align: center;  
-  }  
-  
-  #startScreen h1 {  
-    font-size: clamp(2.5rem, 5vw, 4rem);  
-    margin: 10px 0;  
-    padding: 20px;  
-    border: 2px solid #122231;  
-    border-radius: 12px;  
-    background-color: #0f1724;  
-    width: 90%;  
-    max-width: 500px;  
-  }  
-  
-  #startScreen p {  
-    font-size: clamp(0.9rem, 2.5vw, 1.5rem);  
-    margin: 8px 0;  
-    padding: 12px;  
-    border: 2px solid #122231;  
-    border-radius: 10px;  
-    background-color: #0f1724;  
-    width: 90%;  
-    max-width: 400px;  
-    line-height: 1.4;  
-  }  
-  
-  #startScreen button {  
-    padding: 16px 35px;  
-    margin: 15px;  
-    border: none;  
-    border-radius: 10px;  
-    font-weight: bold;  
-    cursor: pointer;  
-    font-size: clamp(0.9rem, 2.5vw, 1.5rem);  
-    background: #06b6d4;  
-    color: #062024;  
-  }  
-  
-  .hud {  
-    display: flex;  
-    justify-content: center;  
-    gap: 30px;  
-    font-size: clamp(1.2rem, 2vw, 2rem);  
-    margin-top: 10px;  
-    flex-wrap: wrap;  
-    padding: 20px;  
-  }  
-  
-  .hud div {  
-    padding: 10px 16px;  
-    border: 2px solid #122231;  
-    border-radius: 6px;  
-    background-color: #0f1724;  
-    min-width: 120px;  
-    text-align: center;  
-  }  
-  
-  @media (max-width: 480px){  
-    .hud { font-size: clamp(1rem, 4vw, 1.2rem); gap: 15px; padding: 10px; }  
-    .hud div { min-width: 90px; padding: 8px 10px; }  
-    #startScreen h1 { font-size: clamp(1.8rem, 5vw, 3rem); }  
-    #startScreen p { font-size: clamp(0.8rem, 3vw, 1.2rem); }  
-    #startScreen button { font-size: clamp(0.8rem, 3vw, 1.2rem); padding: 12px 25px; }  
-  }  
-</style>  
-</head>  
-<body>  
-  
-<div id="startScreen">  
-  <h1>Cobrinha</h1>  
-  <p>  
-    Controles:<br>  
-    - Setas do teclado: mover<br>  
-    - Espaço: pausar/jogar  
-  </p>  
-  <p>Vidas: <span id="startLives">3</span></p>  
-  <button id="startBtn">Começar</button>  
-</div>  
-  
-<div class="hud">  
-  <div>Pontos: <span id="score">0</span></div>  
-  <div>Vidas: <span id="lives">3</span></div>  
-  <div>Pausado (Espaço): <span id="paused">Não</span></div>  
-</div>  
-  
-<canvas id="game"></canvas>  
-  
-<audio id="bgMusic" src="cobra.mp3" loop></audio>  
-<audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>  
-<audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio>  
-<audio id="biteSound" src="bite.mp3"></audio> <!-- NOVO SOM -->  
-  
-<script>  
-const canvas = document.getElementById('game');  
-const ctx = canvas.getContext('2d');  
-  
-const startScreen = document.getElementById('startScreen');  
-const startBtn = document.getElementById('startBtn');  
-const scoreEl = document.getElementById('score');  
-const livesEl = document.getElementById('lives');  
-const startLivesEl = document.getElementById('startLives');  
-const pausedEl = document.getElementById('paused');  
-  
-const bgMusic = document.getElementById('bgMusic');  
-const eatSound = document.getElementById('eatSound');  
-const hitSound = document.getElementById('hitSound');  
-const biteSound = document.getElementById('biteSound'); // NOVO SOM
-  
-let snake = [];  
-let direction = 'RIGHT';  
-let food = {};  
-let score = 0;  
-let lives = 3;  
-let gameInterval;  
-let isPaused = false;  
-const gridSize = 20;  
-let cellSize;  
-  
-const foodImg = new Image();  
-foodImg.src = 'rato.png';  
-  
-function resizeCanvas() {  
-  const size = Math.min(window.innerWidth, window.innerHeight) * 0.7;  
-  canvas.width = size;  
-  canvas.height = size;  
-  cellSize = canvas.width / gridSize;  
-  drawGame();  
-}  
-  
-window.addEventListener('resize', resizeCanvas);  
-  
-function placeFood() {  
-  food = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) };  
-}  
-  
-function initGame() {  
-  resizeCanvas();  
-  snake = [{x:10, y:10}];  
-  direction = 'RIGHT';  
-  placeFood();  
-  score = 0;  
-  lives = 3;  
-  isPaused = false;  
-  scoreEl.textContent = score;  
-  livesEl.textContent = lives;  
-  startLivesEl.textContent = lives;  
-  pausedEl.textContent = 'Não';  
-  startScreen.style.display = 'none';  
-  bgMusic.play();  
-  if(gameInterval) clearInterval(gameInterval);  
-  gameInterval = setInterval(gameLoop, 150);  
-}  
-  
-function gameLoop() {  
-  if(isPaused) return;  
-  const head = {...snake[0]};  
-  if(direction==='RIGHT') head.x++;  
-  if(direction==='LEFT') head.x--;  
-  if(direction==='UP') head.y--;  
-  if(direction==='DOWN') head.y++;  
-  
-  if(head.x<0 || head.x>=gridSize || head.y<0 || head.y>=gridSize){ loseLife(); return; }  
-  if(snake.some(seg=>seg.x===head.x && seg.y===head.y)){ loseLife(); return; }  
-  
-  snake.unshift(head);  
-  
-  if(head.x===food.x && head.y===food.y){  
-    score += 10;  
-    scoreEl.textContent = score;  
-    // Tocar o novo som bite  
-    biteSound.currentTime = 0;  
-    biteSound.play();  
-    placeFood();  
-  } else { snake.pop(); }  
-  
-  drawGame();  
-}  
-  
-function loseLife() {  
-  lives--;  
-  livesEl.textContent = lives;  
-  startLivesEl.textContent = lives;  
-  hitSound.currentTime = 0;  
-  hitSound.play();  
-  if(lives <= 0){ alert("Game Over!"); startScreen.style.display = 'flex'; clearInterval(gameInterval); }   
-  else { snake = [{x:10, y:10}]; direction = 'RIGHT'; }  
-}  
-  
-function drawGrass() {  
-  ctx.fillStyle = '#116611';  
-  ctx.fillRect(0, 0, canvas.width, canvas.height);  
-  
-  ctx.strokeStyle = '#0f3f0f';  
-  ctx.lineWidth = 1;  
-  for(let i=0; i<=gridSize; i++){  
-    ctx.beginPath();  
-    ctx.moveTo(i*cellSize,0);  
-    ctx.lineTo(i*cellSize,canvas.height);  
-    ctx.stroke();
-    ctx.beginctx.beginPath();  
-    ctx.moveTo(0,i*cellSize);  
-    ctx.lineTo(canvas.width,i*cellSize);  
-    ctx.stroke();  
-  }  
-}  
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo da Cobrinha</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    background: #0b1220;
+    color: #e6eef8;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  canvas {
+    width: 70vmin;
+    height: 70vmin;
+    display: block;
+    margin: 10px auto;
+    background: #116611;
+    border-radius: 8px;
+    border: 5px solid #FFFF99;
+    box-shadow: 0 0 15px #FFFF99;
+  }
+  #startScreen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(11,18,32,0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    padding: 20px;
+    text-align: center;
+  }
+  #startScreen h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin: 10px 0;
+    padding: 20px;
+    border: 2px solid #122231;
+    border-radius: 12px;
+    background-color: #0f1724;
+    width: 90%;
+    max-width: 500px;
+  }
+  #startScreen p {
+    font-size: clamp(0.9rem, 2.5vw, 1.5rem);
+    margin: 8px 0;
+    padding: 12px;
+    border: 2px solid #122231;
+    border-radius: 10px;
+    background-color: #0f1724;
+    width: 90%;
+    max-width: 400px;
+    line-height: 1.4;
+  }
+  #startScreen button {
+    padding: 16px 35px;
+    margin: 15px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: clamp(0.9rem, 2.5vw, 1.5rem);
+    background: #06b6d4;
+    color: #062024;
+  }
+  .hud {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    margin-top: 10px;
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+  .hud div {
+    padding: 10px 16px;
+    border: 2px solid #122231;
+    border-radius: 6px;
+    background-color: #0f1724;
+    min-width: 120px;
+    text-align: center;
+  }
+  @media (max-width: 480px){
+    .hud { font-size: clamp(1rem, 4vw, 1.2rem); gap: 15px; padding: 10px; }
+    .hud div { min-width: 90px; padding: 8px 10px; }
+    #startScreen h1 { font-size: clamp(1.8rem, 5vw, 3rem); }
+    #startScreen p { font-size: clamp(0.8rem, 3vw, 1.2rem); }
+    #startScreen button { font-size: clamp(0.8rem, 3vw, 1.2rem); padding: 12px 25px; }
+  }
+</style>
+</head>
+<body>
 
-function drawGame() {  
-  drawGrass();  
-  const foodSize = cellSize * 1.2;  
-  ctx.drawImage(foodImg, food.x*cellSize - (foodSize-cellSize)/2, food.y*cellSize - (foodSize-cellSize)/2, foodSize, foodSize);  
+<div id="startScreen">
+  <h1>Cobrinha</h1>
+  <p>
+    Controles:<br>
+    - Setas do teclado: mover<br>
+    - Espaço: pausar/jogar
+  </p>
+  <p>Vidas: <span id="startLives">3</span></p>
+  <button id="startBtn">Começar</button>
+</div>
 
-  snake.forEach((seg,index)=>{  
-    ctx.fillStyle="#FFFF99";  
-    ctx.fillRect(seg.x*cellSize, seg.y*cellSize, cellSize, cellSize);  
+<div class="hud">
+  <div>Pontos: <span id="score">0</span></div>
+  <div>Vidas: <span id="lives">3</span></div>
+  <div>Pausado (Espaço): <span id="paused">Não</span></div>
+</div>
 
-    if(index===0){  
-      const eyeSize = cellSize/8;  
-      ctx.fillStyle="#000000";  
-      ctx.beginPath();  
-      ctx.arc(seg.x*cellSize + cellSize/4, seg.y*cellSize + cellSize/4, eyeSize, 0, Math.PI*2);  
-      ctx.arc(seg.x*cellSize + 3*cellSize/4, seg.y*cellSize + cellSize/4, eyeSize, 0, Math.PI*2);  
-      ctx.fill();  
-    }  
-  });  
-}  
+<canvas id="game"></canvas>
 
-document.addEventListener('keydown', e=>{  
-  if(e.key==='ArrowUp' && direction!=='DOWN') direction='UP';  
-  if(e.key==='ArrowDown' && direction!=='UP') direction='DOWN';  
-  if(e.key==='ArrowLeft' && direction!=='RIGHT') direction='LEFT';  
-  if(e.key==='ArrowRight' && direction!=='LEFT') direction='RIGHT';  
-  if(e.code==='Space'){  
-    isPaused = !isPaused;  
-    pausedEl.textContent = isPaused ? 'Sim' : 'Não';  
-  }  
-});  
+<audio id="bgMusic" src="cobra.mp3" loop></audio>
+<audio id="biteSound" src="bite.mp3"></audio>
+<audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio>
 
-startBtn.addEventListener('click', initGame);  
-</script>  
-</body>  
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+
+  const startScreen = document.getElementById('startScreen');
+  const startBtn = document.getElementById('startBtn');
+  const scoreEl = document.getElementById('score');
+  const livesEl = document.getElementById('lives');
+  const startLivesEl = document.getElementById('startLives');
+  const pausedEl = document.getElementById('paused');
+
+  const bgMusic = document.getElementById('bgMusic');
+  const biteSound = document.getElementById('biteSound');
+  const hitSound = document.getElementById('hitSound');
+
+  let snake = [];
+  let direction = 'RIGHT';
+  let food = {};
+  let score = 0;
+  let lives = 3;
+  let gameInterval;
+  let isPaused = false;
+  const gridSize = 20;
+  let cellSize;
+
+  const foodImg = new Image();
+  foodImg.src = 'rato.png';
+
+  function resizeCanvas() {
+    const size = Math.min(window.innerWidth, window.innerHeight) * 0.7;
+    canvas.width = size;
+    canvas.height = size;
+    cellSize = canvas.width / gridSize;
+    drawGame();
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+
+  function placeFood() {
+    food = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) };
+  }
+
+  function initGame() {
+    resizeCanvas();
+    snake = [{x:10, y:10}];
+    direction = 'RIGHT';
+    placeFood();
+    score = 0;
+    lives = 3;
+    isPaused = false;
+    scoreEl.textContent = score;
+    livesEl.textContent = lives;
+    startLivesEl.textContent = lives;
+    pausedEl.textContent = 'Não';
+    startScreen.style.display = 'none';
+    bgMusic.play().catch(()=>{});
+    if(gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, 150);
+    drawGame();
+  }
+
+  function gameLoop() {
+    if(isPaused) return;
+    const head = {...snake[0]};
+    if(direction==='RIGHT') head.x++;
+    if(direction==='LEFT') head.x--;
+    if(direction==='UP') head.y--;
+    if(direction==='DOWN') head.y++;
+
+    if(head.x<0 || head.x>=gridSize || head.y<0 || head.y>=gridSize){ loseLife(); return; }
+    if(snake.some(seg=>seg.x===head.x && seg.y===head.y)){ loseLife(); return; }
+
+    snake.unshift(head);
+
+    if(head.x===food.x && head.y===food.y){
+      score += 10;
+      scoreEl.textContent = score;
+      biteSound.currentTime = 0;
+      biteSound.play();
+      placeFood();
+    } else { snake.pop(); }
+
+    drawGame();
+  }
+
+  function loseLife() {
+    lives--;
+    livesEl.textContent = lives;
+    startLivesEl.textContent = lives;
+    hitSound.currentTime = 0;
+    hitSound.play();
+    if(lives <= 0){
+      alert("Game Over!");
+      startScreen.style.display = 'flex';
+      clearInterval(gameInterval);
+    } else {
+      snake = [{x:10, y:10}];
+      direction = 'RIGHT';
+    }
+  }
+
+  function drawGrass() {
+    ctx.fillStyle = '#116611';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#0f3f0f';
+    ctx.lineWidth = 1;
+    for(let i=0; i<=gridSize; i++){
+      ctx.beginPath();
+      ctx.moveTo(i*cellSize,0);
+      ctx.lineTo(i*cellSize,canvas.height);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0,i*cellSize);
+      ctx.lineTo(canvas.width,i*cellSize);
+      ctx.stroke();
+    }
+  }
+
+  function drawGame() {
+    drawGrass();
+    const foodSize = cellSize * 1.2;
+    ctx.drawImage(foodImg, food.x*cellSize - (foodSize-cellSize)/2, food.y*cellSize - (foodSize-cellSize)/2, foodSize, foodSize);
+
+    snake.forEach((seg,index)=>{
+      ctx.fillStyle="#FFFF99";
+      ctx.fillRect(seg.x*cellSize, seg.y*cellSize, cellSize, cellSize);
+
+      if(index===0){
+        const eyeSize = cellSize/8;
+        ctx.fillStyle="#000000";
+        ctx.beginPath();
+        ctx.arc(seg.x*cellSize + cellSize/4, seg.y*cellSize + cellSize/4, eyeSize, 0, Math.PI*2);
+        ctx.arc(seg.x*cellSize + 3*cellSize/4, seg.y*cellSize + cellSize/4, eyeSize, 0, Math.PI*2);
+        ctx.fill();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowUp' && direction!=='DOWN') direction='UP';
+    if(e.key==='ArrowDown' && direction!=='UP') direction='DOWN';
+    if(e.key==='ArrowLeft' && direction!=='RIGHT') direction='LEFT';
+    if(e.key==='ArrowRight' && direction!=='LEFT') direction='RIGHT';
+    if(e.code==='Space'){
+      isPaused = !isPaused;
+      pausedEl.textContent = isPaused ? 'Sim' : 'Não';
+    }
+  });
+
+  startBtn.addEventListener('click', initGame);
+});
+</script>
+</body>
 </html>
