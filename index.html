@@ -49,7 +49,7 @@ body::before {
   border-radius: 20px;
   padding: 50px 60px;
   width: 90%;
-  max-width: 1200px; /* ideal para notebook */
+  max-width: 1200px;
   backdrop-filter: blur(20px);
   box-shadow: 0 10px 40px rgba(0,0,0,0.7);
   display: flex;
@@ -67,7 +67,7 @@ header {
 
 h1 {
   color: #fff;
-  font-size: clamp(2.8rem, 4vw, 3.8rem); /* notebook */
+  font-size: clamp(2.8rem, 4vw, 3.8rem);
   text-shadow: 3px 3px 12px rgba(0,0,0,0.9);
   letter-spacing: 4px;
   animation: glow 2s ease-in-out infinite alternate;
@@ -156,7 +156,7 @@ h1 {
 
 .game-info img {
   width: 100%;
-  max-width: 800px; /* ideal notebook */
+  max-width: 800px;
   height: auto;
   object-fit: contain;
   background-color: #000;
@@ -202,6 +202,52 @@ h1 {
   color: #fff;
   font-size: 1rem;
   font-weight: bold;
+}
+
+/* ----------- MOBILE AJUSTES ----------- */
+@media (max-width: 768px) {
+  .container {
+    padding: 25px 20px;
+  }
+
+  h1 {
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+
+  .button-background {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .game-btn {
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.1rem;
+    padding: 18px;
+  }
+
+  .game-info {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    margin-top: 20px;
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .game-info img {
+    max-width: 100%;
+    border-radius: 15px;
+  }
+
+  .game-info p {
+    font-size: 1rem;
+    max-width: 100%;
+    padding: 15px;
+  }
 }
 </style>
 </head>
