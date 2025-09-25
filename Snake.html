@@ -31,21 +31,24 @@
 
   .game-container {
     position: relative;
-    padding: 20px;
+    padding: 40px 50px;
     border: 2px solid rgba(255,255,255,0.25);
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    backdrop-filter: blur(20px);
     background: rgba(255,255,255,0.08);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.7);
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 1000px;
+    width: 90%;
   }
 
   .backBtn {
     position: absolute;
-    top: 10px; left: 10px;
-    padding: 10px 20px;
+    top: 5px;
+    left: 10px;
+    padding: 12px 25px;
     background: linear-gradient(145deg, #3f51b5, #1a237e);
     color: #fff;
     font-weight: bold;
@@ -58,25 +61,26 @@
   .backBtn:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
 
   canvas {
-    width: 70vmin;
-    height: 70vmin;
+    width: 80vmin;
+    height: 80vmin;
     background: #116611;
-    border-radius: 8px;
-    border: 5px solid #FFFF99;
-    box-shadow: 0 0 15px #FFFF99;
+    border-radius: 12px;
+    border: 6px solid #FFFF99;
+    box-shadow: 0 0 25px #FFFF99;
     display: block;
-    margin: 10px auto;
+    margin: 15px auto;
   }
 
   .hud {
     display:flex;
     justify-content:center;
-    gap:30px;
-    font-size:clamp(1.2rem,2vw,2rem);
-    margin-top:10px;
+    gap:40px;
+    font-size:clamp(1.5rem,2vw,2.5rem);
+    margin-top:15px;
     flex-wrap:wrap;
-    padding:20px;
+    padding:25px;
   }
+
   .hud div {
     padding:10px 16px;
     border:2px solid #122231;
@@ -93,55 +97,55 @@
     width:100%; height:100%;
     display:flex; flex-direction:column;
     justify-content:center; align-items:center;
-    z-index:10; text-align:center; padding:20px;
+    z-index:10; text-align:center; padding:30px;
     background: rgba(11,18,32,0.95);
-    border-radius: 20px;
+    border-radius: 25px;
     border: 2px solid rgba(255,255,255,0.25);
-    backdrop-filter: blur(15px);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.7);
   }
 
   #startScreen h1, #startScreen p {
-    margin:10px 0; padding:20px;
+    margin:15px 0; padding:25px;
     background-color: #0f1724;
     border:2px solid rgba(255,255,255,0.25);
-    border-radius:15px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    border-radius:18px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.6);
     color: #e6eef8;
   }
 
-  #startScreen h1 { font-size: clamp(2.5rem,5vw,4rem); }
-  #startScreen p { font-size: clamp(0.9rem,2.5vw,1.5rem); line-height:1.4; }
+  #startScreen h1 { font-size: clamp(3rem,5vw,5rem); }
+  #startScreen p { font-size: clamp(1rem,2.5vw,1.8rem); line-height:1.5; }
 
   #startScreen button {
-    padding:16px 35px; margin:15px;
-    border:none; border-radius:15px; font-weight:bold; cursor:pointer;
-    font-size:clamp(0.9rem,2.5vw,1.5rem);
+    padding:20px 45px; margin:20px;
+    border:none; border-radius:18px; font-weight:bold; cursor:pointer;
+    font-size:clamp(1rem,2.5vw,1.8rem);
     background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color:#fff; box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    color:#fff; box-shadow: 0 10px 35px rgba(0,0,0,0.6);
     transition: all 0.3s ease;
   }
   #startScreen button:hover { transform:scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
 
-  /* Botões para os outros jogos */
   .other-games {
-    margin-top:20px;
+    margin-top:25px;
     display:flex;
-    gap:20px;
+    gap:25px;
     flex-wrap:wrap;
   }
   .other-games button {
-    padding:15px 30px;
-    font-size:1.2rem;
+    padding:18px 35px;
+    font-size:1.3rem;
     border:none;
-    border-radius:15px;
+    border-radius:18px;
     cursor:pointer;
     background: linear-gradient(145deg, #3f51b5, #1a237e);
     color:#fff;
-    box-shadow:0 8px 25px rgba(0,0,0,0.6);
+    box-shadow:0 10px 35px rgba(0,0,0,0.6);
     transition: all 0.3s ease;
   }
   .other-games button:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
+
 </style>
 </head>
 <body>
@@ -165,7 +169,6 @@
 
   <canvas id="game"></canvas>
 
-  <!-- Botões para os outros jogos -->
   <div class="other-games">
     <button onclick="window.location.href='jogo_da_velha.html'">Jogo da Velha</button>
     <button onclick="window.location.href='falling.html'">Falling</button>
@@ -177,7 +180,6 @@
 <audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio>
 
 <script>
-// Lógica do Snake (igual ao código anterior)
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 const startScreen = document.getElementById('startScreen');
@@ -312,8 +314,8 @@ document.addEventListener('keydown', e=>{
 startBtn.addEventListener('click', initGame);
 
 function goBack(){ window.location.href='index.html'; bgMusic.pause(); }
+resizeCanvas();
 </script>
 
 </body>
 </html>
-
