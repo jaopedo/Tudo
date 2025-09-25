@@ -1,170 +1,172 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo da Velha - 10 Rodadas</title>
+<title>Jogo da Velha</title>
 <style>
-html, body {
-  margin:0; padding:0;
-  height:100%; width:100%;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:flex-start;
-  font-family:Arial, sans-serif;
-  background:#1e293b; color:#e2e8f0;
-}
-#gameWrapper {
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:flex-start;
-  width:100%; max-width:1000px;
-  padding:20px;
-  box-sizing:border-box;
-}
-h1 {
-  margin:0 0 20px 0;
-  text-align:center;
-  font-size:clamp(2.5rem, 4vw, 4.5rem);
-  text-shadow:0 0 25px #38bdf8;
-  line-height:1.2;
-}
-.hud {
-  display:flex;
-  justify-content:center;
-  gap:40px;
-  width:100%;
-  font-weight:bold;
-  margin-bottom:20px;
-  font-size:clamp(1.2rem, 2vw, 1.8rem);
-  flex-wrap:wrap;
-  text-align:center;
-}
-#boardContainer {
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-}
-#board {
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  grid-gap:25px;
-  width:min(80vw, 450px);
-  height:min(80vw, 450px);
-  margin-bottom:20px;
-}
-.cell {
-  background:#111827;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:clamp(2.5rem, 8vw, 6rem);
-  cursor:pointer;
-  border-radius:12px;
-  text-shadow:0 0 20px #fff;
-  user-select:none;
-}
-.cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
-.cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
-#menuScreen, #aiOptions {
-  display:flex; flex-direction:column;
-  align-items:center;
-  margin-top:20px;
-  background:#334155;
-  padding:30px 40px;
-  border-radius:12px;
-  box-shadow:0 0 20px #38bdf8;
-  width:90%; max-width:450px;
-}
-button, select {
-  margin-top:15px;
-  padding:14px 28px;
-  border:none; border-radius:10px;
-  background:#0ea5e9; color:white;
-  font-size:clamp(1rem, 1.5vw, 1.3rem);
-  cursor:pointer;
-  box-shadow:0 0 15px #0ea5e9;
-  width:100%; max-width:260px;
-}
-#aiOptions .option {
-  display:flex; flex-direction:column;
-  align-items:flex-start;
-  margin-top:15px;
-  width:100%;
-}
-#aiOptions label {
-  font-size:clamp(0.95rem, 1.4vw, 1.2rem);
-  color:#e2e8f0;
-  margin-bottom:6px;
-}
-#aiOptions select {
-  width:100%;
-  padding:10px 18px;
-  border-radius:8px;
-  border:none;
-  background:#0ea5e9;
-  color:white;
-  font-size:clamp(0.9rem, 1.2vw, 1.1rem);
-  box-shadow:0 0 12px #0ea5e9;
-  cursor:pointer;
-}
+  * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
+  html, body {
+    height:100%; width:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background: radial-gradient(circle at top, #1a237e, #0d133d);
+    color:#fff;
+  }
+  body::before {
+    content:"";
+    position:absolute;
+    width:200%; height:200%;
+    background: radial-gradient(circle, #3949ab33, #1a237e22 70%, transparent 90%);
+    animation: rotateBg 25s linear infinite;
+    z-index:-1;
+  }
+  @keyframes rotateBg { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
 
-/* Área de mensagens abaixo do tabuleiro */
-#message {
-  padding:15px 25px;
-  border-radius:12px;
-  font-size:clamp(1.5rem, 4vw, 2.5rem);
-  font-weight:bold;
-  text-align:center;
-  display:none;
-  background:#0f172a;
-  box-shadow:0 0 20px #38bdf8;
-  width:90%;
-  max-width:500px;
-  text-shadow:0 0 15px #38bdf8;
-  margin-top:15px;
-}
+  .game-container {
+    position: relative;
+    padding: 20px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    display:flex; flex-direction:column; align-items:center;
+  }
+
+  .backBtn {
+    position: absolute; top:10px; left:10px;
+    padding:10px 20px;
+    background: linear-gradient(145deg, #3f51b5, #1a237e);
+    color: #fff;
+    font-weight: bold;
+    border:none; border-radius:15px;
+    cursor:pointer; z-index:10;
+    transition: all 0.3s ease;
+  }
+  .backBtn:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
+
+  #startScreen {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    z-index:10; text-align:center; padding:20px;
+    background: rgba(11,18,32,0.95);
+    border-radius: 20px; border:2px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(15px);
+    box-shadow:0 10px 40px rgba(0,0,0,0.7);
+  }
+  #startScreen h1 {
+    font-size: clamp(2.5rem,5vw,4rem);
+    margin-bottom:15px;
+  }
+  #startScreen p {
+    margin:10px 0; padding:10px 20px;
+    background: #0f1724; border:2px solid rgba(255,255,255,0.25);
+    border-radius:15px; box-shadow:0 8px 30px rgba(0,0,0,0.6);
+    line-height:1.4;
+  }
+  #startScreen button {
+    padding:16px 35px; margin-top:15px;
+    border:none; border-radius:15px; font-weight:bold; cursor:pointer;
+    font-size:clamp(1rem,2.5vw,1.5rem);
+    background: linear-gradient(145deg, #3f51b5, #1a237e);
+    color:#fff; box-shadow:0 8px 25px rgba(0,0,0,0.6);
+    transition: all 0.3s ease;
+  }
+  #startScreen button:hover { transform:scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
+
+  .hud {
+    display:flex; justify-content:center; gap:30px;
+    font-size:clamp(1.2rem,2vw,2rem);
+    margin-top:10px; flex-wrap:wrap; padding:20px;
+  }
+  .hud div {
+    padding:10px 16px;
+    border:2px solid #122231; border-radius:6px;
+    background-color:#0f1724; min-width:120px;
+    text-align:center; color:#fff;
+  }
+
+  #board {
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap:15px;
+    width: min(70vmin, 450px);
+    height: min(70vmin, 450px);
+    margin-top:20px;
+  }
+  .cell {
+    background:#111827;
+    display:flex; justify-content:center; align-items:center;
+    font-size:clamp(2.5rem, 8vw, 6rem);
+    cursor:pointer; border-radius:12px;
+    text-shadow:0 0 20px #fff; user-select:none;
+  }
+  .cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
+  .cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
+
+  #message {
+    margin-top:20px;
+    padding:15px 25px;
+    border-radius:12px;
+    font-size:clamp(1.5rem,4vw,2rem);
+    font-weight:bold;
+    text-align:center;
+    display:none;
+    background:#0f172a;
+    box-shadow:0 0 20px #38bdf8;
+    text-shadow:0 0 15px #38bdf8;
+  }
+
+  /* Botões para outros jogos */
+  .other-games {
+    margin-top:25px; display:flex; gap:20px; flex-wrap:wrap; justify-content:center;
+  }
+  .other-games button {
+    padding:15px 30px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    background: linear-gradient(145deg, #3f51b5, #1a237e);
+    color:#fff;
+    box-shadow:0 8px 25px rgba(0,0,0,0.6);
+    transition: all 0.3s ease;
+  }
+  .other-games button:hover { 
+    transform: scale(1.05); 
+    background: linear-gradient(145deg, #1a237e, #283593); 
+  }
 </style>
 </head>
 <body>
 
-<div id="gameWrapper">
-  <h1>✨ Jogo da Velha ✨</h1>
+<div class="game-container">
+  <button class="backBtn" onclick="goBack()">Voltar</button>
+
+  <div id="startScreen">
+    <h1>✨ Jogo da Velha ✨</h1>
+    <p>Escolha o modo de jogo:</p>
+    <button id="singleBtn">Contra IA</button>
+    <button id="multiBtn">Multiplayer Local</button>
+  </div>
+
   <div class="hud">
     <div>Pontos X: <span id="scoreX">0</span></div>
     <div>Pontos O: <span id="scoreO">0</span></div>
     <div>Rodada: <span id="round">1</span>/10</div>
   </div>
 
-  <div id="menuScreen">
-    <p>Escolha o modo de jogo:</p>
-    <button id="singleBtn">Contra IA</button>
-    <button id="multiBtn">Multiplayer Local</button>
-  </div>
+  <div id="board" style="display:none;"></div>
+  <div id="message"></div>
 
-  <div id="aiOptions" style="display:none;">
-    <div class="option">
-      <label for="playerSymbol">Escolha seu símbolo:</label>
-      <select id="playerSymbol">
-        <option value="X">❌ X</option>
-        <option value="O">⭕ O</option>
-      </select>
-    </div>
-    <div class="option">
-      <label for="difficulty">Dificuldade:</label>
-      <select id="difficulty">
-        <option value="easy">Fácil</option>
-        <option value="medium" selected>Médio</option>
-        <option value="hard">Difícil</option>
-      </select>
-    </div>
-    <button id="startAI">Iniciar</button>
-  </div>
-
-  <div id="boardContainer" style="display:none;">
-    <div id="board"></div>
-    <div id="message"></div> <!-- mensagem agora abaixo do tabuleiro -->
+  <!-- Botões para outros jogos -->
+  <div class="other-games">
+    <button onclick="window.location.href='snake.html'">Cobrinha</button>
+    <button onclick="window.location.href='falling.html'">Falling</button>
   </div>
 </div>
 
-<!-- Sons -->
 <audio id="bgMusic" src="elec.mp3" loop autoplay></audio>
 <audio id="clickSound" src="click.mp3"></audio>
 <audio id="winSound" src="win.mp3"></audio>
@@ -172,21 +174,13 @@ button, select {
 <audio id="drawSound" src="draw.mp3"></audio>
 
 <script>
-const menuScreen=document.getElementById("menuScreen");
-const aiOptions=document.getElementById("aiOptions");
-const singleBtn=document.getElementById("singleBtn");
-const multiBtn=document.getElementById("multiBtn");
-const startAI=document.getElementById("startAI");
+const startScreen=document.getElementById("startScreen");
 const boardEl=document.getElementById("board");
-const boardContainer=document.getElementById("boardContainer");
+const messageEl=document.getElementById("message");
 const scoreXEl=document.getElementById("scoreX");
 const scoreOEl=document.getElementById("scoreO");
 const roundEl=document.getElementById("round");
-const playerSymbolEl=document.getElementById("playerSymbol");
-const difficultyEl=document.getElementById("difficulty");
-const messageEl=document.getElementById("message");
 
-// sons
 const bgMusic=document.getElementById("bgMusic");
 const clickSound=document.getElementById("clickSound");
 const winSound=document.getElementById("winSound");
@@ -205,22 +199,18 @@ function showMessage(text,color="#38bdf8"){
   messageEl.style.color=color;
   messageEl.style.display="block";
 }
-
-function hideMessage(){
-  messageEl.style.display="none";
-}
+function hideMessage(){ messageEl.style.display="none"; }
 
 let board=Array(9).fill(null);
-let player="X", ai="O", mode="single", difficulty="medium";
+let player="X", ai="O", mode="single";
 let currentTurn="X", gameOver=false;
 let scoreX=0, scoreO=0, round=1, maxRounds=10;
 
 function createBoard(){
   boardEl.innerHTML="";
   board=Array(9).fill(null);
-  gameOver=false;
-  currentTurn="X";
-  hideMessage();
+  gameOver=false; currentTurn="X"; hideMessage();
+  boardEl.style.display="grid";
   for(let i=0;i<9;i++){
     const cell=document.createElement("div");
     cell.classList.add("cell");
@@ -243,39 +233,27 @@ function playerMove(i){
   if(mode==="single"){
     board[i]=player; renderBoard();
     if(checkWinner(player)){
-      scoreX++; playWithPause(winSound);
-      endRound("Você ganhou esta rodada!", "#22c55e"); return;
+      scoreX++; playWithPause(winSound); endRound("Você ganhou esta rodada!", "#22c55e"); return;
     }
-    if(board.every(c=>c)){
-      scoreX++; scoreO++; playWithPause(drawSound);
-      endRound("Empate nesta rodada!", "#eab308"); return;
-    }
+    if(board.every(c=>c)){ scoreX++; scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
     aiMove();
   } else {
     board[i]=currentTurn; renderBoard();
     if(checkWinner(currentTurn)){
       currentTurn==="X"?scoreX++:scoreO++;
-      if(currentTurn===player) playWithPause(winSound); else playWithPause(loseSound);
-      endRound(`Jogador ${currentTurn} ganhou esta rodada!`, currentTurn===player?"#22c55e":"#ef4444"); return;
+      playWithPause(winSound); endRound(`Jogador ${currentTurn} venceu!`, "#22c55e"); return;
     }
-    if(board.every(c=>c)){
-      scoreX++; scoreO++; playWithPause(drawSound);
-      endRound("Empate nesta rodada!", "#eab308"); return;
-    }
+    if(board.every(c=>c)){ scoreX++; scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
     currentTurn=currentTurn==="X"?"O":"X";
   }
 }
 
 function aiMove(){
   const empty=board.map((v,i)=>v?null:i).filter(v=>v!==null);
-  let move;
-  if(difficulty==="easy"){ move=empty[Math.floor(Math.random()*empty.length)]; }
-  else if(difficulty==="medium"){ move=Math.random()<0.5?findBestMove(ai):empty[Math.floor(Math.random()*empty.length)]; }
-  else if(difficulty==="hard"){ move=findBestMove(ai); }
-
+  const move=empty[Math.floor(Math.random()*empty.length)];
   board[move]=ai; renderBoard();
-  if(checkWinner(ai)){scoreO++; playWithPause(loseSound); endRound("Você perdeu esta rodada!", "#ef4444"); return;}
-  if(board.every(c)){scoreX++;scoreO++; playWithPause(drawSound); endRound("Empate nesta rodada!", "#eab308"); return;}
+  if(checkWinner(ai)){scoreO++; playWithPause(loseSound); endRound("Você perdeu!", "#ef4444"); return;}
+  if(board.every(c=>c)){ scoreX++; scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
 }
 
 function renderBoard(){
@@ -290,69 +268,24 @@ function checkWinner(p){
   return wins.some(c=>c.every(i=>board[i]===p));
 }
 
-function findBestMove(playerSymbol){
-  function minimax(b, depth, isMaximizing){
-    if(checkWinner(ai)) return 10-depth;
-    if(checkWinner(player)) return depth-10;
-    if(b.every(c=>c)) return 0;
-    const empty=b.map((v,i)=>v?null:i).filter(v=>v!==null);
-    if(isMaximizing){
-      let best=-Infinity;
-      for(const i of empty){ b[i]=ai; best=Math.max(best,minimax(b,depth+1,false)); b[i]=null; }
-      return best;
-    } else {
-      let best=Infinity;
-      for(const i of empty){ b[i]=player; best=Math.min(best,minimax(b,depth+1,true)); b[i]=null; }
-      return best;
-    }
-  }
-  let bestScore=-Infinity, move;
-  board.forEach((cell,i)=>{
-    if(!cell){ board[i]=ai; let score=minimax(board,0,false); board[i]=null;
-      if(score>bestScore){ bestScore=score; move=i; }
-    }
-  });
-  return move;
-}
-
 function endRound(msg,color){
   gameOver=true;
   showMessage(msg,color);
   setTimeout(()=>{
     hideMessage();
     if(round>=maxRounds){
-      if(scoreX===scoreO){
-        showMessage("Empate geral! Rodadas bônus.", "#eab308");
-        round++; createBoard(); updateHUD();
-        if(mode==="single" && player==="O") aiMove();
-        return;
-      }
-      showMessage(`Fim das ${maxRounds} rodadas! ${scoreX>scoreO?"X venceu!":"O venceu!"}`, scoreX>scoreO?"#22c55e":"#ef4444");
-      scoreX=0; scoreO=0; round=1;
-      menuScreen.style.display="flex";
-      boardContainer.style.display="none";
-      aiOptions.style.display="none";
+      showMessage(`Fim das ${maxRounds} rodadas!`, "#22c55e");
+      round=1; scoreX=0; scoreO=0;
+      startScreen.style.display="flex"; boardEl.style.display="none";
       updateHUD();
-    } else {
-      round++; 
-      createBoard(); 
-      updateHUD();
-      if(mode==="single" && player==="O") aiMove();
-    }
-  }, 2000);
+    } else { round++; createBoard(); updateHUD();}
+  },2000);
 }
 
-// botões
-singleBtn.onclick=()=>{ menuScreen.style.display="none"; aiOptions.style.display="flex"; mode="single"; }
-multiBtn.onclick=()=>{ menuScreen.style.display="none"; boardContainer.style.display="flex"; mode="multi"; createBoard(); }
-startAI.onclick=()=>{
-  player=playerSymbolEl.value;
-  ai=(player==="X")?"O":"X";
-  difficulty=difficultyEl.value;
-  aiOptions.style.display="none";
-  boardContainer.style.display="flex";
-  createBoard();
-};
+document.getElementById("singleBtn").onclick=()=>{ mode="single"; startScreen.style.display="none"; createBoard();}
+document.getElementById("multiBtn").onclick=()=>{ mode="multi"; startScreen.style.display="none"; createBoard();}
+
+function goBack(){ window.location.href='index.html'; bgMusic.pause(); }
 
 updateHUD();
 </script>
