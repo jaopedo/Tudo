@@ -9,16 +9,14 @@ html, body {
   margin:0; padding:0;
   height:100%; width:100%;
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
+  align-items:center; justify-content:flex-start;
   font-family:Arial, sans-serif;
   background:#1e293b; color:#e2e8f0;
-  overflow:hidden;
 }
 #gameWrapper {
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
+  align-items:center; justify-content:flex-start;
   width:100%; max-width:1000px;
-  height:100%;
   padding:20px;
   box-sizing:border-box;
 }
@@ -41,7 +39,7 @@ h1 {
   text-align:center;
 }
 #boardContainer {
-  display:flex; align-items:center; justify-content:center;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
 }
 #board {
   display:grid;
@@ -50,6 +48,7 @@ h1 {
   grid-gap:25px;
   width:min(80vw, 450px);
   height:min(80vw, 450px);
+  margin-bottom:20px;
 }
 .cell {
   background:#111827;
@@ -107,21 +106,20 @@ button, select {
   cursor:pointer;
 }
 
-/* Área de mensagens */
+/* Área de mensagens abaixo do tabuleiro */
 #message {
-  position: absolute;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  padding:12px 20px;
-  border-radius:8px;
-  font-size:5rem;
+  padding:15px 25px;
+  border-radius:12px;
+  font-size:clamp(1.5rem, 4vw, 2.5rem);
   font-weight:bold;
   text-align:center;
   display:none;
-  background: blue;
-  box-shadow:0 0 12px #38bdf8;
-  z-index:1000;
+  background:#0f172a;
+  box-shadow:0 0 20px #38bdf8;
+  width:90%;
+  max-width:500px;
+  text-shadow:0 0 15px #38bdf8;
+  margin-top:15px;
 }
 </style>
 </head>
@@ -134,8 +132,6 @@ button, select {
     <div>Pontos O: <span id="scoreO">0</span></div>
     <div>Rodada: <span id="round">1</span>/10</div>
   </div>
-
-  <div id="message"></div>
 
   <div id="menuScreen">
     <p>Escolha o modo de jogo:</p>
@@ -164,10 +160,11 @@ button, select {
 
   <div id="boardContainer" style="display:none;">
     <div id="board"></div>
+    <div id="message"></div> <!-- mensagem agora abaixo do tabuleiro -->
   </div>
 </div>
 
-<!-- Música e sons -->
+<!-- Sons -->
 <audio id="bgMusic" src="elec.mp3" loop autoplay></audio>
 <audio id="clickSound" src="click.mp3"></audio>
 <audio id="winSound" src="win.mp3"></audio>
@@ -196,7 +193,6 @@ const winSound=document.getElementById("winSound");
 const loseSound=document.getElementById("loseSound");
 const drawSound=document.getElementById("drawSound");
 
-// helper para tocar sons e pausar a música
 function playWithPause(sound){
   bgMusic.pause();
   sound.currentTime=0;
@@ -204,14 +200,12 @@ function playWithPause(sound){
   sound.onended=()=>{ bgMusic.play(); };
 }
 
-// função para mostrar mensagem flutuante
 function showMessage(text,color="#38bdf8"){
   messageEl.textContent=text;
   messageEl.style.color=color;
   messageEl.style.display="block";
 }
 
-// esconder mensagem
 function hideMessage(){
   messageEl.style.display="none";
 }
@@ -321,11 +315,9 @@ function findBestMove(playerSymbol){
   return move;
 }
 
-// versão com delay para mostrar mensagem
 function endRound(msg,color){
   gameOver=true;
   showMessage(msg,color);
-
   setTimeout(()=>{
     hideMessage();
     if(round>=maxRounds){
@@ -347,7 +339,7 @@ function endRound(msg,color){
       updateHUD();
       if(mode==="single" && player==="O") aiMove();
     }
-  }, 2000); // espera 2 segundos para mostrar mensagem
+  }, 2000);
 }
 
 // botões
@@ -366,4 +358,3 @@ updateHUD();
 </script>
 </body>
 </html>
-
