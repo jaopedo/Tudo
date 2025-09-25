@@ -88,9 +88,40 @@
     letter-spacing: 3px;
   }
 
-  #controls {
-    text-align:center; margin-bottom:10px;
+  #startScreen {
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    background: rgba(11,18,32,0.95);
+    border-radius: 20px;
+    border: 2px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    text-align:center;
+    z-index:10;
   }
+  #startScreen h1, #startScreen p {
+    margin:10px 0; padding:20px;
+    background-color: #0f1724;
+    border:2px solid rgba(255,255,255,0.25);
+    border-radius:15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    color: #e6eef8;
+  }
+  #startScreen h1 { font-size: clamp(2.5rem,5vw,4rem); }
+  #startScreen p { font-size: clamp(0.9rem,2.5vw,1.5rem); line-height:1.4; }
+  #startScreen button {
+    padding:16px 35px; margin:15px;
+    border:none; border-radius:15px; font-weight:bold; cursor:pointer;
+    font-size:clamp(0.9rem,2.5vw,1.5rem);
+    background: linear-gradient(145deg, #3f51b5, #1a237e);
+    color:#fff; box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    transition: all 0.3s ease;
+  }
+  #startScreen button:hover { transform:scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
+
+  #controls { text-align:center; margin-bottom:10px; }
   #controls button {
     font-size: clamp(0.9rem, 2vw, 1.3rem);
     padding:6px 12px;
@@ -129,6 +160,14 @@
 <div class="game-container">
   <button class="backBtn" onclick="goBack()">Voltar</button>
 
+  <!-- Tela inicial -->
+  <div id="startScreen">
+    <h1>Cobrinha</h1>
+    <p>Controles:<br>- Setas: mover<br>- Espaço: pausar/jogar</p>
+    <p>Vidas: <span id="startLives">3</span></p>
+    <button id="startBtn">Começar</button>
+  </div>
+
   <div class="hud">
     <div>Pontos: <span id="score">0</span></div>
     <div>Vidas: <span id="lives">3</span></div>
@@ -137,11 +176,9 @@
 
   <div id="gameWrapper">
     <canvas id="gameCanvas"></canvas>
-    <div id="pausedOverlay">PAUSE</div>
   </div>
 
   <div id="controls">
-    <button id="startBtn">Start</button>
     <button id="restartBtn" style="display:none;">Reiniciar</button>
   </div>
 
@@ -151,20 +188,143 @@
   </div>
 </div>
 
-<!-- Aqui vai o script original do Snake, sem alterações na lógica -->
-<script src="snake-original.js"></script>
-<script>
-const canvasWrapper = document.getElementById("gameWrapper");
-const canvas = document.getElementById("gameCanvas");
+<audio id="bgMusic" src="cobra.mp3" loop></audio>
+<audio id="biteSound" src="bite.mp3"></audio>
+<audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio>
+<img id="foodImg" src="rato.png" style="display:none;">
 
-function resizeCanvas() {
-  canvas.width = canvasWrapper.clientWidth;
-  canvas.height = canvasWrapper.clientHeight;
+<script>
+// Código completo do Snake original, apenas adaptando canvas para o gameWrapper
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const startScreen = document.getElementById('startScreen');
+const startBtn = document.getElementById('startBtn');
+const restartBtn = document.getElementById('restartBtn');
+
+const scoreEl = document.getElementById('score');
+const livesEl = document.getElementById('lives');
+const startLivesEl = document.getElementById('startLives');
+const pausedEl = document.getElementById('paused');
+
+const bgMusic = document.getElementById('bgMusic');
+const biteSound = document.getElementById('biteSound');
+const hitSound = document.getElementById('hitSound');
+const foodImg = document.getElementById('foodImg');
+
+let snake = [];
+let direction = 'RIGHT';
+let food = {};
+let score = 0;
+let lives = 3;
+let gameInterval;
+let isPaused = false;
+const gridSize = 20;
+let cellSize;
+
+function resizeCanvas(){
+  const wrapper = document.getElementById('gameWrapper');
+  canvas.width = wrapper.clientWidth;
+  canvas.height = wrapper.clientHeight;
+  cellSize = canvas.width / gridSize;
 }
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-function goBack(){ window.location.href='index.html'; }
+function placeFood() {
+  food = { x: Math.floor(Math.random()*gridSize), y: Math.floor(Math.random()*gridSize) };
+}
+
+function initGame() {
+  snake = [{x:10, y:10}];
+  direction='RIGHT';
+  score=0; lives=3;
+  scoreEl.textContent = score;
+  livesEl.textContent = lives;
+  startLivesEl.textContent = lives;
+  pausedEl.textContent='Não';
+  startScreen.style.display='none';
+  isPaused=false;
+  placeFood();
+  bgMusic.play().catch(()=>{});
+  if(gameInterval) clearInterval(gameInterval);
+  gameInterval = setInterval(gameLoop,150);
+  drawGame();
+}
+
+function gameLoop() {
+  if(isPaused) return;
+  const head = {...snake[0]};
+  if(direction==='RIGHT') head.x++;
+  if(direction==='LEFT') head.x--;
+  if(direction==='UP') head.y--;
+  if(direction==='DOWN') head.y++;
+
+  if(head.x<0||head.x>=gridSize||head.y<0||snake.some(s=>s.x===head.x&&s.y===head.y)){
+    loseLife(); return;
+  }
+  snake.unshift(head);
+  if(head.x===food.x&&head.y===food.y){
+    score+=10; scoreEl.textContent=score;
+    biteSound.currentTime=0; biteSound.play();
+    placeFood();
+  } else { snake.pop(); }
+  drawGame();
+}
+
+function loseLife(){
+  lives--;
+  livesEl.textContent = lives;
+  startLivesEl.textContent = lives;
+  hitSound.currentTime=0; hitSound.play();
+  if(lives<=0){
+    alert("Game Over!");
+    startScreen.style.display='flex';
+    clearInterval(gameInterval);
+  } else { snake=[{x:10,y:10}]; direction='RIGHT'; }
+}
+
+function drawGrass(){
+  ctx.fillStyle='#116611';
+  ctx.fillRect(0function drawGame() {
+  // Limpa canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Desenha fundo
+  drawGrass();
+
+  // Desenha comida
+  ctx.drawImage(foodImg, food.x * cellSize, food.y * cellSize, cellSize, cellSize);
+
+  // Desenha cobra
+  ctx.fillStyle = '#00ff00';
+  snake.forEach((segment, index) => {
+    ctx.fillRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
+    ctx.strokeStyle = '#003300';
+    ctx.strokeRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
+  });
+}
+
+// Controles
+window.addEventListener('keydown', e => {
+  if(e.key==='ArrowUp' && direction!=='DOWN') direction='UP';
+  if(e.key==='ArrowDown' && direction!=='UP') direction='DOWN';
+  if(e.key==='ArrowLeft' && direction!=='RIGHT') direction='LEFT';
+  if(e.key==='ArrowRight' && direction!=='LEFT') direction='RIGHT';
+  if(e.code==='Space') {
+    isPaused = !isPaused;
+    pausedEl.textContent = isPaused ? 'Sim' : 'Não';
+  }
+});
+
+// Botões
+startBtn.addEventListener('click', initGame);
+restartBtn.addEventListener('click', initGame);
+
+function goBack() {
+  window.location.href = 'index.html';
+  bgMusic.pause();
+}
 </script>
 </body>
 </html>
