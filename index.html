@@ -253,9 +253,6 @@ h1 {
 </head>
 
 <body>
-<!-- Música de fundo -->
-<audio id="bgMusic" src="ps2.mp3" autoplay loop></audio>
-
 <div class="container">
   <header>
     <h1>Bem-vindo aos Jogos!</h1>
@@ -285,6 +282,9 @@ h1 {
   </div>
 </div>
 
+<!-- Música de fundo -->
+<audio id="bgMusic" src="ps2.mp3" loop></audio>
+
 <script>
 function showPreview(image, description){
   const gameInfo = document.getElementById('gameInfo');
@@ -300,6 +300,18 @@ function showPreview(image, description){
 function goToGame(link){
   window.location.href = link;
 }
+
+// Inicia música após primeira interação do usuário
+const music = document.getElementById('bgMusic');
+
+function startMusic() {
+  music.play().catch(e => console.log("Autoplay bloqueado pelo navegador."));
+  document.removeEventListener('click', startMusic);
+  document.removeEventListener('mousemove', startMusic);
+}
+
+document.addEventListener('click', startMusic);
+document.addEventListener('mousemove', startMusic);
 </script>
 </body>
 </html>
