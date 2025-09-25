@@ -160,7 +160,6 @@
 <div class="game-container">
   <button class="backBtn" onclick="goBack()">Voltar</button>
 
-  <!-- Tela inicial -->
   <div id="startScreen">
     <h1>Cobrinha</h1>
     <p>Controles:<br>- Setas: mover<br>- Espaço: pausar/jogar</p>
@@ -286,17 +285,46 @@ function loseLife(){
 function drawGrass(){
   ctx.fillStyle='#116611';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // desenhar linhas para efeito quadriculado
+  ctx.strokeStyle = '#0a330a';
+  ctx.lineWidth = 1;
+  for(let i=0;i<=gridSize;i++){
+    ctx.beginPath();
+    ctx.moveTo(i*cellSize,0);
+    ctx.lineTo(i*cellSize,canvas.height);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0,i*cellSize);
+    ctx.lineTo(canvas.width,i*cellSize);
+    ctx.stroke();
+  }
 }
 
 function drawGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawGrass();
+
   ctx.drawImage(foodImg, food.x * cellSize, food.y * cellSize, cellSize, cellSize);
-  ctx.fillStyle = '#00ff00';
-  snake.forEach(segment => {
-    ctx.fillRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
-    ctx.strokeStyle = '#003300';
-    ctx.strokeRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
+
+  snake.forEach((segment,index)=>{
+    ctx.fillStyle = '#00ff00';
+    ctx.fillRect(segment.x*cellSize, segment.y*cellSize, cellSize, cellSize);
+    ctx.strokeStyle='#003300';
+    ctx.strokeRect(segment.x*cellSize, segment.y*cellSize, cellSize, cellSize);
+
+    // Olhinhos na cabeça
+    if(index===0){
+      const eyeSize = cellSize*0.15;
+      ctx.fillStyle='#000';
+      ctx.beginPath();
+      ctx.arc(segment.x*cellSize + cellSize*0.25, segment.y*cellSize + cellSize*0.25, eyeSize, 0, Math.PI*2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(segment.x*cellSize + cellSize*0.75, segment.y*cellSize + cellSize*0.25, eyeSize, 0, Math.PI*2);
+      ctx.fill();
+    }
   });
 }
 
