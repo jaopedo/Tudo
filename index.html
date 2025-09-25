@@ -1,342 +1,318 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo da Velha</title>
+<title>Página Inicial de Jogos</title>
+
 <style>
-  * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
-  html, body {
-    height:100%; width:100%;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background: radial-gradient(circle at top, #1a237e, #0d133d);
-    color:#fff;
-    position:relative; overflow:hidden;
-  }
-  body::before {
-    content:"";
-    position:absolute; width:200%; height:200%;
-    background: radial-gradient(circle, #3949ab33, #1a237e22 70%, transparent 90%);
-    animation: rotateBg 25s linear infinite;
-    z-index:-1;
-  }
-  @keyframes rotateBg { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+/* Reset e fontes */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-  .game-container {
-    position: relative;
-    padding: 30px;
-    border: 2px solid rgba(255,255,255,0.25);
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
-    background: rgba(255,255,255,0.08);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-    display:flex; flex-direction:column; align-items:center;
-    max-width: 600px; width:95%;
+html, body {
+  height: 100%;
+  background: radial-gradient(circle at top, #1a237e, #0d133d);
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  padding: 30px 0;
+}
+
+/* Fundo animado */
+body::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, #3949ab33, #1a237e22 70%, transparent 90%);
+  animation: rotateBg 25s linear infinite;
+  z-index: -1;
+}
+
+@keyframes rotateBg {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Container principal */
+.container {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 50px 60px;
+  width: 90%;
+  max-width: 1200px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Header */
+header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h1 {
+  color: #fff;
+  font-size: clamp(2.8rem, 4vw, 3.8rem);
+  text-shadow: 3px 3px 12px rgba(0,0,0,0.9);
+  letter-spacing: 4px;
+  animation: glow 2s ease-in-out infinite alternate;
+  margin-bottom: 30px;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px #7986cb, 0 0 20px #3949ab; }
+  to { text-shadow: 0 0 20px #90caf9, 0 0 40px #5c6bc0; }
+}
+
+/* Área dos botões */
+.button-background {
+  background: #0d133d;
+  border-radius: 20px;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  width: 100%;
+  position: relative;
+  flex-wrap: nowrap;
+  z-index: 1;
+}
+
+/* Botões */
+.game-btn {
+  flex: 0 0 280px; 
+  min-width: 260px;
+  max-width: 320px;
+  padding: 20px 25px;
+  font-size: 1.3rem;
+  background: linear-gradient(145deg, #3f51b5, #1a237e);
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  text-transform: uppercase;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: all 0.5s;
+}
+
+.game-btn:hover::after { left: 100%; }
+.game-btn:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+  background: linear-gradient(145deg, #1a237e, #283593);
+}
+
+/* Preview */
+.game-info {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  padding: 25px 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.game-info.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.game-info img {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  object-fit: contain;
+  background-color: #000;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  transform: scale(0.95);
+  transition: all 0.5s ease;
+}
+
+.game-info.show img {
+  transform: scale(1);
+}
+
+/* Texto da descrição */
+.game-info p {
+  font-size: clamp(1.1rem, 1.4vw, 1.5rem);
+  line-height: 1.6;
+  color: #fff;
+  max-width: 85%;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(0,0,0,0.75), rgba(30,30,30,0.75));
+  padding: 20px 25px;
+  border-radius: 15px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: all 0.5s ease 0.2s;
+}
+
+.game-info.show p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Créditos */
+.credits {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.credits p {
+  margin: 5px 0;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* ----------- MOBILE AJUSTES ----------- */
+@media (max-width: 768px) {
+  .container {
+    padding: 25px 20px;
   }
 
-  .backBtn {
-    position: absolute; top:5px; left:10px;
-    padding:10px 20px;
-    background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color: #fff; font-weight:bold; border:none; border-radius:15px;
-    cursor:pointer; z-index:10; transition: all 0.3s ease;
-  }
-  .backBtn:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
-
-  #startScreen {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
-    z-index:10; text-align:center; padding:20px;
-    background: rgba(11,18,32,0.95); border-radius:20px;
-    border:2px solid rgba(255,255,255,0.25); backdrop-filter: blur(15px);
-    box-shadow:0 10px 40px rgba(0,0,0,0.7);
-  }
-  #startScreen h1 { font-size: clamp(2.5rem,5vw,4rem); margin-bottom:15px; }
-  #startScreen p {
-    margin:10px 0; padding:10px 20px;
-    background:#0f1724; border:2px solid rgba(255,255,255,0.25);
-    border-radius:15px; box-shadow:0 8px 30px rgba(0,0,0,0.6); line-height:1.4;
-  }
-  #startScreen button {
-    padding:16px 35px; margin-top:15px;
-    border:none; border-radius:15px; font-weight:bold; cursor:pointer;
-    font-size:clamp(1rem,2.5vw,1.5rem);
-    background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color:#fff; box-shadow:0 8px 25px rgba(0,0,0,0.6);
-    transition: all 0.3s ease;
-  }
-  #startScreen button:hover { transform:scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
-
-  .hud {
-    display:flex; justify-content:center; gap:30px;
-    font-size:clamp(1.2rem,2vw,2rem);
-    margin-top:10px; flex-wrap:wrap; padding:20px;
-  }
-  .hud div {
-    padding:10px 16px; border:2px solid #122231; border-radius:6px;
-    background-color:#0f1724; min-width:120px;
-    text-align:center; color:#fff;
+  h1 {
+    font-size: 2rem;
+    letter-spacing: 2px;
   }
 
-  #board {
-    display:grid; gap:15px;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    width:100%; max-width:400px; aspect-ratio:1/1;
-    margin-top:20px;
-    display:none;
-  }
-  .cell {
-    background:#111827; display:flex; justify-content:center; align-items:center;
-    font-size:clamp(2.5rem,8vw,6rem); cursor:pointer; border-radius:12px;
-    text-shadow:0 0 20px #fff; user-select:none;
-  }
-  .cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
-  .cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
-
-  #message {
-    display: none;
-    justify-content: center;
+  .button-background {
+    flex-direction: column;
+    gap: 20px;
     align-items: center;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    font-size: clamp(2rem, 4vw, 4rem);
-    font-weight: bold;
-    text-align: center;
-    color: #fff;
-    z-index: 999;
-    padding: 20px;
-    box-sizing: border-box;
-    animation: fadeInMessage 0.5s ease-in-out;
-  }
-  @keyframes fadeInMessage {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
   }
 
-  .other-games {
-    margin-top:25px; display:flex; gap:20px; flex-wrap:wrap; justify-content:center;
+  .game-btn {
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.1rem;
+    padding: 18px;
   }
-  .other-games button {
-    padding:15px 30px; font-size:1.2rem; border:none; border-radius:15px;
-    cursor:pointer; background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color:#fff; box-shadow:0 8px 25px rgba(0,0,0,0.6);
-    transition: all 0.3s ease;
+
+  .game-info {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    margin-top: 20px;
+    padding: 15px;
+    max-width: 100%;
   }
-  .other-games button:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
+
+  .game-info img {
+    max-width: 100%;
+    border-radius: 15px;
+  }
+
+  .game-info p {
+    font-size: 1rem;
+    max-width: 100%;
+    padding: 15px;
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="game-container">
-  <button class="backBtn" onclick="goBack()">Voltar</button>
+<div class="container">
+  <header>
+    <h1>Bem-vindo aos Jogos!</h1>
+    <div class="button-background">
+      <button class="game-btn"
+        onmouseover="showPreview('imagem1.png','Controle a cobra faminta neste clássico viciante. Teste seus reflexos, aumente sua pontuação e veja até onde consegue chegar sem se morder! Controles: Setas do teclado e espaço para pausar.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/Snake.html')">Snake</button>
 
-  <div id="startScreen">
-    <h1>✨ Jogo da Velha ✨</h1>
-    <p>Escolha o modo de jogo:</p>
-    <button id="singleBtn">Contra IA</button>
-    <button id="multiBtn">Multiplayer Local</button>
+      <button class="game-btn"
+        onmouseover="showPreview('imagem2.png','Desafie amigos ou a AI em no mínimo 10 rodadas no tradicional Jogo da Velha. Planeje suas jogadas, antecipe o oponente e conquiste a vitória com estratégia! Controles: Clique do mouse.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/jogo_da_velha.html')">Jogo da Velha</button>
 
-    <div id="difficulty" style="margin-top:15px; display:none;">
-      <p>Selecione a dificuldade:</p>
-      <button onclick="setDifficulty('easy')">Fácil</button>
-      <button onclick="setDifficulty('medium')">Médio</button>
-      <button onclick="setDifficulty('hard')">Difícil</button>
+      <button class="game-btn"
+        onmouseover="showPreview('imagem3.png','Ajude Kirby a comer seus inimigos enquanto desvia das bananas que ele odeia! Teste sua agilidade e reflexos neste divertido jogo. Controles: Use as setas do teclado para mover Kirby.')"
+        onclick="goToGame('https://jaopedo.github.io/Tudo/falling.html')">Falling Game</button>
     </div>
+  </header>
+
+  <div class="game-info" id="gameInfo">
+    <img id="gameImage" src="" alt="Imagem do Jogo">
+    <p id="gameDescription"></p>
   </div>
 
-  <div class="hud">
-    <div>Pontos X: <span id="scoreX">0</span></div>
-    <div>Pontos O: <span id="scoreO">0</span></div>
-    <div>Rodada: <span id="round">1</span>/10</div>
-  </div>
-
-  <div id="board"></div>
-  <div id="message"></div>
-
-  <div class="other-games">
-    <button onclick="window.location.href='Snake.html'">Snake</button>
-    <button onclick="window.location.href='falling.html'">Falling</button>
+  <div class="credits">
+    <p>Projeto desenvolvido por:</p>
+    <p>João Pedro | Guilherme | Anna Júlia | Maria Fernanda | Gabrielle</p>
   </div>
 </div>
 
-<audio id="bgMusic" src="elec.mp3" loop autoplay></audio>
-<audio id="clickSound" src="click.mp3"></audio>
-<audio id="winSound" src="win.mp3"></audio>
-<audio id="loseSound" src="lose.mp3"></audio>
-<audio id="drawSound" src="draw.mp3"></audio>
+<!-- Música de fundo -->
+<audio id="bgMusic" src="ps2.mp3" loop></audio>
 
 <script>
-const startScreen = document.getElementById("startScreen");
-const boardEl = document.getElementById("board");
-const messageEl = document.getElementById("message");
-const scoreXEl = document.getElementById("scoreX");
-const scoreOEl = document.getElementById("scoreO");
-const roundEl = document.getElementById("round");
+function showPreview(image, description){
+  const gameInfo = document.getElementById('gameInfo');
+  const gameImage = document.getElementById('gameImage');
+  const gameDescription = document.getElementById('gameDescription');
 
-let board=[], player="X", ai="O", mode="single", currentTurn="X", gameOver=false;
-let scoreX=0, scoreO=0, round=1, maxRounds=10;
-let difficulty="easy";
+  gameImage.src = image;
+  gameDescription.textContent = description;
 
-function setDifficulty(level){
-  difficulty = level;
-  startScreen.style.display="none";
-  createBoard();
+  gameInfo.classList.add('show');
 }
 
-function playWithPause(sound){
-  bgMusic.pause();
-  sound.currentTime=0;
-  sound.play();
-  sound.onended=()=>{ bgMusic.play(); };
+function goToGame(link){
+  window.location.href = link;
 }
 
-function showMessage(text,color="#38bdf8"){
-  messageEl.textContent=text;
-  messageEl.style.color=color;
-  messageEl.style.display="flex";
-}
-function hideMessage(){
-  messageEl.style.display="none";
-}
+// Inicia música após primeira interação do usuário
+const music = document.getElementById('bgMusic');
 
-function createBoard(){
-  boardEl.innerHTML=""; board=Array(9).fill(null); gameOver=false; currentTurn="X"; hideMessage();
-  boardEl.style.display="grid";
-  for(let i=0;i<9;i++){
-    const cell=document.createElement("div");
-    cell.classList.add("cell");
-    cell.dataset.index=i;
-    cell.addEventListener("click",()=>playerMove(i));
-    boardEl.appendChild(cell);
-  }
+function startMusic() {
+  music.play().catch(e => console.log("Autoplay bloqueado pelo navegador."));
+  document.removeEventListener('click', startMusic);
+  document.removeEventListener('mousemove', startMusic);
 }
 
-function updateHUD(){
-  scoreXEl.textContent=scoreX; scoreOEl.textContent=scoreO; roundEl.textContent=round;
-}
-
-function playerMove(i){
-  if(gameOver||board[i]) return;
-  clickSound.play();
-
-  if(mode==="single"){
-    board[i]=player; renderBoard();
-    if(checkWinner(player)){ scoreX++; playWithPause(winSound); endRound("Você ganhou!", "#22c55e"); return;}
-    if(board.every(c=>c)){ scoreX++; scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
-    aiMove();
-  } else {
-    board[i]=currentTurn; renderBoard();
-    if(checkWinner(currentTurn)){
-      currentTurn==="X"?scoreX++:scoreO++; playWithPause(winSound); endRound(`Jogador ${currentTurn} venceu!`, "#22c55e"); return;
-    }
-    if(board.every(c=>c)){ scoreX++; scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
-    currentTurn=currentTurn==="X"?"O":"X";
-  }
-}
-
-function aiMove(){
-  const empty=board.map((v,i)=>v?null:i).filter(v=>v!==null);
-  let move;
-
-  if(difficulty==="easy"){
-    move = empty[Math.floor(Math.random()*empty.length)];
-  } else if(difficulty==="medium"){
-    move = findBestMove(ai) || findBestMove(player) || empty[Math.floor(Math.random()*empty.length)];
-  } else if(difficulty==="hard"){
-    move = minimax(board, ai).index;
-  }
-
-  board[move]=ai; renderBoard();
-  if(checkWinner(ai)){scoreO++; playWithPause(loseSound); endRound("Você perdeu!", "#ef4444"); return;}
-  if(board.every(c=>c)){ scoreX++; scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
-}
-
-function findBestMove(p){
-  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  for(let combo of wins){
-    const [a,b,c]=combo;
-    if(board[a]===p && board[b]===p && !board[c]) return c;
-    if(board[a]===p && board[c]===p && !board[b]) return b;
-    if(board[b]===p && board[c]===p && !board[a]) return a;
-  }
-  return null;
-}
-
-function minimax(newBoard, playerTurn){
-  const availSpots=newBoard.map((v,i)=>v?null:i).filter(v=>v!==null);
-
-  if(checkWinner(player)) return {score:-10};
-  if(checkWinner(ai)) return {score:10};
-  if(availSpots.length===0) return {score:0};
-
-  const moves=[];
-  for(let i=0;i<availSpots.length;i++){
-    const idx=availSpots[i];
-    const move={index:idx};
-    newBoard[idx]=playerTurn;
-
-    if(playerTurn===ai){
-      const result=minimax(newBoard, player);
-      move.score=result.score;
-    } else {
-      const result=minimax(newBoard, ai);
-      move.score=result.score;
-    }
-    newBoard[idx]=null;
-    moves.push(move);
-  }
-
-  let bestMove;
-  if(playerTurn===ai){
-    let bestScore=-Infinity;
-    for(let m of moves){ if(m.score>bestScore){ bestScore=m.score; bestMove=m; } }
-  } else {
-    let bestScore=Infinity;
-    for(let m of moves){ if(m.score<bestScore){ bestScore=m.score; bestMove=m; } }
-  }
-  return bestMove;
-}
-
-function renderBoard(){
-  document.querySelectorAll(".cell").forEach((c,i)=>{
-    c.textContent=board[i]||"";
-    c.className="cell "+(board[i]||"");
-  });
-}
-
-function checkWinner(p){
-  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  return wins.some(c=>c.every(i=>board[i]===p));
-}
-
-function endRound(msg,color){
-  gameOver=true;
-  showMessage(msg,color);
-  setTimeout(()=>{
-    hideMessage();
-    if(round>=maxRounds){
-      showMessage(`Fim das ${maxRounds} rodadas!`, "#22c55e");
-      round=1; scoreX=0; scoreO=0;
-      startScreen.style.display="flex"; boardEl.style.display="none";
-      updateHUD();
-    } else { round++; createBoard(); updateHUD();}
-  },2000);
-}
-
-document.getElementById("singleBtn").onclick=()=>{
-  mode="single";
-  document.getElementById("difficulty").style.display="block";
-};
-document.getElementById("multiBtn").onclick=()=>{
-  mode="multi";
-  startScreen.style.display="none";
-  createBoard();
-};
-function goBack(){ window.location.href='index.html'; bgMusic.pause(); }
-updateHUD();
+document.addEventListener('click', startMusic);
+document.addEventListener('mousemove', startMusic);
 </script>
 </body>
 </html>
+
