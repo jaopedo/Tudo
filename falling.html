@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Falling - Kirby</title>
 <style>
-  * { box-sizing:border-box; margin:0; padding:0; font-family:Arial,sans-serif; }
+  * { box-sizing:border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
   html, body {
     height:100%; width:100%;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -23,104 +23,82 @@
 
   .game-container {
     position: relative;
-    padding: 2vw;
+    padding: 30px;
     border: 2px solid rgba(255,255,255,0.25);
-    border-radius: 2vw;
+    border-radius: 20px;
     backdrop-filter: blur(15px);
     background: rgba(255,255,255,0.08);
-    box-shadow: 0 1vw 2vw rgba(0,0,0,0.7);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
     display:flex; flex-direction:column; align-items:center;
-    max-width: 95vw;
-    width: 100%;
+    max-width: 800px;
+    width: 95%;
   }
-
   .backBtn {
-    position: absolute; top:1vw; left:1vw;
-    padding:1vw 2vw;
+    position: absolute; top:5px; left:10px;
+    padding:10px 20px;
     background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color: #fff; font-weight:bold; border:none; border-radius:1vw;
+    color: #fff; font-weight:bold; border:none; border-radius:15px;
     cursor:pointer; z-index:10; transition: all 0.3s ease;
   }
   .backBtn:hover {
     transform: scale(1.05);
     background: linear-gradient(145deg, #1a237e, #283593);
   }
-
   h2 {
     text-align:center;
     color:#fff;
-    margin:1vw 0;
-    font-size:clamp(1rem, 2.5vw, 2rem);
+    margin:15px 0;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    text-shadow: none;
   }
-
   .hud {
-    display:flex; justify-content:center; gap:3vw;
-    font-size:clamp(1rem,2vw,1.5rem);
-    margin:1vw 0; flex-wrap:wrap;
+    display:flex; justify-content:center; gap:30px;
+    font-size:clamp(1.2rem,2vw,2rem);
+    margin:10px 0; flex-wrap:wrap;
   }
   .hud div {
-    padding:1vw 2vw;
-    border:0.2vw solid #122231; border-radius:1vw;
-    background-color:#0f1724; min-width:10vw;
+    padding:10px 16px;
+    border:2px solid #122231; border-radius:6px;
+    background-color:#0f1724; min-width:120px;
     text-align:center; color:#fff;
   }
-
   #gameWrapper {
-    width:90vw; max-width:690px;
+    width:100%; max-width:690px;
     aspect-ratio:1/1;
-    border:0.6vw solid #000;
-    border-radius:1.5vw;
-    box-shadow:0 0 2vw #000, 0 0 4vw #000 inset;
+    border:6px solid #000;
+    border-radius:15px;
+    box-shadow:0 0 25px #000, 0 0 50px #000 inset;
     background: url('back.png') no-repeat center center;
     background-size: cover;
     position: relative;
-    margin-bottom:2vw;
+    margin-bottom:20px;
   }
-  canvas { width:100%; height:100%; border-radius:1vw; display:block; }
-
+  canvas { width:100%; height:100%; border-radius:12px; display:block; }
   #pausedOverlay {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top:0; left:0;
+    width:100%; height:100%;
     background: rgba(0,0,0,0.7);
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    font-size: clamp(1.5rem, 4vw, 3rem);
+    font-size: clamp(2rem, 5vw, 4rem);
     color: #f17bb4;
     text-align:center;
     display: none;
     pointer-events: none;
     font-weight: bold;
-    letter-spacing: 0.2vw;
+    letter-spacing: 3px;
   }
-  #pausedOverlay button {
-    margin-top: 2vw;
-    padding: 1vw 2vw;
-    font-size:clamp(1rem,2vw,1.5rem);
-    border: none;
-    border-radius: 1vw;
-    background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 1vw 2vw rgba(0,0,0,0.6);
-    transition: all 0.3s ease;
-  }
-  #pausedOverlay button:hover {
-    transform: scale(1.05);
-    background: linear-gradient(145deg, #1a237e, #283593);
-  }
-
   #controls {
-    text-align:center; margin-bottom:2vw;
+    text-align:center; margin-bottom:10px;
   }
   #controls button {
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    padding:0.8vw 1.5vw;
-    margin:0 1vw;
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    padding:6px 12px;
+    margin:0 5px;
     border:none;
-    border-radius:1vw;
+    border-radius:8px;
     background:#0c1118;
     color:#fff;
     font-weight:bold;
@@ -128,19 +106,18 @@
     transition: all 0.3s ease;
   }
   #controls button:hover { transform:scale(1.05); }
-
   .other-games {
-    display:flex; gap:2vw; flex-wrap:wrap; justify-content:center; margin-top:2vw;
+    display:flex; gap:15px; flex-wrap:wrap; justify-content:center; margin-top:15px;
   }
   .other-games button {
-    padding:1vw 2vw;
-    font-size:clamp(1rem,2vw,1.1rem);
+    padding:12px 25px;
+    font-size:1.1rem;
     border:none;
-    border-radius:1vw;
+    border-radius:15px;
     cursor:pointer;
     background: linear-gradient(145deg, #3f51b5, #1a237e);
     color:#fff;
-    box-shadow:0 1vw 2vw rgba(0,0,0,0.6);
+    box-shadow:0 8px 25px rgba(0,0,0,0.6);
     transition: all 0.3s ease;
   }
   .other-games button:hover {
@@ -152,27 +129,19 @@
 <body>
 <div class="game-container">
   <button class="backBtn" onclick="goBack()">Voltar</button>
-
   <h2>Kirby odeia bananas! Coma os inimigos e desvie das bananas!</h2>
-
   <div class="hud">
     <div>Pontos: <span id="score">0</span></div>
     <div>Vidas: <span id="lives">3</span></div>
   </div>
-
   <div id="gameWrapper">
     <canvas id="gameCanvas"></canvas>
-    <div id="pausedOverlay">
-      PAUSE
-      <button id="continueBtn" style="display:none;">Continuar</button>
-    </div>
+    <div id="pausedOverlay">PAUSE</div>
   </div>
-
   <div id="controls">
     <button id="startBtn">Start</button>
     <button id="restartBtn" style="display:none;">Reiniciar</button>
   </div>
-
   <div class="other-games">
     <button onclick="window.location.href='Snake.html'">Snake</button>
     <button onclick="window.location.href='jogo_da_velha.html'">Jogo da Velha</button>
@@ -186,14 +155,12 @@
 <script>
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
 const bgMusic = document.getElementById("bgMusic");
 const scoreSound = document.getElementById("scoreSound");
 const hitSound = document.getElementById("hitSound");
 const pausedOverlay = document.getElementById("pausedOverlay");
-const continueBtn = document.getElementById("continueBtn");
 
 const kirbyImg = new Image(); kirbyImg.src = 'Kirby.png';
 const bananaImg = new Image(); bananaImg.src = 'banana.png';
@@ -218,7 +185,6 @@ function updateHUD(){
   document.getElementById("score").textContent = score;
   document.getElementById("lives").textContent = lives;
 }
-
 function rectCollide(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
 
 function spawnObject(){
@@ -250,12 +216,16 @@ function update(delta){
     obj.y += obj.vy*(delta/16);
     if(rectCollide(player,obj)){
       if(obj.type==="enemy"){ 
-        score++; scoreSound.currentTime=0; scoreSound.play(); 
+        score++; 
+        scoreSound.currentTime=0; scoreSound.play(); 
       } else { 
-        lives--; hitSound.currentTime=0; hitSound.play(); 
-        if(lives<=0){ endGame(); return; } 
+        lives--; 
+        hitSound.currentTime=0; hitSound.play(); 
+        if(lives<=0){endGame(); return;} 
       }
-      objects.splice(i,1); updateHUD(); continue;
+      objects.splice(i,1);
+      updateHUD();
+      continue;
     }
     if(obj.y>canvas.height) objects.splice(i,1);
   }
@@ -287,7 +257,7 @@ function startGame(){
   player.y = canvas.height - player.h - 10;
   updateHUD();
   bgMusic.currentTime=0; bgMusic.play().catch(()=>{});
-  pausedOverlay.style.display = "none"; continueBtn.style.display = "none";
+  pausedOverlay.style.display = "none";
   isPaused=false; lastTime=0;
   requestAnimationFrame(loop);
   startBtn.style.display="none";
@@ -298,7 +268,6 @@ function endGame(){
   running=false; gameOver=true; bgMusic.pause();
   pausedOverlay.style.display = "flex";
   pausedOverlay.textContent = "GAME OVER";
-  continueBtn.style.display = "none";
   restartBtn.style.display="inline-block";
 }
 
@@ -306,11 +275,9 @@ window.addEventListener("keydown", e=>{
   if(e.key==="ArrowLeft"||e.key==="a") keys.left=true;
   if(e.key==="ArrowRight"||e.key==="d") keys.right=true;
   if(e.code==="Space"){ 
-    if(running && !gameOver){ 
+    if(running){ 
       isPaused = !isPaused; 
       pausedOverlay.style.display = isPaused ? "flex" : "none"; 
-      continueBtn.style.display = isPaused ? "block" : "none";
-      pausedOverlay.textContent = "PAUSE";
       if(isPaused){ bgMusic.pause(); } else { bgMusic.play().catch(()=>{}); }
     } 
   }
@@ -319,12 +286,6 @@ window.addEventListener("keyup", e=>{
   if(e.key==="ArrowLeft"||e.key==="a") keys.left=false;
   if(e.key==="ArrowRight"||e.key==="d") keys.right=false;
 });
-
-continueBtn.onclick = () => {
-  isPaused = false;
-  pausedOverlay.style.display = "none";
-  bgMusic.play().catch(()=>{});
-};
 
 function resizeCanvas(){
   const wrapper = document.getElementById("gameWrapper");
@@ -339,9 +300,9 @@ function resizeCanvas(){
     obj.vy = obj.type==="enemy"?0.004*canvas.width:0.003*canvas.width*(2+Math.random()*2);
   });
 }
-
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
+
 startBtn.addEventListener("click",()=>startGame());
 restartBtn.addEventListener("click",()=>startGame());
 function goBack(){ window.location.href='index.html'; bgMusic.pause(); }
