@@ -11,11 +11,11 @@
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     background: radial-gradient(circle at top, #1a237e, #0d133d);
     color:#fff;
+    position:relative; overflow:hidden;
   }
   body::before {
     content:"";
-    position:absolute;
-    width:200%; height:200%;
+    position:absolute; width:200%; height:200%;
     background: radial-gradient(circle, #3949ab33, #1a237e22 70%, transparent 90%);
     animation: rotateBg 25s linear infinite;
     z-index:-1;
@@ -24,45 +24,38 @@
 
   .game-container {
     position: relative;
-    padding: 20px;
+    padding: 30px;
     border: 2px solid rgba(255,255,255,0.25);
     border-radius: 20px;
     backdrop-filter: blur(15px);
     background: rgba(255,255,255,0.08);
     box-shadow: 0 10px 40px rgba(0,0,0,0.7);
     display:flex; flex-direction:column; align-items:center;
+    max-width: 600px; width:95%;
   }
 
   .backBtn {
-    position: absolute; top:10px; left:10px;
+    position: absolute; top:5px; left:10px;
     padding:10px 20px;
     background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color: #fff;
-    font-weight: bold;
-    border:none; border-radius:15px;
-    cursor:pointer; z-index:10;
-    transition: all 0.3s ease;
+    color: #fff; font-weight:bold; border:none; border-radius:15px;
+    cursor:pointer; z-index:10; transition: all 0.3s ease;
   }
   .backBtn:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
 
   #startScreen {
-    position: absolute; top:0; left:0; width:100%; height:100%;
+    position:absolute; top:0; left:0; width:100%; height:100%;
     display:flex; flex-direction:column; justify-content:center; align-items:center;
     z-index:10; text-align:center; padding:20px;
-    background: rgba(11,18,32,0.95);
-    border-radius: 20px; border:2px solid rgba(255,255,255,0.25);
-    backdrop-filter: blur(15px);
+    background: rgba(11,18,32,0.95); border-radius:20px;
+    border:2px solid rgba(255,255,255,0.25); backdrop-filter: blur(15px);
     box-shadow:0 10px 40px rgba(0,0,0,0.7);
   }
-  #startScreen h1 {
-    font-size: clamp(2.5rem,5vw,4rem);
-    margin-bottom:15px;
-  }
+  #startScreen h1 { font-size: clamp(2.5rem,5vw,4rem); margin-bottom:15px; }
   #startScreen p {
     margin:10px 0; padding:10px 20px;
-    background: #0f1724; border:2px solid rgba(255,255,255,0.25);
-    border-radius:15px; box-shadow:0 8px 30px rgba(0,0,0,0.6);
-    line-height:1.4;
+    background:#0f1724; border:2px solid rgba(255,255,255,0.25);
+    border-radius:15px; box-shadow:0 8px 30px rgba(0,0,0,0.6); line-height:1.4;
   }
   #startScreen button {
     padding:16px 35px; margin-top:15px;
@@ -80,67 +73,48 @@
     margin-top:10px; flex-wrap:wrap; padding:20px;
   }
   .hud div {
-    padding:10px 16px;
-    border:2px solid #122231; border-radius:6px;
+    padding:10px 16px; border:2px solid #122231; border-radius:6px;
     background-color:#0f1724; min-width:120px;
     text-align:center; color:#fff;
   }
 
   #board {
-    display:grid;
+    display:grid; gap:15px;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap:15px;
-    width: min(70vmin, 450px);
-    height: min(70vmin, 450px);
+    width:100%; max-width:400px; aspect-ratio:1/1;
     margin-top:20px;
+    display:none;
   }
   .cell {
-    background:#111827;
-    display:flex; justify-content:center; align-items:center;
-    font-size:clamp(2.5rem, 8vw, 6rem);
-    cursor:pointer; border-radius:12px;
+    background:#111827; display:flex; justify-content:center; align-items:center;
+    font-size:clamp(2.5rem,8vw,6rem); cursor:pointer; border-radius:12px;
     text-shadow:0 0 20px #fff; user-select:none;
   }
   .cell.X { color:#f43f5e; text-shadow:0 0 20px #f43f5e; }
   .cell.O { color:#3b82f6; text-shadow:0 0 20px #3b82f6; }
 
   #message {
-    margin-top:20px;
-    padding:15px 25px;
-    border-radius:12px;
-    font-size:clamp(1.5rem,4vw,2rem);
-    font-weight:bold;
-    text-align:center;
-    display:none;
-    background:#0f172a;
-    box-shadow:0 0 20px #38bdf8;
+    margin-top:20px; padding:15px 25px; border-radius:12px;
+    font-size:clamp(1.5rem,4vw,2rem); font-weight:bold;
+    text-align:center; display:none;
+    background:#0f172a; box-shadow:0 0 20px #38bdf8;
     text-shadow:0 0 15px #38bdf8;
   }
 
-  /* Botões para outros jogos */
   .other-games {
     margin-top:25px; display:flex; gap:20px; flex-wrap:wrap; justify-content:center;
   }
   .other-games button {
-    padding:15px 30px;
-    font-size:1.2rem;
-    border:none;
-    border-radius:15px;
-    cursor:pointer;
-    background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color:#fff;
-    box-shadow:0 8px 25px rgba(0,0,0,0.6);
+    padding:15px 30px; font-size:1.2rem; border:none; border-radius:15px;
+    cursor:pointer; background: linear-gradient(145deg, #3f51b5, #1a237e);
+    color:#fff; box-shadow:0 8px 25px rgba(0,0,0,0.6);
     transition: all 0.3s ease;
   }
-  .other-games button:hover { 
-    transform: scale(1.05); 
-    background: linear-gradient(145deg, #1a237e, #283593); 
-  }
+  .other-games button:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
 </style>
 </head>
 <body>
-
 <div class="game-container">
   <button class="backBtn" onclick="goBack()">Voltar</button>
 
@@ -157,10 +131,9 @@
     <div>Rodada: <span id="round">1</span>/10</div>
   </div>
 
-  <div id="board" style="display:none;"></div>
+  <div id="board"></div>
   <div id="message"></div>
 
-  <!-- Botões para outros jogos -->
   <div class="other-games">
     <button onclick="window.location.href='Snake.html'">Snake</button>
     <button onclick="window.location.href='falling.html'">Falling</button>
@@ -174,18 +147,18 @@
 <audio id="drawSound" src="draw.mp3"></audio>
 
 <script>
-const startScreen=document.getElementById("startScreen");
-const boardEl=document.getElementById("board");
-const messageEl=document.getElementById("message");
-const scoreXEl=document.getElementById("scoreX");
-const scoreOEl=document.getElementById("scoreO");
-const roundEl=document.getElementById("round");
+const startScreen = document.getElementById("startScreen");
+const boardEl = document.getElementById("board");
+const messageEl = document.getElementById("message");
+const scoreXEl = document.getElementById("scoreX");
+const scoreOEl = document.getElementById("scoreO");
+const roundEl = document.getElementById("round");
 
-const bgMusic=document.getElementById("bgMusic");
-const clickSound=document.getElementById("clickSound");
-const winSound=document.getElementById("winSound");
-const loseSound=document.getElementById("loseSound");
-const drawSound=document.getElementById("drawSound");
+const bgMusic = document.getElementById("bgMusic");
+const clickSound = document.getElementById("clickSound");
+const winSound = document.getElementById("winSound");
+const loseSound = document.getElementById("loseSound");
+const drawSound = document.getElementById("drawSound");
 
 function playWithPause(sound){
   bgMusic.pause();
@@ -195,21 +168,15 @@ function playWithPause(sound){
 }
 
 function showMessage(text,color="#38bdf8"){
-  messageEl.textContent=text;
-  messageEl.style.color=color;
-  messageEl.style.display="block";
+  messageEl.textContent=text; messageEl.style.color=color; messageEl.style.display="block";
 }
 function hideMessage(){ messageEl.style.display="none"; }
 
-let board=Array(9).fill(null);
-let player="X", ai="O", mode="single";
-let currentTurn="X", gameOver=false;
+let board=[], player="X", ai="O", mode="single", currentTurn="X", gameOver=false;
 let scoreX=0, scoreO=0, round=1, maxRounds=10;
 
 function createBoard(){
-  boardEl.innerHTML="";
-  board=Array(9).fill(null);
-  gameOver=false; currentTurn="X"; hideMessage();
+  boardEl.innerHTML=""; board=Array(9).fill(null); gameOver=false; currentTurn="X"; hideMessage();
   boardEl.style.display="grid";
   for(let i=0;i<9;i++){
     const cell=document.createElement("div");
@@ -221,9 +188,7 @@ function createBoard(){
 }
 
 function updateHUD(){
-  scoreXEl.textContent=scoreX;
-  scoreOEl.textContent=scoreO;
-  roundEl.textContent=round;
+  scoreXEl.textContent=scoreX; scoreOEl.textContent=scoreO; roundEl.textContent=round;
 }
 
 function playerMove(i){
@@ -232,16 +197,13 @@ function playerMove(i){
 
   if(mode==="single"){
     board[i]=player; renderBoard();
-    if(checkWinner(player)){
-      scoreX++; playWithPause(winSound); endRound("Você ganhou esta rodada!", "#22c55e"); return;
-    }
+    if(checkWinner(player)){ scoreX++; playWithPause(winSound); endRound("Você ganhou!", "#22c55e"); return;}
     if(board.every(c=>c)){ scoreX++; scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
     aiMove();
   } else {
     board[i]=currentTurn; renderBoard();
     if(checkWinner(currentTurn)){
-      currentTurn==="X"?scoreX++:scoreO++;
-      playWithPause(winSound); endRound(`Jogador ${currentTurn} venceu!`, "#22c55e"); return;
+      currentTurn==="X"?scoreX++:scoreO++; playWithPause(winSound); endRound(`Jogador ${currentTurn} venceu!`, "#22c55e"); return;
     }
     if(board.every(c=>c)){ scoreX++; scoreO++; playWithPause(drawSound); endRound("Empate!", "#eab308"); return;}
     currentTurn=currentTurn==="X"?"O":"X";
@@ -284,11 +246,8 @@ function endRound(msg,color){
 
 document.getElementById("singleBtn").onclick=()=>{ mode="single"; startScreen.style.display="none"; createBoard();}
 document.getElementById("multiBtn").onclick=()=>{ mode="multi"; startScreen.style.display="none"; createBoard();}
-
 function goBack(){ window.location.href='index.html'; bgMusic.pause(); }
-
 updateHUD();
 </script>
 </body>
 </html>
-
