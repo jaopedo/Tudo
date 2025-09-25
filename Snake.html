@@ -194,7 +194,6 @@
 <img id="foodImg" src="rato.png" style="display:none;">
 
 <script>
-// Código completo do Snake original, apenas adaptando canvas para o gameWrapper
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -286,19 +285,15 @@ function loseLife(){
 
 function drawGrass(){
   ctx.fillStyle='#116611';
-  ctx.fillRect(0function drawGame() {
-  // Limpa canvas
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Desenha fundo
   drawGrass();
-
-  // Desenha comida
   ctx.drawImage(foodImg, food.x * cellSize, food.y * cellSize, cellSize, cellSize);
-
-  // Desenha cobra
   ctx.fillStyle = '#00ff00';
-  snake.forEach((segment, index) => {
+  snake.forEach(segment => {
     ctx.fillRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
     ctx.strokeStyle = '#003300';
     ctx.strokeRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
