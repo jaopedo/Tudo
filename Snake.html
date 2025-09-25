@@ -3,42 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo da Cobrinha</title>
+<title>Jogos</title>
 <style>
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-  body { background: #0b1220; color: #e6eef8; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  canvas { width: 70vmin; height: 70vmin; background: #116611; border-radius: 8px; border: 5px solid #FFFF99; box-shadow: 0 0 15px #FFFF99; display: block; margin: 10px auto; }
-  #startScreen { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(11,18,32,0.95); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:10; text-align:center; padding:20px; }
-  #startScreen h1 { font-size: clamp(2.5rem,5vw,4rem); margin:10px 0; padding:20px; border:2px solid #122231; border-radius:12px; background-color:#0f1724; width:90%; max-width:500px; }
-  #startScreen p { font-size: clamp(0.9rem,2.5vw,1.5rem); margin:8px 0; padding:12px; border:2px solid #122231; border-radius:10px; background-color:#0f1724; width:90%; max-width:400px; line-height:1.4; }
-  #startScreen button { padding:16px 35px; margin:15px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:clamp(0.9rem,2.5vw,1.5rem); background:#06b6d4; color:#062024; }
-  .hud { display:flex; justify-content:center; gap:30px; font-size:clamp(1.2rem,2vw,2rem); margin-top:10px; flex-wrap:wrap; padding:20px; }
-  .hud div { padding:10px 16px; border:2px solid #122231; border-radius:6px; background-color:#0f1724; min-width:120px; text-align:center; }
+  html, body {
+    margin:0; padding:0;
+    height:100%; 
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background: radial-gradient(circle at top, #1a237e, #0d133d);
+    font-family: Arial, sans-serif;
+  }
+
+  body::before {
+    content:"";
+    position:absolute;
+    width:200%;
+    height:200%;
+    background: radial-gradient(circle, #3949ab33, #1a237e22 70%, transparent 90%);
+    animation: rotateBg 25s linear infinite;
+    z-index:-1;
+  }
+
+  @keyframes rotateBg { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+
+  .game-container {
+    position: relative;
+    padding: 20px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .backBtn {
+    position: absolute;
+    top: 10px; left: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(145deg, #3f51b5, #1a237e);
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+  }
+  .backBtn:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
+
+  canvas {
+    width: 70vmin;
+    height: 70vmin;
+    background: #116611;
+    border-radius: 8px;
+    border: 5px solid #FFFF99;
+    box-shadow: 0 0 15px #FFFF99;
+    display: block;
+    margin: 10px auto;
+  }
+
+  .hud {
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    font-size:clamp(1.2rem,2vw,2rem);
+    margin-top:10px;
+    flex-wrap:wrap;
+    padding:20px;
+  }
+  .hud div {
+    padding:10px 16px;
+    border:2px solid #122231;
+    border-radius:6px;
+    background-color:#0f1724;
+    min-width:120px;
+    text-align:center;
+    color:#fff;
+  }
+
+  #startScreen {
+    position: absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    display:flex; flex-direction:column;
+    justify-content:center; align-items:center;
+    z-index:10; text-align:center; padding:20px;
+    background: rgba(11,18,32,0.95);
+    border-radius: 20px;
+    border: 2px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  }
+
+  #startScreen h1, #startScreen p {
+    margin:10px 0; padding:20px;
+    background-color: #0f1724;
+    border:2px solid rgba(255,255,255,0.25);
+    border-radius:15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    color: #e6eef8;
+  }
+
+  #startScreen h1 { font-size: clamp(2.5rem,5vw,4rem); }
+  #startScreen p { font-size: clamp(0.9rem,2.5vw,1.5rem); line-height:1.4; }
+
+  #startScreen button {
+    padding:16px 35px; margin:15px;
+    border:none; border-radius:15px; font-weight:bold; cursor:pointer;
+    font-size:clamp(0.9rem,2.5vw,1.5rem);
+    background: linear-gradient(145deg, #3f51b5, #1a237e);
+    color:#fff; box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    transition: all 0.3s ease;
+  }
+  #startScreen button:hover { transform:scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
+
+  /* Botões para os outros jogos */
+  .other-games {
+    margin-top:20px;
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .other-games button {
+    padding:15px 30px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    background: linear-gradient(145deg, #3f51b5, #1a237e);
+    color:#fff;
+    box-shadow:0 8px 25px rgba(0,0,0,0.6);
+    transition: all 0.3s ease;
+  }
+  .other-games button:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
 </style>
 </head>
 <body>
 
-<div id="startScreen">
-  <h1>Cobrinha</h1>
-  <p>Controles:<br>- Setas: mover<br>- Espaço: pausar/jogar</p>
-  <p>Vidas: <span id="startLives">3</span></p>
-  <button id="startBtn">Começar</button>
-</div>
+<div class="game-container">
+  <button class="backBtn" onclick="goBack()">Voltar</button>
 
-<div class="hud">
-  <div>Pontos: <span id="score">0</span></div>
-  <div>Vidas: <span id="lives">3</span></div>
-  <div>Pausado: <span id="paused">Não</span></div>
-</div>
+  <!-- Snake -->
+  <div id="startScreen">
+    <h1>Cobrinha</h1>
+    <p>Controles:<br>- Setas: mover<br>- Espaço: pausar/jogar</p>
+    <p>Vidas: <span id="startLives">3</span></p>
+    <button id="startBtn">Começar</button>
+  </div>
 
-<canvas id="game"></canvas>
+  <div class="hud">
+    <div>Pontos: <span id="score">0</span></div>
+    <div>Vidas: <span id="lives">3</span></div>
+    <div>Pausado: <span id="paused">Não</span></div>
+  </div>
+
+  <canvas id="game"></canvas>
+
+  <!-- Botões para os outros jogos -->
+  <div class="other-games">
+    <button onclick="window.location.href='jogo-da-velha.html'">Jogo da Velha</button>
+    <button onclick="window.location.href='falling.html'">Falling</button>
+  </div>
+</div>
 
 <audio id="bgMusic" src="cobra.mp3" loop></audio>
 <audio id="biteSound" src="bite.mp3"></audio>
 <audio id="hitSound" src="https://www.soundjay.com/button/button-10.wav"></audio>
 
 <script>
+// Lógica do Snake (igual ao código anterior)
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 const startScreen = document.getElementById('startScreen');
@@ -102,24 +241,16 @@ function gameLoop() {
   if(direction==='LEFT') head.x--;
   if(direction==='UP') head.y--;
   if(direction==='DOWN') head.y++;
-
-  if(head.x<0||head.x>=gridSize||head.y<0||head.y>=gridSize||snake.some(s=>s.x===head.x && s.y===head.y)){
+  if(head.x<0||head.x>=gridSize||head.y<0||snake.some(s=>s.x===head.x && s.y===head.y)){
     loseLife();
     return;
   }
-
   snake.unshift(head);
-
   if(head.x===food.x && head.y===food.y){
-    score += 10;
-    scoreEl.textContent = score;
-    biteSound.currentTime = 0;
-    biteSound.play();
+    score+=10; scoreEl.textContent=score;
+    biteSound.currentTime=0; biteSound.play();
     placeFood();
-  } else {
-    snake.pop();
-  }
-
+  } else { snake.pop(); }
   drawGame();
 }
 
@@ -127,16 +258,12 @@ function loseLife(){
   lives--;
   livesEl.textContent = lives;
   startLivesEl.textContent = lives;
-  hitSound.currentTime = 0;
-  hitSound.play();
+  hitSound.currentTime=0; hitSound.play();
   if(lives<=0){
     alert("Game Over!");
     startScreen.style.display='flex';
     clearInterval(gameInterval);
-  } else {
-    snake=[{x:10,y:10}];
-    direction='RIGHT';
-  }
+  } else { snake=[{x:10,y:10}]; direction='RIGHT'; }
 }
 
 function drawGrass(){
@@ -160,7 +287,6 @@ function drawGame(){
   drawGrass();
   const foodSize = cellSize*1.2;
   ctx.drawImage(foodImg, food.x*cellSize - (foodSize-cellSize)/2, food.y*cellSize - (foodSize-cellSize)/2, foodSize, foodSize);
-
   snake.forEach((seg,i)=>{
     ctx.fillStyle="#FFFF99";
     ctx.fillRect(seg.x*cellSize, seg.y*cellSize, cellSize, cellSize);
@@ -184,6 +310,9 @@ document.addEventListener('keydown', e=>{
 });
 
 startBtn.addEventListener('click', initGame);
+
+function goBack(){ window.location.href='index.html'; bgMusic.pause(); }
 </script>
+
 </body>
 </html>
