@@ -1,0 +1,235 @@
+/* Fonte padrão */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fa;
+    color: #333;
+}
+
+/* Cabeçalho */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+header .logo h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.main-nav ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.main-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Layout principal */
+#main-container {
+    display: flex;
+    min-height: 100vh;
+    flex-wrap: wrap;
+}
+
+/* Sidebar */
+#sidebar {
+    width: 250px;
+    background: #ecf0f1;
+    padding: 20px;
+    border-right: 2px solid #ccc;
+}
+
+#sidebar h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.movie-list-nav ol {
+    list-style: none;
+    padding: 0;
+}
+
+.movie-list-nav li {
+    margin-bottom: 15px;
+}
+
+.movie-list-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.movie-list-nav a:hover {
+    color: #16a085;
+}
+
+.movie-list-nav img {
+    width: 40px;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Conteúdo principal */
+#main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.movie-ranking {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: white;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+}
+
+.ranking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rank-number {
+    background: #16a085;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.movie-poster {
+    width: 200px;
+    max-width: 100%;
+    display: block;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Botões */
+.locadora-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.emprestar-btn {
+    background: #3498db;
+    color: white;
+}
+
+.emprestar-btn:hover {
+    background: #2980b9;
+}
+
+.vender-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.vender-btn:hover {
+    background: #c0392b;
+}
+
+.status-locacao {
+    margin-top: 10px;
+    font-style: italic;
+    color: #555;
+}
+
+/* Rodapé */
+.site-footer {
+    text-align: center;
+    padding: 15px;
+    background: #2c3e50;
+    color: white;
+    margin-top: 20px;
+}
+
+/* ===================================== */
+/* RESPONSIVIDADE */
+/* ===================================== */
+
+/* Tablets e celulares */
+@media (max-width: 900px) {
+    #main-container {
+        flex-direction: column;
+    }
+
+    #sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px solid #ccc;
+    }
+
+    #main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .movie-list-nav a {
+        font-size: 0.9rem;
+    }
+}
+
+/* Celulares pequenos */
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .main-nav ul {
+        justify-content: center;
+    }
+
+    .ranking-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .rank-number {
+        font-size: 1rem;
+    }
+
+    .movie-poster {
+        width: 100%;
+    }
+
+    .action-btn {
+        flex: 1;
+        text-align: center;
+    }
+}

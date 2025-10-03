@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Top 3 Filmes - A Locadora Pessoal</title>
+    <link rel="stylesheet" href="styleloca.css">
+</head>
+<body>
+
+    <header id="header">
+        <div class="logo">
+            <h1>A Locadora do Top 3</h1>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">Saiba Mais</a></li>
+                <li><a href="#contact">Contato</a></li>
+                <li><a href="#share">Compartilhar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="main-container">
+
+        <aside id="sidebar">
+            <h2>Lista de Filmes</h2>
+            <nav class="movie-list-nav">
+                <ol>
+                    <li>
+                        <a href="#filme1">
+                            <img src="filme1.png" alt="Poster Oldboy" width="50"> 
+                            1. Oldboy (2003)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#filme2">
+                            <img src="filme3.png" alt="Poster Fallen Angels" width="50"> 
+                            2. Fallen Angels (1995)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#filme3">
+                            <img src="filme2.png" alt="Poster Réquiem" width="50"> 
+                            3. Réquiem para um Sonho (2000)
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+        </aside>
+
+        <main id="main-content">
+
+            <h2>O Meu Ranking Pessoal: Top 3 Filmes Favoritos</h2>
+            <p>Confira os três filmes que mais marcaram minha vida. Clique em "Emprestar" ou "Vender" para simular a transação.</p>
+
+            <!-- Filme 1 -->
+            <section class="movie-ranking" id="filme1">
+                <div class="ranking-header">
+                    <h3>#1: Oldboy (2003)</h3>
+                    <span class="rank-number">1º Lugar</span>
+                </div>
+                <p>Um dos maiores thrillers psicológicos do cinema sul-coreano. Intenso, brutal e com uma das reviravoltas mais impactantes da história do cinema.</p>
+                <img src="filme1.png" alt="Poster de Oldboy" class="movie-poster">
+
+                <div class="locadora-actions">
+                    <button class="action-btn emprestar-btn" onclick="simularLocacao('filme1', 'Emprestar')">
+                        Emprestar (R$ 5,00)
+                    </button>
+                    <button class="action-btn vender-btn" onclick="simularLocacao('filme1', 'Vender')">
+                        Vender (R$ 30,00)
+                    </button>
+                    <p class="status-locacao" id="status-filme1">Disponível para locação.</p>
+                </div>
+            </section>
+
+            <!-- Filme 2 -->
+            <section class="movie-ranking" id="filme2">
+                <div class="ranking-header">
+                    <h3>#2: Fallen Angels (1995)</h3>
+                    <span class="rank-number">2º Lugar</span>
+                </div>
+                <p>Obra-prima de Wong Kar-Wai. Um mergulho poético na solidão urbana, com estética única e uma fotografia que marcou o cinema mundial.</p>
+                <img src="filme3.png" alt="Poster de Fallen Angels" class="movie-poster">
+
+                <div class="locadora-actions">
+                    <button class="action-btn emprestar-btn" onclick="simularLocacao('filme2', 'Emprestar')">
+                        Emprestar (R$ 5,00)
+                    </button>
+                    <button class="action-btn vender-btn" onclick="simularLocacao('filme2', 'Vender')">
+                        Vender (R$ 30,00)
+                    </button>
+                    <p class="status-locacao" id="status-filme2">Disponível para locação.</p>
+                </div>
+            </section>
+
+            <!-- Filme 3 -->
+            <section class="movie-ranking" id="filme3">
+                <div class="ranking-header">
+                    <h3>#3: Réquiem para um Sonho (2000)</h3>
+                    <span class="rank-number">3º Lugar</span>
+                </div>
+                <p>Um retrato visceral e devastador sobre vício e destruição. Com trilha sonora icônica e atuações memoráveis, é um filme inesquecível.</p>
+                <img src="filme2.png" alt="Poster de Réquiem para um Sonho" class="movie-poster">
+
+                <div class="locadora-actions">
+                    <button class="action-btn emprestar-btn" onclick="simularLocacao('filme3', 'Emprestar')">
+                        Emprestar (R$ 5,00)
+                    </button>
+                    <button class="action-btn vender-btn" onclick="simularLocacao('filme3', 'Vender')">
+                        Vender (R$ 30,00)
+                    </button>
+                    <p class="status-locacao" id="status-filme3">Disponível para locação.</p>
+                </div>
+            </section>
+
+            <footer class="site-footer">
+                <p>&copy; 2025 Ranking Pessoal de Filmes. Todos os direitos reservados.</p>
+            </footer>
+
+            <script src="locadora.js"></script>
+        </main>
+    </div>
+
+</body>
+</html>
