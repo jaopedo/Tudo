@@ -46,3 +46,58 @@ function simularLocacao(tituloFilme, tipoAcao) {
     // Opcional: Adiciona um alerta para feedback imediato
     alert(mensagem);
 }
+
+// locadora.js (versão robusta com debug)
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Função principal que atualiza o status e desabilita botões na seção
+    function simularLocacao(sectionId, acao) {
+      console.log(`[locadora] Ação solicitada: ${acao} -> ${sectionId}`);
+      const statusEl = document.getElementById('status-' + sectionId);
+      const section = document.getElementById(sectionId);
+      if (!statusEl || !section) {
+        console.error('[locadora] Elemento não encontrado:', sectionId, { statusEl, section });
+        return;
+      }
+  
+      const emprestarBtn = section.querySelector('.emprestar-btn');
+      const venderBtn = section.querySelector('.vender-btn');
+  
+      if (acao === 'Emprestar') {
+        statusEl.textContent = 'Alugado — devolução em 7 dias.';
+      } else if (acao === 'Vender') {
+        statusEl.textContent = 'Vendido — transação concluída.';
+      } else {
+        console.warn('[locadora] Ação desconhecida:', acao);
+        statusEl.textContent = 'Ação desconhecida.';
+      }
+  
+      if (emprestarBtn) emprestarBtn.disabled = true;
+      if (venderBtn) venderBtn.disabled = true;
+    }
+  
+    // Ligando os botões aos handlers (não usar atributos onclick inline)
+    const emprestarBtns = document.querySelectorAll('.emprestar-btn');
+    const venderBtns = document.querySelectorAll('.vender-btn');
+  
+    emprestarBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const film = btn.dataset.film;
+        const action = btn.dataset.action || 'Emprestar';
+        simularLocacao(film, action);
+      });
+    });
+  
+    venderBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const film = btn.dataset.film;
+        const action = btn.dataset.action || 'Vender';
+        simularLocacao(film, action);
+      });
+    });
+  
+    console.log('[locadora] Script carregado — botões prontos.');
+  });
+  
