@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCalculator</title>
+    <link rel="stylesheet" href="calculadora.css">
+</head>
+<body>
+    <header>
+        <h1>
+            <a href="#">
+                <img id="logo-img" src="logo_ecocalculator.png" alt="ícone de calculadora ecológica">
+            </a>
+        </h1>
+    </header>
+
+    <main>
+        <div class="conteudo-principal">
+            <div class="enunciado-principal">
+                <img class="img-pegada" src="logo_pegada.png" alt="Ícone de pegada ecológica">
+                <input type="range" id="input-range" class="input-range" min="0" max="100">
+                <label id="lenRange" for="input-range">50%</label>
+
+                <div class="input-box">
+                    <div class="radio">
+                        <input type="radio" id="radio-sim" name="energia" checked>
+                        <label for="radio-sim">Sim</label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" id="radio-nao" name="energia">
+                        <label for="radio-nao">Não</label>
+                    </div>
+                </div>
+
+                <p class="qtd-planetas"></p>
+            </div>
+
+            <button class="botao-principal">Iniciar</button>
+        </div>
+    </main>
+
+    <!-- Modal para alert -->
+    <div id="modal-alert" class="modal">
+        <div class="modal-content">
+            <p>Digite seu nome antes de continuar!</p>
+            <button id="modal-close">Ok</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Calculadora inspirada em <a href="https://www.footprintcalculator.org/home/en" target="_blank">FootPrint Calculator</a></p>
+    </footer>
+
+    <script src="calculadora.js"></script>
+</body>
+</html>
