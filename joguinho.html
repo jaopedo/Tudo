@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo da Memória Educativo</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f5f5f5;
+  }
+  h1 { margin-bottom: 10px; }
+  #game { 
+    display: flex; flex-wrap: wrap; justify-content: center; 
+    max-width: 600px; margin: 20px auto;
+  }
+  .card {
+    width: 100px; height: 100px;
+    margin: 6px; border-radius: 10px;
+    background: #0097ff;
+    border: 3px solid #004c7f;
+    cursor: pointer;
+    transition: .2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card img {
+    width: 90%; height: 90%;
+    display: none;
+  }
+  .card.flipped img { display: block; }
+</style>
+</head>
+<body>
+
+<h1>Jogo da Memória Educativo</h1>
+<p id="fase">Fase 1</p>
+<div id="game"></div>
+<p id="message"></p>
+<button id="nextLevel" style="display:none;">Próxima Fase</button>
+
+<script>
+const fases = [
+  {
+    nome: "Fase 1: Trânsito 🚦",
+    imagens: [
+      "https://cdn-icons-png.flaticon.com/512/2972/2972185.png", // Semáforo
+      "https://cdn-icons-png.flaticon.com/512/743/743131.png", // Carro
+      "https://cdn-icons-png.flaticon.com/512/2972/2972180.png" // Placa
+    ]
+  },
+  {
+    nome: "Fase 2: Comida Saudável 🍎",
+    imagens: [
+      "https://cdn-icons-png.flaticon.com/512/415/415682.png", // Maçã
+      "https://cdn-icons-png.flaticon.com/512/135/135689.png", // Banana
+      "https://cdn-icons-png.flaticon.com/512/766/766741.png", // Cenoura
+      "https://cdn-icons-png.flaticon.com/512/3480/3480697.png" // Brócolis
+    ]
+  },
+  {
+    nome: "Fase 3: Animais 🐾",
+    imagens: [
+      "https://cdn-icons-png.flaticon.com/512/220/220231.png", // Gato
+      "https://cdn-icons-png.flaticon.com/512/620/620851.png", // Cachorro
+      "https://cdn-icons-png.flaticon.com/512/1998/1998627.png", // Elefante
+      "https://cdn-icons-png.flaticon.com/512/616/616408.png", // Leão
+      "https://cdn-icons-png.flaticon.com/512/1998/1998671.png" // Pássaro
+    ]
+  }
+];
+
+let faseAtual = 0;
+let cartas = [];
+let primeiraCarta = null;
+let segundaCarta = null;
+let travar = false;
+let acertos = 0;
+
+const gameContainer = document.getElementById("game");
+const faseTexto = document.getElementById("fase");
+const message = document.getElementById("message");
+const nextBtn = document.getElementById("nextLevel");
+
+function iniciarFase() {
+  acertos = 0;
+  primeiraCarta = null;
+  segundaCarta = null;
+  travar = false;
+  gameContainer.innerHTML = "";
+  faseTexto.textContent = fases[faseAtual].nome;
+
+  const imagens = [...fases[faseAtual].imagens, ...fases[faseAtual].imagens];
+  cartas = imagens.sort(() => Math.random() - 0.5);
+
+  cartas.forEach(imgSrc => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.dataset.image = imgSrc;
+
+    const img = document.createElement("img");
+    img.src = imgSrc;
+    card.appendChild(img);
+
+    card.addEventListener("click", flipCard);
+    gameContainer.appendChild(card);
+  });
+}
+
+function flipCard() {
+  if (travar || this.classList.contains("flipped")) return;
+  this.classList.add("flipped");
+  if (!primeiraCarta) {
+    primeiraCarta = this;
+  } else {
+    segundaCarta = this;
+    travar = true;
+    checkMatch();
+  }
+}
+
+function checkMatch() {
+  if (primeiraCarta.dataset.image === segundaCarta.dataset.image) {
+    acertos++;
+    resetFlip();
+    if (acertos === fases[faseAtual].imagens.length) {
+      message.textContent = "✅ Parabéns! Você completou a fase!";
+      if (faseAtual < fases.length - 1) {
+        nextBtn.style.display = "inline-block";
+      } else {
+        message.textContent = "🎉 Você venceu TODAS as fases!";
+      }
+    }
+  } else {
+    setTimeout(() => {
+      primeiraCarta.classList.remove("flipped");
+      segundaCarta.classList.remove("flipped");
+      resetFlip();
+    }, 900);
+  }
+}
+
+function resetFlip() {
+  primeiraCarta = null;
+  segundaCarta = null;
+  travar = false;
+}
+
+nextBtn.addEventListener("click", () => {
+  faseAtual++;
+  nextBtn.style.display = "none";
+  message.textContent = "";
+  iniciarFase();
+});
+
+iniciarFase();
+</script>
+</body>
+</html>
