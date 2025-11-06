@@ -44,28 +44,78 @@
   .backBtn:hover { transform: scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
 
   #startScreen {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
-    z-index:10; text-align:center; padding:20px;
-    background: rgba(11,18,32,0.95); border-radius:20px;
-    border:2px solid rgba(255,255,255,0.25); backdrop-filter: blur(15px);
-    box-shadow:0 10px 40px rgba(0,0,0,0.7);
-  }
-  #startScreen h1 { font-size: clamp(2.5rem,5vw,4rem); margin-bottom:15px; }
-  #startScreen p {
-    margin:10px 0; padding:10px 20px;
-    background:#0f1724; border:2px solid rgba(255,255,255,0.25);
-    border-radius:15px; box-shadow:0 8px 30px rgba(0,0,0,0.6); line-height:1.4;
-  }
-  #startScreen button {
-    padding:16px 35px; margin-top:15px;
-    border:none; border-radius:15px; font-weight:bold; cursor:pointer;
-    font-size:clamp(1rem,2.5vw,1.5rem);
-    background: linear-gradient(145deg, #3f51b5, #1a237e);
-    color:#fff; box-shadow:0 8px 25px rgba(0,0,0,0.6);
-    transition: all 0.3s ease;
-  }
-  #startScreen button:hover { transform:scale(1.05); background: linear-gradient(145deg, #1a237e, #283593); }
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 10;
+  text-align: center;
+  padding: 40px 25px;
+  background: rgba(11,18,32,0.95);
+  border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+}
+
+#startScreen h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 10px;
+}
+
+#startScreen p {
+  margin: 5px 0 10px;
+  padding: 12px 20px;
+  background: #0f1724;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  line-height: 1.4;
+  width: 100%;
+}
+
+#startScreen button {
+  width: 80%;
+  max-width: 280px;
+  padding: 15px 25px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  background: linear-gradient(145deg, #3f51b5, #1a237e);
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  transition: all 0.3s ease;
+}
+
+#startScreen button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(145deg, #1a237e, #283593);
+}
+
+#difficulty {
+  margin-top: 20px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+#difficulty p {
+  margin-bottom: 10px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 
   .hud {
     display:flex; justify-content:center; gap:30px;
@@ -134,7 +184,7 @@
   <button class="backBtn" onclick="goBack()">Voltar</button>
 
   <div id="startScreen">
-    <h1>✨ Jogo da Velha ✨</h1>
+    <h1>Jogo da Velha</h1>
     <p>Escolha o modo de jogo:</p>
     <button id="singleBtn">Contra IA</button>
     <button id="multiBtn">Multiplayer Local</button>
@@ -340,3 +390,4 @@ updateHUD();
 </script>
 </body>
 </html>
+
