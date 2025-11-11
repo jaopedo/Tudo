@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Coleção - Robson Garcia</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #06040b;
+    --panel: #0d0b1a;
+    --accent: #9b4dff;
+    --accent2: #00ffff;
+    --text: #f7f4ff;
+    --muted: #b5b1d1;
+    --card: #171228;
+  }
+
+  * { box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
+
+  body {
+    background: radial-gradient(circle at top left, #100b1d, #06040b);
+    color: var(--text);
+    margin: 0; padding: 0; min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(90deg, #140f2b, #2a1458);
+    box-shadow: 0 0 25px #000c;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #2a1f4a;
+  }
+
+  header h1 {
+    color: var(--accent2);
+    text-shadow: 0 0 15px #00ffff90;
+    font-size: 1.9em;
+    margin: 0;
+  }
+
+  main {
+    max-width: 1000px;
+    margin: 30px auto;
+    background: var(--panel);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px #0008;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  button {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    box-shadow: 0 0 15px #9b4dff55;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #9b4dffaa;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #2a1f4a;
+    background: #0b0920;
+    color: var(--text);
+    margin-top: 4px;
+    margin-bottom: 10px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid #281a4a;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 0 20px #0005;
+    transition: 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px #9b4dff66;
+  }
+
+  .card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #0a0f18;
+    margin-bottom: 10px;
+  }
+
+  .card h3 {
+    font-size: 1.1em;
+    margin: 5px 0;
+    color: var(--accent2);
+    text-shadow: 0 0 8px #00ffff88;
+  }
+
+  .info {
+    font-size: 0.9em;
+    color: var(--muted);
+    line-height: 1.4em;
+  }
+
+  .info strong {
+    color: var(--text);
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .actions button {
+    background: transparent;
+    border: 1px solid #3a2b66;
+    color: var(--text);
+    padding: 6px 9px;
+    border-radius: 8px;
+  }
+
+  .actions button:hover {
+    background: rgba(155, 77, 255, 0.1);
+    border-color: var(--accent);
+    color: var(--accent2);
+  }
+
+  #modal {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.6);
+    display:none; align-items:center; justify-content:center; z-index:999;
+  }
+
+  #modal.open { display:flex; }
+
+  #modal .content {
+    background: var(--panel);
+    padding: 20px;
+    border-radius: 12px;
+    width: 92%;
+    max-width: 520px;
+    box-shadow: 0 0 25px #9b4dff55;
+  }
+
+  #previewImg {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #120b2a;
+    display: none;
+    margin-bottom: 8px;
+  }
+
+  #resumo {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><i class="fa-solid fa-vault"></i> Sistema de Coleção - Robson Garcia</h1>
+</header>
+
+<main>
+  <div class="toolbar">
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="btnNovo"><i class="fa-solid fa-plus"></i> Novo Item</button>
+      <button id="btnExport">Exportar JSON</button>
+      <button id="btnImport">Importar JSON</button>
+      <input id="fileImport" type="file" accept="application/json" style="display:none">
+    </div>
+    <input id="busca" type="text" placeholder="🔍 Pesquisar por nome..." style="max-width:360px" />
+  </div>
+
+  <div id="grid" class="grid"></div>
+  <div id="resumo"></div>
+</main>
+
+<!-- Modal -->
+<div id="modal">
+  <div class="content">
+    <h2 id="tituloModal">Novo Item</h2>
+    <label>Nome</label>
+    <input id="nome" placeholder="Nome do item" />
+    <label>Categoria</label>
+    <select id="categoria">
+      <option value="Livro">📚 Livro</option>
+      <option value="Revista">📰 Revista</option>
+      <option value="Carro">🏎️ Carro</option>
+      <option value="Artigo">🕰️ Artigo Antigo</option>
+      <option value="Outro">🧩 Outro</option>
+    </select>
+    <label>Valor estimado (R$)</label>
+    <input id="valor" type="number" step="0.01" placeholder="0.00" />
+    <label>Local de armazenamento</label>
+    <input id="local" placeholder="Ex: Prateleira A / Garagem" />
+    <label>Descrição</label>
+    <textarea id="descricao" rows="3" placeholder="Descrição..."></textarea>
+    <label>Imagem (opcional)</label>
+    <input id="imagem" type="file" accept="image/*" />
+    <img id="previewImg" alt="Preview" />
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button id="btnCancelar" style="background:#444;border:none">Cancelar</button>
+      <button id="btnSalvar">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- mesmo JavaScript (sem alterações de cor) ---
+const STORAGE_KEY = 'colecao_robson_v3';
+let editingId = null;
+let currentImageSrc = '';
+
+const modal = document.getElementById('modal');
+const nomeEl = document.getElementById('nome');
+const categoriaEl = document.getElementById('categoria');
+const valorEl = document.getElementById('valor');
+const localEl = document.getElementById('local');
+const descricaoEl = document.getElementById('descricao');
+const imagemEl = document.getElementById('imagem');
+const previewImg = document.getElementById('previewImg');
+const grid = document.getElementById('grid');
+const buscaEl = document.getElementById('busca');
+const resumo = document.getElementById('resumo');
+
+function uid(){ return 'id_' + Math.random().toString(36).slice(2,9); }
+function moneyBR(v){ return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+
+function openModalForNew(){
+  editingId = null;
+  currentImageSrc = '';
+  modal.classList.add('open');
+  nomeEl.value = categoriaEl.value = valorEl.value = localEl.value = descricaoEl.value = '';
+  previewImg.style.display = 'none';
+}
+
+function openModalForEdit(item){
+  editingId = item.id;
+  currentImageSrc = item.imagem || '';
+  nomeEl.value = item.nome;
+  categoriaEl.value = item.categoria;
+  valorEl.value = item.valor;
+  localEl.value = item.local;
+  descricaoEl.value = item.descricao;
+  if(item.imagem){ previewImg.src=item.imagem; previewImg.style.display='block'; }
+  modal.classList.add('open');
+}
+
+function closeModal(){ modal.classList.remove('open'); }
+
+imagemEl.addEventListener('change', ()=>{
+  const f = imagemEl.files[0];
+  if(!f){ previewImg.style.display='none'; return; }
+  const r = new FileReader();
+  r.onload = e => { previewImg.src = e.target.result; previewImg.style.display='block'; };
+  r.readAsDataURL(f);
+});
+
+document.getElementById('btnNovo').onclick = openModalForNew;
+document.getElementById('btnCancelar').onclick = closeModal;
+
+document.getElementById('btnSalvar').onclick = ()=>{
+  const nome = nomeEl.value.trim();
+  if(!nome){ alert('Informe o nome'); return; }
+  const item = {
+    id: editingId || uid(),
+    nome,
+    categoria: categoriaEl.value,
+    valor: Number(valorEl.value)||0,
+    local: localEl.value.trim(),
+    descricao: descricaoEl.value.trim(),
+    imagem: currentImageSrc
+  };
+  const file = imagemEl.files[0];
+  if(file){
+    const r = new FileReader();
+    r.onload = e => { item.imagem = e.target.result; persistItem(item); closeModal(); };
+    r.readAsDataURL(file);
+  } else { persistItem(item); closeModal(); }
+};
+
+function persistItem(item){
+  const list = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const i = list.findIndex(x=>x.id===item.id);
+  if(i>=0) list[i]=item; else list.push(item);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  listarItens();
+}
+
+function listarItens(){
+  const q = (buscaEl.value||'').toLowerCase();
+  const list = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const filtered = list.filter(i=>i.nome.toLowerCase().includes(q));
+  grid.innerHTML='';
+  for(const item of filtered){
+    const card=document.createElement('div'); card.className='card';
+    const img=document.createElement('img'); img.src=item.imagem||'https://cdn-icons-png.flaticon.com/512/1584/1584892.png'; card.appendChild(img);
+    const h3=document.createElement('h3'); h3.textContent=item.nome; card.appendChild(h3);
+    const info=document.createElement('div'); info.className='info';
+    info.innerHTML=`
+      <p><strong>Categoria:</strong> ${item.categoria}</p>
+      <p><strong>Local:</strong> ${item.local||'-'}</p>
+      <p><strong>Valor:</strong> ${moneyBR(item.valor)}</p>
+      <p><strong>Descrição:</strong> ${item.descricao||'-'}</p>`;
+    card.appendChild(info);
+    const actions=document.createElement('div'); actions.className='actions';
+    const eBtn=document.createElement('button'); eBtn.innerHTML='<i class="fa-solid fa-pen"></i>'; eBtn.onclick=()=>openModalForEdit(item);
+    const dBtn=document.createElement('button'); dBtn.innerHTML='<i class="fa-solid fa-trash"></i>'; dBtn.onclick=()=>{ if(confirm('Excluir?')) excluirItem(item.id); };
+    actions.appendChild(eBtn); actions.appendChild(dBtn);
+    card.appendChild(actions);
+    grid.appendChild(card);
+  }
+  const total=filtered.length;
+  const valorTotal=filtered.reduce((s,i)=>s+(i.valor||0),0);
+  resumo.textContent=`Itens: ${total} | Valor total: ${moneyBR(valorTotal)}`;
+}
+
+function excluirItem(id){
+  const list=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]').filter(x=>x.id!==id);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(list));
+  listarItens();
+}
+
+listarItens();
+buscaEl.oninput=listarItens;
+modal.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
